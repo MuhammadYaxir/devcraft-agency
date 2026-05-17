@@ -4,6 +4,7 @@ import React, { useRef } from "react";
 import Image from "next/image"; // Added for optimized image loading
 import { motion, useScroll, useTransform } from "framer-motion";
 import { ArrowRight, Play, Code, Zap, Globe, Database } from "lucide-react";
+import Link from "next/link";
 
 const stats = [
   { label: "Projects Completed", value: "100+" },
@@ -74,26 +75,43 @@ const HeroSection = () => {
             We combine luxury aesthetics with cutting-edge tech to help your brand lead the future.
           </p>
 
-          {/* CTAs */}
-          <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto pt-2">
-            <motion.button
-              whileHover={{ scale: 1.05, boxShadow: "0 0 25px rgba(139, 92, 246, 0.4)" }}
-              whileTap={{ scale: 0.95 }}
-              className="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-[#8B5CF6] to-[#7C3AED] text-white rounded-full font-bold flex items-center justify-center gap-2 group transition-all"
-            >
-              Get Started
-              <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
-            </motion.button>
+         {/* CTAs */}
+<div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto pt-2">
+  
+  {/* Get Started */}
+  <Link href="/contact" className="w-full sm:w-auto">
+    <motion.button
+      whileHover={{
+        scale: 1.05,
+        boxShadow: "0 0 25px rgba(139, 92, 246, 0.4)",
+      }}
+      whileTap={{ scale: 0.95 }}
+      className="w-full px-8 py-4 bg-gradient-to-r from-[#8B5CF6] to-[#7C3AED] text-white rounded-full font-bold flex items-center justify-center gap-2 group transition-all"
+    >
+      Get Started
+      <ArrowRight
+        size={20}
+        className="group-hover:translate-x-1 transition-transform"
+      />
+    </motion.button>
+  </Link>
 
-            <motion.button
-              whileHover={{ scale: 1.05, backgroundColor: "rgba(255, 255, 255, 0.05)" }}
-              whileTap={{ scale: 0.95 }}
-              className="w-full sm:w-auto px-8 py-4 bg-white/5 border border-white/10 backdrop-blur-md text-white rounded-full font-bold flex items-center justify-center gap-2"
-            >
-              <Play size={18} className="fill-white" />
-              View Our Work
-            </motion.button>
-          </div>
+  {/* View Our Work */}
+  <Link href="/projects" className="w-full sm:w-auto">
+    <motion.button
+      whileHover={{
+        scale: 1.05,
+        backgroundColor: "rgba(255, 255, 255, 0.05)",
+      }}
+      whileTap={{ scale: 0.95 }}
+      className="w-full px-8 py-4 bg-white/5 border border-white/10 backdrop-blur-md text-white rounded-full font-bold flex items-center justify-center gap-2"
+    >
+      <Play size={18} className="fill-white" />
+      View Our Work
+    </motion.button>
+  </Link>
+
+</div>
 
           {/* Stats Section */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 pt-12 border-t border-white/10 w-full mt-6">
