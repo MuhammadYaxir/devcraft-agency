@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import type { Variants } from "framer-motion";
 
 interface LoaderScreenProps {
   onComplete?: () => void;
@@ -37,15 +38,22 @@ export default function LoaderScreen({ onComplete }: LoaderScreenProps) {
     },
   };
 
-  const letterVariants = {
-    hidden: { opacity: 0, y: 15, filter: "blur(4px)" },
-    visible: {
-      opacity: 1,
-      y: 0,
-      filter: "blur(0px)",
-      transition: { duration: 0.5, ease: [0.215, 0.61, 0.355, 1] },
+  const letterVariants: Variants = {
+  hidden: {
+    opacity: 0,
+    y: 20,
+    filter: "blur(8px)",
+  },
+  visible: {
+    opacity: 1,
+    y: 0,
+    filter: "blur(0px)",
+    transition: {
+      duration: 0.6,
+      ease: "easeOut",
     },
-  };
+  },
+};
 
   return (
     <AnimatePresence mode="wait">

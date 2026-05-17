@@ -1,10 +1,18 @@
 "use client";
 
-import React, { useRef, useState, useEffect } from "react";
-import { motion } from "framer-motion";
+import React, { useRef, useState } from "react";
 import { Star } from "lucide-react";
 
-const testimonials = [
+type Testimonial = {
+  id: number;
+  name: string;
+  role: string;
+  review: string;
+  rating: number;
+  image?: string;
+};
+
+const testimonials: Testimonial[] = [
   { id: 1, name: "James Carter", role: "CEO, Nevora", review: "DevCraft built our SaaS platform and the results were beyond our expectations. Great communication and top-notch development skills!", rating: 5 },
   { id: 2, name: "Sophia Bennett", role: "Founder, ShopKart", review: "The team delivered our e-commerce store on time with amazing UI/UX. Our sales increased by 40% after the launch!", rating: 5 },
   { id: 3, name: "Liam Anderson", role: "CTO, FinDash", review: "Highly professional and skilled developers. They understood our requirements perfectly and delivered a great product.", rating: 5 },
@@ -21,51 +29,53 @@ export default function TestimonialsSection() {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [activeDot, setActiveDot] = useState(0);
 
-  // Update dots based on scroll position
   const handleScroll = () => {
     if (!scrollRef.current) return;
+
     const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
-    
-    // Calculate progress (0 to 1)
-    const scrollPercent = scrollLeft / (scrollWidth - clientWidth);
-    
-    // Map progress to 3 dots
+    const maxScroll = scrollWidth - clientWidth;
+
+    if (maxScroll <= 0) return;
+
+    const scrollPercent = scrollLeft / maxScroll;
+
     if (scrollPercent < 0.33) setActiveDot(0);
     else if (scrollPercent < 0.66) setActiveDot(1);
     else setActiveDot(2);
   };
 
-  // Scroll to section when dot is clicked
   const scrollTo = (index: number) => {
     if (!scrollRef.current) return;
+
     const { scrollWidth, clientWidth } = scrollRef.current;
-    const target = (scrollWidth - clientWidth) * (index / 2);
+    const maxScroll = scrollWidth - clientWidth;
+    const target = maxScroll * (index / 2);
+
     scrollRef.current.scrollTo({ left: target, behavior: "smooth" });
   };
 
   return (
     <section className="relative w-full py-24 bg-[#050816] overflow-hidden">
       <div className="max-w-7xl mx-auto px-6 relative z-10">
-        
-        {/* Header Section */}
         <div className="text-center mb-16">
           <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-purple-500/80">
             TESTIMONIALS
           </span>
+
           <h2 className="text-4xl md:text-5xl font-bold text-white mt-4 mb-4 tracking-tight">
             What Our Clients Say
           </h2>
+
           <p className="max-w-2xl mx-auto text-gray-500 text-base">
             Our clients love working with us. See what they have to say.
           </p>
         </div>
 
-        {/* Scrollable Container */}
-        <div 
+        <div
           ref={scrollRef}
           onScroll={handleScroll}
           className="flex gap-6 overflow-x-auto snap-x snap-mandatory scrollbar-hide pb-12 cursor-grab active:cursor-grabbing"
-          style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+          style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
         >
           {testimonials.map((t) => (
             <div
@@ -74,24 +84,31 @@ export default function TestimonialsSection() {
             >
               <div className="flex gap-1 mb-6">
                 {[...Array(t.rating)].map((_, i) => (
-                  <Star key={i} size={16} className="fill-yellow-500 text-yellow-500" />
+                  <Star
+                    key={i}
+                    size={16}
+                    className="fill-yellow-500 text-yellow-500"
+                  />
                 ))}
               </div>
 
               <p className="text-gray-400 text-[15px] leading-relaxed mb-10 min-h-[100px]">
-                "{t.review}"
+                &quot;{t.review}&quot;
               </p>
 
               <div className="flex items-center gap-4">
                 <div className="w-12 h-12 rounded-full overflow-hidden border border-white/10 bg-gray-800">
-                  <img 
-                    src={t.image || `https://i.pravatar.cc/150?u=${t.id}`} 
+                  <img
+                    src={t.image ?? `https://i.pravatar.cc/150?u=${t.id}`}
                     alt={t.name}
                     className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
                   />
                 </div>
+
                 <div>
-                  <h4 className="text-white font-bold text-sm tracking-wide">{t.name}</h4>
+                  <h4 className="text-white font-bold text-sm tracking-wide">
+                    {t.name}
+                  </h4>
                   <p className="text-gray-500 text-[12px]">{t.role}</p>
                 </div>
               </div>
@@ -99,16 +116,15 @@ export default function TestimonialsSection() {
           ))}
         </div>
 
-        {/* Pagination Dots (Fixed at 3) */}
         <div className="flex justify-center gap-3 mt-4">
           {[0, 1, 2].map((i) => (
             <button
               key={i}
               onClick={() => scrollTo(i)}
               className={`transition-all duration-500 rounded-full ${
-                activeDot === i 
-                ? "w-3 h-3 bg-purple-600 shadow-[0_0_12px_rgba(147,51,234,1)]" 
-                : "w-2 h-2 bg-gray-700 hover:bg-gray-500"
+                activeDot === i
+                  ? "w-3 h-3 bg-purple-600 shadow-[0_0_12px_rgba(147,51,234,1)]"
+                  : "w-2 h-2 bg-gray-700 hover:bg-gray-500"
               }`}
               aria-label={`Go to slide ${i + 1}`}
             />
@@ -116,7 +132,6 @@ export default function TestimonialsSection() {
         </div>
       </div>
 
-      {/* Subtle background glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-purple-600/5 blur-[120px] pointer-events-none" />
     </section>
   );
