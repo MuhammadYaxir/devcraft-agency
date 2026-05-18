@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import SmoothScrollProvider from "@/providers/SmoothScrollProvider";
 import CursorGlow from "@/components/animations/CursorGlow";
 import "./globals.css";
+import MobileStickyCTA from "@/components/mobile/MobileStickyCTA";
 
 // 1. Define the absolute production URL for your agency site
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://devcraft.agency";
@@ -81,6 +82,7 @@ export default function RootLayout({
         {/* Preserved your smooth scroll wrapper and cursor glow hooks */}
         <SmoothScrollProvider>
           <CursorGlow />
+          <MobileStickyCTA />
           {children}
         </SmoothScrollProvider>
       </body>
