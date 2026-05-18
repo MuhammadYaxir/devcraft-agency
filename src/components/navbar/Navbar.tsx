@@ -51,6 +51,7 @@ const Navbar = () => {
 
           {/* CTA Button */}
           <div className="hidden md:block">
+              <Link href="/contact">
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
@@ -59,6 +60,7 @@ const Navbar = () => {
               Let's Talk
               <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
             </motion.button>
+            </Link>
           </div>
 
           {/* Mobile menu button */}
