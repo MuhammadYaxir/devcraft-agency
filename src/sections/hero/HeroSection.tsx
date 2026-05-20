@@ -150,32 +150,51 @@ const HeroSection = () => {
           </div>
 
           {/* Floating Laptop Visual */}
-          <motion.div
-            style={{ y: y1 }}
-            animate={{
-              y: [0, -15, 0],
-              rotate: [0, 1, 0] // Subtle rotation for floating effect
-            }}
-            transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-            className="relative z-20 w-[90%] md:w-[500px] aspect-[16/10] overflow-visible group"
-          >
-            {/* The actual image asset from the public folder */}
-            <div className="relative w-full h-full p-2 bg-black rounded-2xl border border-white/20 shadow-2xl overflow-hidden">
-                <Image 
-                    src="/laptop.png" // Pointing to public/laptop.png
-                    alt="Agency Projects Laptop"
-                    fill
-                    className="object-cover object-center rounded-xl opacity-90"
-                    priority
-                />
-                
-                {/* Overlay gradient over screen to enhance futuristic feel */}
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0A0F1F] via-transparent to-transparent"></div>
-            </div>
+          {/* Interactive Robot Visual */}
+<motion.div
+  style={{ y: y1 }}
+  onMouseMove={(e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = e.clientX - rect.left - rect.width / 2;
+    const y = e.clientY - rect.top - rect.height / 2;
 
-            {/* Glowing effect under laptop */}
-            <div className="absolute -bottom-16 left-1/2 -translate-x-1/2 w-[90%] h-12 bg-[#8B5CF6] blur-[60px] opacity-40 z-10"></div>
-          </motion.div>
+    e.currentTarget.style.setProperty("--rotateY", `${x / 25}deg`);
+    e.currentTarget.style.setProperty("--rotateX", `${-y / 25}deg`);
+  }}
+  onMouseLeave={(e) => {
+    e.currentTarget.style.setProperty("--rotateY", "0deg");
+    e.currentTarget.style.setProperty("--rotateX", "0deg");
+  }}
+  animate={{
+    y: [0, -18, 0],
+  }}
+  transition={{
+    duration: 6,
+    repeat: Infinity,
+    ease: "easeInOut",
+  }}
+  className="relative z-20 w-[90%] md:w-[520px] aspect-square flex items-center justify-center [perspective:1000px]"
+>
+  <div
+    className="relative w-full h-full transition-transform duration-300 ease-out"
+    style={{
+      transform:
+        "rotateX(var(--rotateX, 0deg)) rotateY(var(--rotateY, 0deg))",
+    }}
+  >
+    <Image
+      src="/robot-new2.png"
+      alt="AI Robot Assistant"
+      fill
+      className="object-contain drop-shadow-[0_0_60px_rgba(139,92,246,0.45)]"
+      priority
+    />
+
+    <div className="absolute inset-0 bg-purple-500/20 blur-[90px] rounded-full -z-10" />
+  </div>
+
+  <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 w-[70%] h-10 bg-[#8B5CF6] blur-[60px] opacity-40" />
+</motion.div>
 
           {/* Floating Tech Icons */}
           <FloatingIcon
