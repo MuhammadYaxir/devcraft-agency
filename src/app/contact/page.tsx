@@ -5,6 +5,7 @@ import Navbar from "@/components/navbar/Navbar";
 export default function ContactPage() {
   return (
     <main className="min-h-screen bg-[#050816] text-white">
+      <Navbar />
       <ContactFormSection />
       <Footer />
     </main>
