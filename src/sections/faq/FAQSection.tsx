@@ -3,6 +3,8 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Plus } from 'lucide-react';
+import Link from "next/link";
+
 
 const faqs = [
   {
@@ -131,15 +133,24 @@ export default function FAQSection() {
         </div>
 
         {/* Bottom CTA or Label (Optional) */}
-        <motion.p 
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.5 }}
-          className="text-center mt-12 text-gray-600 text-sm"
-        >
-          Still have questions? <span className="text-purple-400 cursor-pointer hover:underline">Contact our team</span>
-        </motion.p>
+        
+      <motion.p
+  initial={{ opacity: 0 }}
+  whileInView={{ opacity: 1 }}
+  viewport={{ once: true }}
+  transition={{ delay: 0.5 }}
+  className="text-center mt-12 text-gray-600 text-sm"
+>
+  Still have questions?{" "}
+  
+  <Link
+    href="/contact"
+    className="text-purple-400 cursor-pointer hover:underline"
+  >
+    Contact our team
+  </Link>
+</motion.p>
+        
       </div>
     </section>
   );

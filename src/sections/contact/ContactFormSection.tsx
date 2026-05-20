@@ -1,262 +1,332 @@
 "use client";
 
 import React, { useState } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
-import { motion, AnimatePresence } from "framer-motion";
-import { Send, CheckCircle2, AlertCircle, Loader2 } from "lucide-react";
-import Navbar from "@/components/navbar/Navbar";
+import { motion } from "framer-motion";
+import {
+  Send,
+  CheckCircle2,
+  AlertCircle,
+} from "lucide-react";
+import { FaWhatsapp } from "react-icons/fa";
 
-// Existing Component Hooks
-import Container from "@/components/ui/Container";
-import SectionHeading from "@/components/ui/SectionHeading";
-import GlowCard from "@/components/ui/GlowCard";
-import PrimaryButton from "@/components/ui/PrimaryButton";
-
-// 1. Zod Validation Engine Schema matching Route Handler specifications
-const contactSchema = z.object({
-  name: z.string().min(2, { message: "Name must be at least 2 characters." }),
-  email: z.string().email({ message: "Please enter a valid email address." }),
-  budget: z.string().min(1, { message: "Please select a project budget bracket." }),
-  message: z.string().min(10, { message: "Message must contain at least 10 characters." }),
-});
-
-type ContactFormData = z.infer<typeof contactSchema>;
-
-const budgetBrackets = [
+const budgets = [
   "$5k – $10k",
   "$10k – $25k",
   "$25k – $50k",
   "$50k+",
 ];
 
+const projectTypes = [
+  "Business Website",
+  "SaaS Platform",
+  "E-Commerce",
+  "Portfolio",
+  "Dashboard",
+  "AI Product",
+];
+
+const timelines = [
+  "ASAP",
+  "1 Month",
+  "2-3 Months",
+  "Flexible",
+];
+
 export default function ContactFormSection() {
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">("idle");
-  const [serverMessage, setServerMessage] = useState("");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [company, setCompany] = useState("");
+  const [projectType, setProjectType] = useState("");
+  const [timeline, setTimeline] = useState("");
+  const [budget, setBudget] = useState("");
+  const [message, setMessage] = useState("");
 
-  const {
-    register,
-    handleSubmit,
-    setValue,
-    watch,
-    reset,
-    formState: { errors },
-  } = useForm<ContactFormData>({
-    resolver: zodResolver(contactSchema),
-    defaultValues: {
-      name: "",
-      email: "",
-      budget: "",
-      message: "",
-    },
-  });
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState("");
+  const [error, setError] = useState("");
 
-  const selectedBudget = watch("budget");
+  const handleSubmit = async (
+    e: React.FormEvent<HTMLFormElement>
+  ) => {
+    e.preventDefault();
 
-  // 2. Async Submit Handler Processing API Loop
-  const onSubmit = async (data: ContactFormData) => {
-    setIsSubmitting(true);
-    setSubmitStatus("idle");
-    setServerMessage("");
+    setLoading(true);
+    setSuccess("");
+    setError("");
 
     try {
       const response = await fetch("/api/contact", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
+        headers: {
+          "Content-Type": "application/json",
+        },
+
+        body: JSON.stringify({
+          name,
+          email,
+          company,
+          projectType,
+          timeline,
+          budget,
+          message,
+        }),
       });
 
-      const result = await response.json();
+      const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(result.error || "Something went wrong.");
+        throw new Error(data.error || "Something went wrong.");
       }
 
-      setSubmitStatus("success");
-      setServerMessage(result.message);
-      reset(); // Clear input fields on success
-    } catch (error: any) {
-      setSubmitStatus("error");
-      setServerMessage(error.message || "Failed to transmit inquiry data layer.");
+      setSuccess(
+        "Message sent successfully. I will contact you soon."
+      );
+
+      setName("");
+      setEmail("");
+      setCompany("");
+      setProjectType("");
+      setTimeline("");
+      setBudget("");
+      setMessage("");
+
+    } catch (err) {
+      const errorMessage =
+        err instanceof Error
+          ? err.message
+          : "Failed to send message.";
+
+      setError(errorMessage);
     } finally {
-      setIsSubmitting(false);
+      setLoading(false);
     }
   };
 
-  return (<>
-    <Navbar/>
-    <section id="contact" className="relative py-24 md:py-32 overflow-hidden bg-[#050816]">
-      {/* Absolute Atmospheric Glow Elements */}
-      <div className="absolute top-1/4 right-0 w-[500px] h-[500px] bg-purple-600/5 blur-[120px] rounded-full pointer-events-none" />
-      <div className="absolute bottom-1/4 left-0 w-[400px] h-[400px] bg-indigo-600/5 blur-[120px] rounded-full pointer-events-none" />
+  return (
+    <section className="relative min-h-screen bg-[#050816] text-white px-6 py-28 overflow-hidden">
 
-      <Container>
-        {/* Modular Section Title Stack */}
-        <SectionHeading
-          badge="Get In Touch"
-          title="Let's craft something legendary"
-          description="Have a disruptive product idea or enterprise system framework? Reach out and our core development team will chart your architectural pipeline."
-        />
+      {/* Background Glow */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[700px] bg-purple-600/10 blur-[160px] rounded-full pointer-events-none" />
 
-        <div className="max-w-3xl mx-auto relative z-10">
-          <GlowCard className="p-6 md:p-12 bg-white/[0.01] border-white/5 backdrop-blur-2xl">
-            <AnimatePresence mode="wait">
-              {submitStatus !== "success" ? (
-                <motion.form
-                  key="contact-form"
-                  onSubmit={handleSubmit(onSubmit)}
-                  className="space-y-6 md:space-y-8"
-                  initial={{ opacity: 1 }}
-                  exit={{ opacity: 0, y: -20 }}
-                >
-                  {/* Row 1: Name and Email Input Fields */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="space-y-2">
-                      <label className="text-xs font-semibold tracking-widest text-gray-400 uppercase">
-                        Your Name
-                      </label>
-                      <input
-                        type="text"
-                        placeholder="John Doe"
-                        {...register("name")}
-                        className={`w-full px-5 py-4 bg-white/[0.02] border ${
-                          errors.name ? "border-red-500/40 focus:border-red-500" : "border-white/10 focus:border-purple-500/50"
-                        } rounded-xl text-white placeholder-gray-600 text-sm outline-none transition-all duration-300 focus:shadow-[0_0_20px_rgba(147,51,234,0.15)]`}
-                      />
-                      {errors.name && (
-                        <p className="text-xs text-red-400 flex items-center gap-1 mt-1"><AlertCircle size={12} /> {errors.name.message}</p>
-                      )}
-                    </div>
+      <div className="relative z-10 max-w-6xl mx-auto">
 
-                    <div className="space-y-2">
-                      <label className="text-xs font-semibold tracking-widest text-gray-400 uppercase">
-                        Email Address
-                      </label>
-                      <input
-                        type="email"
-                        placeholder="john@example.com"
-                        {...register("email")}
-                        className={`w-full px-5 py-4 bg-white/[0.02] border ${
-                          errors.email ? "border-red-500/40 focus:border-red-500" : "border-white/10 focus:border-purple-500/50"
-                        } rounded-xl text-white placeholder-gray-600 text-sm outline-none transition-all duration-300 focus:shadow-[0_0_20px_rgba(147,51,234,0.15)]`}
-                      />
-                      {errors.email && (
-                        <p className="text-xs text-red-400 flex items-center gap-1 mt-1"><AlertCircle size={12} /> {errors.email.message}</p>
-                      )}
-                    </div>
-                  </div>
+        {/* Header */}
+        <div className="text-center mb-20">
+          <motion.span
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="inline-block text-[11px] font-bold uppercase tracking-[0.6em] text-purple-400 bg-purple-500/10 border border-purple-500/20 px-6 py-3 rounded-full"
+          >
+            Get In Touch
+          </motion.span>
 
-                  {/* Row 2: Budget Selector Grid */}
-                  <div className="space-y-3">
-                    <label className="text-xs font-semibold tracking-widest text-gray-400 uppercase">
-                      Project Budget Bracket
-                    </label>
-                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                      {budgetBrackets.map((bracket) => {
-                        const isSelected = selectedBudget === bracket;
-                        return (
-                          <button
-                            key={bracket}
-                            type="button"
-                            onClick={() => setValue("budget", bracket, { shouldValidate: true })}
-                            className={`px-4 py-3.5 text-xs font-medium rounded-xl border text-center transition-all duration-300 ${
-                              isSelected
-                                ? "bg-purple-600/20 border-purple-500 text-purple-300 shadow-[0_0_15px_rgba(147,51,234,0.2)]"
-                                : "bg-white/[0.02] border-white/10 text-gray-400 hover:bg-white/[0.04] hover:border-white/20"
-                            }`}
-                          >
-                            {bracket}
-                          </button>
-                        );
-                      })}
-                    </div>
-                    {errors.budget && (
-                      <p className="text-xs text-red-400 flex items-center gap-1 mt-1"><AlertCircle size={12} /> {errors.budget.message}</p>
-                    )}
-                  </div>
+          <motion.h1
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="text-5xl md:text-7xl font-black tracking-tight mt-10 leading-tight"
+          >
+            Let&apos;s craft something <br />
+            legendary
+          </motion.h1>
 
-                  {/* Row 3: Project Description Text Area */}
-                  <div className="space-y-2">
-                    <label className="text-xs font-semibold tracking-widest text-gray-400 uppercase">
-                      Project Brief / Message
-                    </label>
-                    <textarea
-                      rows={5}
-                      placeholder="Tell us about your product specs, technical goals, and timeline parameters..."
-                      {...register("message")}
-                      className={`w-full px-5 py-4 bg-white/[0.02] border ${
-                        errors.message ? "border-red-500/40 focus:border-red-500" : "border-white/10 focus:border-purple-500/50"
-                      } rounded-xl text-white placeholder-gray-600 text-sm outline-none transition-all duration-300 focus:shadow-[0_0_20px_rgba(147,51,234,0.15)] resize-none`}
-                    />
-                    {errors.message && (
-                      <p className="text-xs text-red-400 flex items-center gap-1 mt-1"><AlertCircle size={12} /> {errors.message.message}</p>
-                    )}
-                  </div>
-
-                  {/* Submission Row & Error Notifications */}
-                  <div className="pt-2 flex flex-col gap-4">
-                    {submitStatus === "error" && (
-                      <motion.div
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className="flex items-center gap-3 p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm"
-                      >
-                        <AlertCircle size={18} className="flex-shrink-0" />
-                        <span>{serverMessage}</span>
-                      </motion.div>
-                    )}
-
-                    <PrimaryButton
-                      type="submit"
-                      disabled={isSubmitting}
-                      className="w-full sm:w-auto sm:self-end"
-                    >
-                      {isSubmitting ? (
-                        <>
-                          <Loader2 size={16} className="animate-spin" />
-                          <span>Processing Inquiry...</span>
-                        </>
-                      ) : (
-                        <>
-                          <span>Transmit Message</span>
-                          <Send size={14} />
-                        </>
-                      )}
-                    </PrimaryButton>
-                  </div>
-                </motion.form>
-              ) : (
-                /* Success Screen Materialized Context Banner */
-                <motion.div
-                  key="success-screen"
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ type: "spring", duration: 0.6 }}
-                  className="flex flex-col items-center text-center py-8 space-y-4"
-                >
-                  <div className="p-4 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 shadow-[0_0_30px_rgba(16,185,129,0.15)]">
-                    <CheckCircle2 size={40} />
-                  </div>
-                  <h3 className="text-2xl font-bold text-white tracking-tight">Transmission Complete</h3>
-                  <p className="text-gray-400 text-sm max-w-md leading-relaxed">
-                    {serverMessage || "Your project parameters have successfully integrated into our network stream. Our core engineering branch will review the brief and contact you within 24 business hours."}
-                  </p>
-                  <button
-                    type="button"
-                    onClick={() => setSubmitStatus("idle")}
-                    className="text-xs text-purple-400 font-semibold uppercase tracking-wider hover:text-purple-300 pt-4 underline underline-offset-4 transition-colors"
-                  >
-                    Send another inquiry
-                  </button>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </GlowCard>
+          <motion.p
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="text-gray-500 text-lg md:text-2xl max-w-4xl mx-auto mt-8 leading-relaxed"
+          >
+            Have a disruptive product idea or enterprise system framework?
+            Reach out and our core development team will chart your architectural pipeline.
+          </motion.p>
         </div>
-      </Container>
+
+        {/* Form */}
+        <motion.form
+          onSubmit={handleSubmit}
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+          className="max-w-5xl mx-auto bg-white/[0.03] border border-white/10 rounded-3xl p-8 md:p-16 backdrop-blur-xl"
+        >
+
+          {/* Row 1 */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+
+            <div>
+              <label className="block text-gray-400 text-sm font-bold uppercase tracking-[0.2em] mb-3">
+                Your Name
+              </label>
+
+              <input
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                type="text"
+                placeholder="John Doe"
+                className="w-full h-16 rounded-2xl bg-white/[0.03] border border-white/10 px-6 text-white placeholder:text-gray-600 outline-none focus:border-purple-500/60 transition"
+              />
+            </div>
+
+            <div>
+              <label className="block text-gray-400 text-sm font-bold uppercase tracking-[0.2em] mb-3">
+                Email Address
+              </label>
+
+              <input
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                type="email"
+                placeholder="john@example.com"
+                className="w-full h-16 rounded-2xl bg-white/[0.03] border border-white/10 px-6 text-white placeholder:text-gray-600 outline-none focus:border-purple-500/60 transition"
+              />
+            </div>
+          </div>
+
+          {/* Row 2 */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+
+            <div>
+              <label className="block text-gray-400 text-sm font-bold uppercase tracking-[0.2em] mb-3">
+                Company Name
+              </label>
+
+              <input
+                value={company}
+                onChange={(e) => setCompany(e.target.value)}
+                type="text"
+                placeholder="Your Company"
+                className="w-full h-16 rounded-2xl bg-white/[0.03] border border-white/10 px-6 text-white placeholder:text-gray-600 outline-none focus:border-purple-500/60 transition"
+              />
+            </div>
+
+            <div>
+              <label className="block text-gray-400 text-sm font-bold uppercase tracking-[0.2em] mb-3">
+                Project Type
+              </label>
+
+              <select
+                value={projectType}
+                onChange={(e) => setProjectType(e.target.value)}
+                className="w-full h-16 rounded-2xl bg-[#0b1020] border border-white/10 px-6 text-white outline-none focus:border-purple-500/60 transition"
+              >
+                <option value="">Select Project Type</option>
+
+                {projectTypes.map((type) => (
+                  <option key={type} value={type}>
+                    {type}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          {/* Row 3 */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+
+            <div>
+              <label className="block text-gray-400 text-sm font-bold uppercase tracking-[0.2em] mb-3">
+                Expected Timeline
+              </label>
+
+              <select
+                value={timeline}
+                onChange={(e) => setTimeline(e.target.value)}
+                className="w-full h-16 rounded-2xl bg-[#0b1020] border border-white/10 px-6 text-white outline-none focus:border-purple-500/60 transition"
+              >
+                <option value="">Select Timeline</option>
+
+                {timelines.map((item) => (
+                  <option key={item} value={item}>
+                    {item}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-gray-400 text-sm font-bold uppercase tracking-[0.2em] mb-3">
+                Budget Range
+              </label>
+
+              <select
+                value={budget}
+                onChange={(e) => setBudget(e.target.value)}
+                className="w-full h-16 rounded-2xl bg-[#0b1020] border border-white/10 px-6 text-white outline-none focus:border-purple-500/60 transition"
+              >
+                <option value="">Select Budget</option>
+
+                {budgets.map((item) => (
+                  <option key={item} value={item}>
+                    {item}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          {/* Message */}
+          <div className="mb-10">
+            <label className="block text-gray-400 text-sm font-bold uppercase tracking-[0.2em] mb-3">
+              Project Brief / Message
+            </label>
+
+            <textarea
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              placeholder="Tell us about your project..."
+              rows={7}
+              className="w-full rounded-2xl bg-white/[0.03] border border-white/10 p-6 text-white placeholder:text-gray-600 outline-none focus:border-purple-500/60 resize-none transition"
+            />
+          </div>
+
+          {/* Success */}
+          {success && (
+            <div className="mb-6 flex items-center gap-3 text-green-400 text-sm">
+              <CheckCircle2 size={18} />
+              {success}
+            </div>
+          )}
+
+          {/* Error */}
+          {error && (
+            <div className="mb-6 flex items-center gap-3 text-red-400 text-sm">
+              <AlertCircle size={18} />
+              {error}
+            </div>
+          )}
+
+          {/* Buttons */}
+          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+
+            {/* WhatsApp */}
+            <a
+              href="https://wa.me/923099997547?text=Hello%20Muhammad%20Yasir%2C%20I%20want%20to%20discuss%20a%20project."
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full md:w-auto"
+            >
+              <button
+                type="button"
+                className="w-full md:w-auto px-8 py-5 rounded-2xl bg-green-500 hover:bg-green-600 text-white font-bold transition-all duration-300 shadow-[0_0_30px_rgba(34,197,94,0.35)] hover:scale-105 active:scale-95 flex items-center justify-center gap-3"
+              >
+                <FaWhatsapp size={24} />
+                Contact on WhatsApp
+              </button>
+            </a>
+
+            {/* Submit */}
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full md:w-auto px-10 py-5 rounded-2xl bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold flex items-center justify-center gap-3 shadow-[0_0_35px_rgba(139,92,246,0.4)] hover:scale-105 active:scale-95 transition disabled:opacity-60 disabled:cursor-not-allowed"
+            >
+              {loading ? "Transmitting..." : "Transmit Message"}
+              <Send size={18} />
+            </button>
+
+          </div>
+        </motion.form>
+      </div>
     </section>
-    </>
   );
 }
