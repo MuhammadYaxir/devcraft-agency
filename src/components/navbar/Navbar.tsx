@@ -27,7 +27,7 @@ const Navbar = () => {
             <Link href="/" className="group flex items-center gap-2">
               <div className="w-8 h-8 bg-gradient-to-br from-[#8B5CF6] to-[#D8B4FE] rounded-lg rotate-12 group-hover:rotate-0 transition-transform duration-300" />
               <span className="text-2xl font-bold text-white tracking-tight">
-                Dev<span className="text-[#8B5CF6]">Craft</span>
+                YY<span className="text-[#8B5CF6]">Devs</span>
               </span>
             </Link>
           </div>

@@ -27,8 +27,8 @@ export default function LoaderScreen({ onComplete }: LoaderScreenProps) {
   }, [onComplete]);
 
   // Separate character arrays for animation tracking
-  const logoTextArray = ["D", "e", "v"];
-  const gradientTextArray = ["C", "r", "a", "f", "t"];
+  const logoTextArray = ["Y", "Y"];
+  const gradientTextArray = ["D", "e", "v", "s"];
 
   const containerVariants = {
     hidden: { opacity: 0 },

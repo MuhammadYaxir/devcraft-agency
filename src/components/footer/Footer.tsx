@@ -49,7 +49,7 @@ export default function Footer() {
             className="space-y-6"
           >
             <h2 className="text-2xl font-bold text-white tracking-tighter">
-              Dev<span className="text-purple-500">Craft</span>
+              YY<span className="text-purple-500">Devs</span>
             </h2>
             <p className="text-gray-500 text-sm leading-relaxed max-w-xs">
               Crafting high-performance digital experiences for forward-thinking brands. 
