@@ -38,17 +38,24 @@ function calculateReadingTime(text: string): number {
 }
 
 // --- Live Server Fetch Operation ---
-async function getBlogArticle(slug: string): AppResponse<BlogData | null> {
+async function getBlogArticle(slug: string): Promise<BlogData | null> {
   try {
-    // Calling the dedicated slug lookup route wrapper
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000'}/api/blogs/slug/${slug}`, {
-      method: "GET",
-      next: { revalidate: 60 }, // Cache and revalidate data clusters every 60 seconds
-    });
+    const baseUrl =
+      process.env.NEXT_PUBLIC_SITE_URL ||
+      "https://devcraft-agency-kappa.vercel.app";
+
+    const response = await fetch(
+      `${baseUrl}/api/blogs/slug/${slug}`,
+      {
+        method: "GET",
+        next: { revalidate: 60 },
+      }
+    );
 
     if (!response.ok) return null;
-    
+
     const json = await response.json();
+
     return json.success ? json.data : null;
   } catch (error) {
     console.error("Critical markdown ingestion failure:", error);
