@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -103,6 +104,7 @@ export default function ProjectManagementPage() {
     const evaluatesStatus = statusFilter === "all" || project.status === statusFilter;
     return evaluatesSearch && evaluatesStatus;
   });
+  const router = useRouter();
 
   return (
     <div className="min-h-screen bg-[#050816] text-white p-6 sm:p-10 relative overflow-hidden font-sans select-none">
@@ -243,7 +245,8 @@ export default function ProjectManagementPage() {
                   </span>
 
                   <div className="flex items-center gap-1.5 relative z-20">
-                    <button className="p-2 rounded-lg bg-white/[0.02] hover:bg-white/5 border border-white/5 text-gray-400 hover:text-white transition-colors outline-none">
+                    <button  onClick={() =>
+      router.push(`/admin/projects/edit/${project._id}`)} className="p-2 rounded-lg bg-white/[0.02] hover:bg-white/5 border border-white/5 text-gray-400 hover:text-white transition-colors outline-none">
                       <Edit size={13} />
                     </button>
                     <button

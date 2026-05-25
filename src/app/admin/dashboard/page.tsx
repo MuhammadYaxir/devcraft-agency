@@ -26,20 +26,12 @@ const sidebarVariants: Variants = {
   open: {
     x: 0,
     opacity: 1,
-    transition: {
-      type: "spring",
-      stiffness: 300,
-      damping: 30,
-    },
+    transition: { type: "spring", stiffness: 300, damping: 30 },
   },
   closed: {
     x: "-100%",
     opacity: 0,
-    transition: {
-      type: "spring",
-      stiffness: 300,
-      damping: 30,
-    },
+    transition: { type: "spring", stiffness: 300, damping: 30 },
   },
 };
 
@@ -56,26 +48,76 @@ const itemVariants: Variants = {
   show: {
     y: 0,
     opacity: 1,
-    transition: {
-      ease: "easeOut",
-      duration: 0.6,
-    },
+    transition: { ease: "easeOut", duration: 0.6 },
   },
+};
+
+type AdminUser = {
+  email: string;
+  role: string;
+};
+
+type DashboardStats = {
+  totalBlogs: number;
+  totalProjects: number;
+  publishedBlogs: number;
+  draftBlogs: number;
+};
+
+type ContentItem = {
+  status?: string;
 };
 
 export default function AdminDashboardPage() {
   const router = useRouter();
 
   const [isAuthorized, setIsAuthorized] = useState<boolean | null>(null);
-  const [adminUser, setAdminUser] = useState<{
-    email: string;
-    role: string;
-  } | null>(null);
+  const [adminUser, setAdminUser] = useState<AdminUser | null>(null);
   const [activeTab, setActiveTab] = useState<string>("Dashboard");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
   const [isLoggingOut, setIsLoggingOut] = useState<boolean>(false);
 
+  const [dashboardStats, setDashboardStats] = useState<DashboardStats>({
+    totalBlogs: 0,
+    totalProjects: 0,
+    publishedBlogs: 0,
+    draftBlogs: 0,
+  });
+
   useEffect(() => {
+    const fetchDashboardStats = async () => {
+      try {
+        const [blogsResponse, projectsResponse] = await Promise.all([
+          fetch("/api/blogs", { method: "GET" }),
+          fetch("/api/projects", { method: "GET" }),
+        ]);
+
+        const blogsData = await blogsResponse.json();
+        const projectsData = await projectsResponse.json();
+
+        const blogs: ContentItem[] = Array.isArray(blogsData?.data)
+          ? blogsData.data
+          : [];
+
+        const projects: ContentItem[] = Array.isArray(projectsData?.data)
+          ? projectsData.data
+          : [];
+
+        setDashboardStats({
+          totalBlogs: blogs.length,
+          totalProjects: projects.length,
+          publishedBlogs: blogs.filter(
+            (blog) => blog.status?.toLowerCase() === "published"
+          ).length,
+          draftBlogs: blogs.filter(
+            (blog) => blog.status?.toLowerCase() === "draft"
+          ).length,
+        });
+      } catch (error) {
+        console.error("Failed to fetch dashboard stats:", error);
+      }
+    };
+
     const verifySessionIdentity = async () => {
       try {
         const response = await fetch("/api/admin/me", { method: "GET" });
@@ -87,6 +129,7 @@ export default function AdminDashboardPage() {
 
         setAdminUser(data.user);
         setIsAuthorized(true);
+        await fetchDashboardStats();
       } catch {
         setIsAuthorized(false);
         router.push("/admin/login");
@@ -135,6 +178,33 @@ export default function AdminDashboardPage() {
     { name: "Blogs", icon: FileText },
     { name: "Projects", icon: Briefcase },
     { name: "Settings", icon: Settings },
+  ];
+
+  const statCards = [
+    {
+      title: "Total Blogs",
+      value: dashboardStats.totalBlogs.toString(),
+      desc: "All blog articles in database",
+      icon: BookOpen,
+    },
+    {
+      title: "Total Projects",
+      value: dashboardStats.totalProjects.toString(),
+      desc: "Projects stored in portfolio",
+      icon: FolderGit2,
+    },
+    {
+      title: "Published Posts",
+      value: dashboardStats.publishedBlogs.toString(),
+      desc: "Live published blog posts",
+      icon: FileText,
+    },
+    {
+      title: "Draft Posts",
+      value: dashboardStats.draftBlogs.toString(),
+      desc: "Pending unpublished drafts",
+      icon: Edit3,
+    },
   ];
 
   return (
@@ -200,7 +270,6 @@ export default function AdminDashboardPage() {
           ) : (
             <LogOut size={18} />
           )}
-
           <span>Disconnect Panel</span>
         </button>
       </aside>
@@ -271,7 +340,6 @@ export default function AdminDashboardPage() {
                 ) : (
                   <LogOut size={18} />
                 )}
-
                 <span>Disconnect Panel</span>
               </button>
             </motion.aside>
@@ -349,37 +417,12 @@ export default function AdminDashboardPage() {
             animate="show"
             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5"
           >
-            {[
-              {
-                title: "Total Blogs",
-                value: "32",
-                desc: "+4 added this month",
-                icon: BookOpen,
-              },
-              {
-                title: "Total Projects",
-                value: "18",
-                desc: "6 active production pipelines",
-                icon: FolderGit2,
-              },
-              {
-                title: "Published Posts",
-                value: "27",
-                desc: "Live on core static client domains",
-                icon: FileText,
-              },
-              {
-                title: "Draft Posts",
-                value: "5",
-                desc: "Awaiting administrative review hooks",
-                icon: Edit3,
-              },
-            ].map((card, i) => {
+            {statCards.map((card, i) => {
               const Icon = card.icon;
 
               return (
                 <motion.div
-                  key={i}
+                  key={card.title}
                   variants={itemVariants}
                   whileHover={{
                     y: -4,

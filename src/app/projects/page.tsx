@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import Navbar from "@/components/navbar/Navbar";
 import { motion, type Variants, AnimatePresence } from "framer-motion";
 import {
   Search,
@@ -101,6 +102,8 @@ export default function PublicProjectsListingPage() {
   });
 
   return (
+    <>
+    <Navbar />
     <div className="min-h-screen bg-[#050816] text-white selection:bg-purple-500/30 selection:text-purple-200 font-sans relative overflow-x-hidden pt-28 pb-20">
       
       {/* Background Environmental Cinematic Lights */}
@@ -252,6 +255,6 @@ export default function PublicProjectsListingPage() {
           </motion.div>
         )}
       </div>
-    </div>
+    </div></>
   );
 }
