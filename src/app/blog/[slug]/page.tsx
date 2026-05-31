@@ -1,18 +1,22 @@
 import React from "react";
 import Link from "next/link";
-import Image from "next/image";
+import Navbar from "@/components/navbar/Navbar";
 import { notFound } from "next/navigation";
-import { 
-  ArrowLeft, 
-  Calendar, 
-  Clock, 
-  Layers, 
-  Sparkles, 
-  BookOpen, 
-  Share2 
+import {
+  ArrowUpRight,
+  Calendar,
+  CheckCircle2,
+  Circle,
+  Clock,
+  DollarSign,
+  Link as LinkIcon,
+  Menu,
+  Send,
+  Target,
+  Timer,
+  TrendingUp,
 } from "lucide-react";
 
-// --- Next.js 15/16 Asynchronous Routing Typings ---
 interface PageProps {
   params: Promise<{ slug: string }>;
 }
@@ -30,189 +34,353 @@ interface BlogData {
   metaDescription?: string;
 }
 
-// --- Reading Time Helper Function ---
 function calculateReadingTime(text: string): number {
-  const wordsPerMinute = 225; 
-  const wordCount = text.trim().split(/\s+/).length;
+  const wordsPerMinute = 225;
+  const wordCount = text.trim().split(/\s+/).filter(Boolean).length;
   return Math.max(1, Math.ceil(wordCount / wordsPerMinute));
 }
 
-// --- Live Server Fetch Operation ---
+function formatDate(date: string) {
+  return new Date(date).toLocaleDateString("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  });
+}
+
+function getImageUrl(image?: string) {
+  if (!image || image.trim() === "") {
+    return "https://images.unsplash.com/photo-1677442136019-21780ecad995?q=80&w=1600";
+  }
+
+  return image;
+}
+
 async function getBlogArticle(slug: string): Promise<BlogData | null> {
   try {
     const baseUrl =
       process.env.NEXT_PUBLIC_SITE_URL ||
       "https://devcraft-agency-kappa.vercel.app";
 
-    const response = await fetch(
-      `${baseUrl}/api/blogs/slug/${slug}`,
-      {
-        method: "GET",
-        next: { revalidate: 60 },
-      }
-    );
+    const response = await fetch(`${baseUrl}/api/blogs/slug/${slug}`, {
+      method: "GET",
+      next: { revalidate: 60 },
+    });
 
     if (!response.ok) return null;
 
     const json = await response.json();
-
     return json.success ? json.data : null;
   } catch (error) {
-    console.error("Critical markdown ingestion failure:", error);
+    console.error("Blog fetch failed:", error);
     return null;
   }
 }
 
-// --- Dynamic Metadata Generation (SEO Optima Engine) ---
 export async function generateMetadata({ params }: PageProps) {
   const { slug } = await params;
   const blog = await getBlogArticle(slug);
 
   if (!blog) {
     return {
-      title: "Article Not Found | DevCraft Agency",
+      title: "Article Not Found | CraftoDev",
     };
   }
 
   return {
-    title: `${blog.metaTitle || blog.title} | DevCraft Insights`,
+    title: `${blog.metaTitle || blog.title} | CraftoDev Insights`,
     description: blog.metaDescription || blog.excerpt,
     openGraph: {
       title: blog.title,
       description: blog.excerpt,
-      images: [{ url: blog.featuredImage || "" }],
+      images: [{ url: getImageUrl(blog.featuredImage) }],
     },
   };
 }
 
-// --- Primary Page Node Implementation ---
-type AppResponse<T> = Promise<T>;
+function renderContent(content: string) {
+  return content.split("\n").map((line, index) => {
+    const value = line.trim();
+
+    if (!value) return null;
+
+    if (value.startsWith("## ")) {
+      return (
+        <h2
+          key={index}
+          className="mt-10 border-t border-gray-200 pt-8 text-2xl font-black tracking-tight text-black"
+        >
+          {value.replace("## ", "")}
+        </h2>
+      );
+    }
+
+    if (value.startsWith("### ")) {
+      return (
+        <h3 key={index} className="mt-8 text-xl font-black tracking-tight text-black">
+          {value.replace("### ", "")}
+        </h3>
+      );
+    }
+
+    if (value.startsWith("- ")) {
+      return (
+        <div key={index} className="mt-3 flex items-start gap-3 text-gray-700">
+          <CheckCircle2 className="mt-1 h-4 w-4 shrink-0 text-blue-600" />
+          <p className="text-[15px] leading-7">{value.replace("- ", "")}</p>
+        </div>
+      );
+    }
+
+    return (
+      <p key={index} className="mt-4 text-[15px] leading-8 text-gray-700">
+        {value}
+      </p>
+    );
+  });
+}
 
 export default async function BlogDetailPage({ params }: PageProps) {
-  // Await the asynchronous params mapping object per Next.js 15/16 layout specifications
   const { slug } = await params;
   const blog = await getBlogArticle(slug);
 
-  // Fallback instantly to system 404 handler frames if resource doesn't match datastore maps
-  if (!blog) {
-    notFound();
-  }
+  if (!blog) notFound();
 
   const durationMinutes = calculateReadingTime(blog.content);
 
+  const tocItems = [
+    "The Growing Need For Automation",
+    "Where Businesses Lose Time",
+    "How AI Automation Helps",
+    "Real Results, Real Impact",
+    "Final Thoughts",
+  ];
+
+  const relatedArticles = [
+    "8 Ways AI Can Transform Your Business Operations",
+    "SaaS Automation: The Future of Scalable Growth",
+    "Workflow Automation Best Practices",
+    "AI vs Traditional Automation",
+  ];
+
   return (
-    <main className="min-h-screen bg-[#050816] text-white pt-32 pb-24 px-6 sm:px-8 lg:px-10 relative overflow-x-hidden font-sans selection:bg-purple-500/30 selection:text-purple-200">
+    <>
+    <Navbar/>
+    <main className="min-h-screen bg-[#f7f8fb] text-black pt-16">
       
-      {/* Environmental Blur Accents */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[400px] bg-purple-600/[0.02] blur-[160px] rounded-full pointer-events-none z-0" />
-      <div className="absolute top-[30%] right-[-10%] w-[500px] h-[500px] bg-indigo-600/[0.015] blur-[140px] rounded-full pointer-events-none z-0" />
 
-      <div className="max-w-4xl mx-auto relative z-10 space-y-10">
-        
-        {/* Navigation Action Control Bar */}
-        <div className="flex items-center justify-between">
-          <Link href="/blog">
-            <button className="inline-flex items-center gap-2 text-xs font-bold text-gray-400 hover:text-purple-400 tracking-wide transition-colors group outline-none">
-              <ArrowLeft size={14} className="group-hover:-translate-x-0.5 transition-transform" />
-              <span>Back To Matrix</span>
-            </button>
-          </Link>
-
-          <button className="p-2.5 rounded-xl bg-white/[0.01] hover:bg-white/[0.03] border border-white/5 hover:border-purple-500/20 text-gray-400 hover:text-purple-400 transition-all outline-none">
-            <Share2 size={14} />
-          </button>
-        </div>
-
-        {/* ========================================================= */}
-        {/* ARTICLE HERO METRICS BAR                                  */}
-        {/* ========================================================= */}
-        <header className="space-y-6">
-          <div className="flex flex-wrap items-center gap-4 text-[11px] font-bold uppercase tracking-wider text-gray-500">
-            <span className="px-3 py-1 rounded-md bg-purple-500/10 border border-purple-500/20 text-purple-400 flex items-center gap-1.5">
-              <Layers size={11} /> {blog.category}
-            </span>
-            <span className="flex items-center gap-1 font-medium">
-              <Calendar size={12} /> {new Date(blog.createdAt).toLocaleDateString(undefined, { dateStyle: 'long' })}
-            </span>
-            <span className="w-1 h-1 bg-white/10 rounded-full" />
-            <span className="flex items-center gap-1 font-medium text-indigo-300">
-              <Clock size={12} /> {durationMinutes} min read
-            </span>
+      <section className="mx-auto grid max-w-[1320px] grid-cols-1 gap-10 px-6 pb-16 pt-10 lg:grid-cols-[1fr_440px] lg:items-center">
+        <div>
+          <div className="mb-10 flex flex-wrap items-center gap-2 text-xs text-gray-500">
+            <Link href="/">Home</Link>
+            <span>/</span>
+            <Link href="/blog" className="text-blue-600">
+              Blog
+            </Link>
+            <span>/</span>
+            <span>{blog.title}</span>
           </div>
 
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight leading-[1.1] bg-gradient-to-r from-white via-gray-200 to-gray-400 bg-clip-text text-transparent">
+          <div className="mb-6 flex items-center gap-2 text-xs font-black uppercase tracking-wide">
+            <span className="h-2 w-2 rounded-full bg-blue-600" />
+            {blog.category || "AI & Automation"}
+          </div>
+
+          <h1 className="max-w-4xl text-5xl font-black leading-[1.05] tracking-[-0.05em] md:text-7xl">
             {blog.title}
           </h1>
 
-          <p className="text-sm sm:text-base text-gray-400 leading-relaxed font-medium italic border-l-2 border-purple-500/30 pl-4 bg-white/[0.003] py-2 rounded-r-xl">
+          <p className="mt-7 max-w-2xl text-lg leading-8 text-gray-600">
             {blog.excerpt}
           </p>
-        </header>
 
-        {/* ========================================================= */}
-        {/* FEATURED ASSET THUMBNAIL DISPLAY LAYER                     */}
-        {/* ========================================================= */}
-        <div className="aspect-[16/9] w-full rounded-2xl overflow-hidden relative border border-white/[0.05] shadow-[0_25px_60px_-15px_rgba(0,0,0,0.9)] bg-white/[0.005]">
-          <Image
-            src={blog.featuredImage || "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1600"}
-            alt={blog.title}
-            fill
-            priority
-            sizes="(max-w-1200px) 100vw, 1200px"
-            className="object-cover brightness-[0.9]"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#050816] via-transparent to-transparent opacity-40" />
+          <div className="mt-10 flex flex-wrap items-center gap-8 text-sm text-gray-600">
+            <div className="flex items-center gap-3">
+              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-black text-xs font-black text-white">
+                CD
+              </div>
+              <div>
+                <p className="font-black text-black">CraftoDev Team</p>
+                <p className="text-xs">Digital Strategy</p>
+              </div>
+            </div>
+
+            <span className="flex items-center gap-2">
+              <Calendar className="h-4 w-4" />
+              {formatDate(blog.createdAt)}
+            </span>
+
+            <span className="flex items-center gap-2">
+              <Clock className="h-4 w-4" />
+              {durationMinutes} min read
+            </span>
+
+            <button className="flex h-9 w-9 items-center justify-center rounded-full bg-black text-white">
+              <LinkIcon className="h-4 w-4" />
+            </button>
+          </div>
         </div>
 
-        {/* ========================================================= */}
-        {/* PREMIUM CONTENT DISPLAY CHASSIS                          */}
-        {/* ========================================================= */}
-        <article className="bg-white/[0.01] border border-white/[0.04] rounded-3xl p-6 sm:p-10 backdrop-blur-3xl shadow-[0_30px_70px_rgba(0,0,0,0.6)]">
-          
-          {/* Render content data layer safely. 
-              Tip: Swap this node out for standard markdown parsers like `react-markdown` 
-              or `compiled-mdx` to parse structural code fragments seamlessly.
-          */}
-          <div className="prose prose-invert max-w-none prose-sm sm:prose-base
-            prose-headings:font-extrabold prose-headings:tracking-tight prose-headings:text-white
-            prose-h2:text-xl sm:prose-h2:text-2xl prose-h2:border-b prose-h2:border-white/[0.03] prose-h2:pb-2 prose-h2:mt-10 prose-h2:text-purple-300
-            prose-h3:text-lg sm:prose-h3:text-xl prose-h3:text-gray-200
-            prose-p:text-gray-400 prose-p:leading-relaxed prose-p:mb-6
-            prose-strong:text-white prose-strong:font-bold
-            prose-ul:list-disc prose-ul:pl-6 prose-ul:mb-6 prose-ul:text-gray-400
-            prose-ol:list-decimal prose-ol:pl-6 prose-ol:mb-6 prose-ol:text-gray-400
-            prose-li:mb-2
-            prose-code:bg-white/5 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-xs prose-code:text-indigo-300 prose-code:font-mono before:prose-code:content-none after:prose-code:content-none
-            prose-pre:bg-[#02040b] prose-pre:border prose-pre:border-white/5 prose-pre:p-4 prose-pre:rounded-xl prose-pre:font-mono prose-pre:text-xs prose-pre:overflow-x-auto
-            prose-blockquote:border-l-4 prose-blockquote:border-purple-500 prose-blockquote:italic prose-blockquote:bg-purple-500/[0.02] prose-blockquote:py-1 prose-blockquote:pr-4 prose-blockquote:pl-6 prose-blockquote:rounded-r-xl prose-blockquote:text-gray-300
-          ">
-            {blog.content.split('\n').map((paragraph, idx) => {
-              // Minimal fallback handling mapping native paragraph blocks elegantly if raw markdown library is missing
-              if (paragraph.startsWith('## ')) {
-                return <h2 key={idx} className="text-xl sm:text-2xl font-extrabold text-purple-300 border-b border-white/[0.03] pb-2 mt-8 mb-4">{paragraph.replace('## ', '')}</h2>;
-              }
-              if (paragraph.startsWith('### ')) {
-                return <h3 key={idx} className="text-lg sm:text-xl font-bold text-gray-200 mt-6 mb-3">{paragraph.replace('### ', '')}</h3>;
-              }
-              if (paragraph.trim() === '') return null;
-              return <p key={idx} className="text-gray-400 leading-relaxed mb-5">{paragraph}</p>;
-            })}
+        <div className="relative hidden min-h-[360px] lg:block">
+          <div className="absolute right-0 top-0 h-[320px] w-[320px] rotate-12 rounded-[44px] bg-gradient-to-br from-slate-100 via-slate-300 to-slate-950 shadow-2xl" />
+          <div className="absolute right-44 top-40 h-16 w-16 rounded-full bg-gradient-to-br from-slate-200 to-slate-950 shadow-xl" />
+          <div className="absolute bottom-10 left-20 h-7 w-7 rounded-full bg-gradient-to-br from-slate-100 to-slate-400" />
+        </div>
+      </section>
+
+      <section className="mx-auto grid max-w-[1320px] grid-cols-1 gap-8 px-6 pb-20 lg:grid-cols-[1fr_360px]">
+        <div>
+          <div className="relative mb-8 aspect-[16/7] overflow-hidden rounded-xl bg-black">
+            <img
+              src={getImageUrl(blog.featuredImage)}
+              alt={blog.title}
+              className="h-full w-full object-cover"
+            />
           </div>
 
-          {/* Article Footer Signoff Grid */}
-          <div className="mt-12 pt-6 border-t border-white/[0.03] flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-gray-500 font-medium">
-            <div className="flex items-center gap-2">
-              <div className="w-6 h-6 rounded-full bg-gradient-to-tr from-purple-600 to-indigo-600 flex items-center justify-center text-[10px] text-white font-black">DC</div>
-              <span>Written by DevCraft Matrix Architecture Engine</span>
+          <article className="rounded-xl bg-white p-6 shadow-sm md:p-10">
+            {renderContent(blog.content)}
+
+            <h2 className="mt-10 border-t border-gray-200 pt-8 text-2xl font-black">
+              Final Thoughts
+            </h2>
+
+            <p className="mt-4 text-[15px] leading-8 text-gray-700">
+              AI automation is no longer just a future idea. It is now a real
+              business advantage for companies that want to save time, reduce
+              manual work, and scale faster.
+            </p>
+
+            <div className="mt-8 grid grid-cols-2 gap-4 md:grid-cols-4">
+              {[
+                [Timer, "Save Time"],
+                [Target, "Improve Accuracy"],
+                [TrendingUp, "Grow Faster"],
+                [DollarSign, "Reduce Cost"],
+              ].map(([Icon, text]) => {
+                const IconComponent = Icon as React.ElementType;
+
+                return (
+                  <div
+                    key={text as string}
+                    className="rounded-xl border border-gray-200 bg-[#f7f8fb] p-5 text-center"
+                  >
+                    <IconComponent className="mx-auto mb-3 h-7 w-7 text-blue-600" />
+                    <p className="text-sm font-bold">{text as string}</p>
+                  </div>
+                );
+              })}
             </div>
-            
-            <div className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-white/[0.02] border border-white/5 text-[11px] text-gray-400">
-              <BookOpen size={12} />
-              <span>Reference Framework Master Record</span>
+
+            <div className="mt-10 flex flex-col items-start justify-between gap-5 rounded-xl bg-black p-6 text-white md:flex-row md:items-center">
+              <div>
+                <h3 className="text-xl font-black">
+                  Want to build something powerful?
+                </h3>
+                <p className="mt-1 text-sm text-gray-400">
+                  Let’s create a modern website or automation system for your
+                  business.
+                </p>
+              </div>
+
+              <Link
+                href="/contact"
+                className="rounded-full bg-white px-7 py-4 text-xs font-black uppercase text-black"
+              >
+                Book a Free Call
+              </Link>
+            </div>
+          </article>
+        </div>
+
+        <aside className="space-y-8">
+          <div className="rounded-xl border border-gray-200 bg-white p-8">
+            <h3 className="mb-6 text-lg font-black">About the Author</h3>
+
+            <div className="flex items-center gap-5">
+              <div className="flex h-20 w-20 items-center justify-center rounded-full bg-black text-lg font-black text-white">
+                CD
+              </div>
+
+              <div>
+                <h4 className="font-black">CraftoDev Team</h4>
+                <p className="text-sm text-gray-500">Web & AI Experts</p>
+              </div>
+            </div>
+
+            <p className="mt-5 text-sm leading-7 text-gray-600">
+              We help businesses grow with modern websites, AI automation, SaaS
+              platforms, and digital systems.
+            </p>
+          </div>
+
+          <div className="rounded-xl border border-gray-200 bg-white p-8">
+            <h3 className="mb-6 text-lg font-black">Table of Contents</h3>
+
+            <div className="space-y-5">
+              {tocItems.map((item, index) => (
+                <div
+                  key={item}
+                  className={`flex items-center gap-3 text-sm ${
+                    index === 0
+                      ? "font-bold text-blue-600"
+                      : "font-medium text-gray-600"
+                  }`}
+                >
+                  <Circle className="h-3 w-3" />
+                  {item}
+                </div>
+              ))}
             </div>
           </div>
-        </article>
-      </div>
+
+          <div className="rounded-xl border border-gray-200 bg-white p-8">
+            <h3 className="mb-6 text-lg font-black">Related Articles</h3>
+
+            <div className="space-y-5">
+              {relatedArticles.map((title) => (
+                <div key={title} className="border-b border-gray-100 pb-5 last:border-0">
+                  <h4 className="text-sm font-black leading-5">{title}</h4>
+                  <p className="mt-2 text-xs text-gray-500">5 min read</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="overflow-hidden rounded-xl bg-black p-8 text-white">
+            <div className="mb-5 flex items-center gap-2 text-[11px] font-black uppercase tracking-wider text-gray-500">
+              <span className="h-2 w-2 rounded-full bg-blue-600" />
+              Stay Updated
+            </div>
+
+            <h3 className="text-2xl font-black leading-tight">
+              Get the latest insights delivered to your inbox.
+            </h3>
+
+            <div className="mt-6 flex rounded-lg bg-white p-1">
+              <input
+                placeholder="Enter your email"
+                className="min-w-0 flex-1 px-4 text-sm text-black outline-none"
+              />
+              <button className="flex h-11 w-11 items-center justify-center rounded-md bg-black text-white">
+                <Send className="h-4 w-4" />
+              </button>
+            </div>
+
+            <p className="mt-4 text-xs text-gray-400">
+              No spam. Unsubscribe anytime.
+            </p>
+          </div>
+        </aside>
+      </section>
+
+      <footer className="bg-black text-white">
+        <div className="mx-auto flex max-w-[1320px] flex-col justify-between gap-4 px-6 py-8 text-sm text-gray-500 md:flex-row">
+          <p>© 2026 CraftoDev. All rights reserved.</p>
+          <p>Privacy Policy · Terms of Service</p>
+        </div>
+      </footer>
     </main>
+    </>
   );
 }

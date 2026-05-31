@@ -1,23 +1,24 @@
 "use client";
 
 import React, { useState } from "react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { 
-  Lock, 
-  Mail, 
-  Eye, 
-  EyeOff, 
-  Loader2, 
-  AlertCircle, 
-  ShieldCheck, 
-  ArrowRight 
+import {
+  Lock,
+  Mail,
+  Eye,
+  EyeOff,
+  Loader2,
+  AlertCircle,
+  ShieldCheck,
+  ArrowRight,
+  Sparkles,
 } from "lucide-react";
 
 export default function AdminLoginPage() {
   const router = useRouter();
 
-  // Core Form Processing States
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -25,15 +26,13 @@ export default function AdminLoginPage() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [rememberMe, setRememberMe] = useState(false);
 
-  // Form Submission Pipeline Handler
   const handleLoginSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     setErrorMessage(null);
 
-    // Basic frontend structure validation check
     if (!email.trim() || !password) {
-      setErrorMessage("Please fill in all requested terminal credentials.");
+      setErrorMessage("Please enter your admin email and password.");
       setIsLoading(false);
       return;
     }
@@ -48,66 +47,95 @@ export default function AdminLoginPage() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || "Access denied. Verification mismatch.");
+        throw new Error(
+          data.error || "Access denied. Please check your login details."
+        );
       }
 
-      // Successful routing dispatch pipeline
       router.push("/admin/dashboard");
-    } catch (err: any) {
-      setErrorMessage(err.message || "An unexpected system routing error occurred.");
+    } catch (err: unknown) {
+      const message =
+        err instanceof Error
+          ? err.message
+          : "Something went wrong. Please try again.";
+
+      setErrorMessage(message);
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-[#050816] text-white flex items-center justify-center p-4 relative overflow-hidden font-sans select-none">
-      
-      {/* 1. Cinematic Background Glowing Elements */}
-      <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-purple-600/[0.04] blur-[130px] rounded-full pointer-events-none" />
-      <div className="absolute bottom-[-10%] right-[-10%] w-[600px] h-[600px] bg-indigo-600/[0.03] blur-[150px] rounded-full pointer-events-none" />
-      
-      {/* Subtle matrix-like grid accent line overlays */}
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff03_1px,transparent_1px),linear-gradient(to_bottom,#ffffff03_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)] pointer-events-none" />
+    <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[#F8FBFF] px-4 py-6 text-slate-900">
+      {/* Background */}
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(59,130,246,0.055)_1px,transparent_1px),linear-gradient(to_bottom,rgba(59,130,246,0.055)_1px,transparent_1px)] bg-[size:52px_52px]" />
+      <div className="absolute -left-32 -top-32 h-[380px] w-[380px] rounded-full bg-blue-500/10 blur-[110px]" />
+      <div className="absolute -bottom-32 -right-32 h-[420px] w-[420px] rounded-full bg-cyan-400/10 blur-[120px]" />
 
-      {/* 2. Concentrated Main Wrapper Card Container */}
+      {/* Floating Badges */}
       <motion.div
-        initial={{ opacity: 0, y: 30, scale: 0.98 }}
-        animate={{ opacity: 1, y: 0, scale: 1 }}
-        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-        className="w-full max-w-md z-10"
+        animate={{ y: [0, -10, 0] }}
+        transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute left-[8%] top-[27%] hidden rounded-2xl border border-blue-100 bg-white/80 px-4 py-3 text-xs font-bold text-blue-600 shadow-[0_18px_55px_rgba(37,99,235,0.10)] backdrop-blur-xl lg:flex"
       >
-        {/* Top Floating Branding Accent */}
-        <div className="flex flex-col items-center mb-8 text-center space-y-2">
-          <motion.div 
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="w-12 h-12 rounded-2xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-400 mb-2 shadow-[0_0_20px_rgba(147,51,234,0.15)]"
-          >
-            <ShieldCheck size={24} />
-          </motion.div>
-          <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-purple-400/80">
-            Secure Gateway Protocols
+        Secure Admin Access
+      </motion.div>
+
+      <motion.div
+        animate={{ y: [0, 10, 0] }}
+        transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute bottom-[18%] right-[8%] hidden items-center gap-2 rounded-2xl border border-blue-100 bg-white/80 px-4 py-3 text-xs font-bold text-slate-600 shadow-[0_18px_55px_rgba(37,99,235,0.10)] backdrop-blur-xl lg:flex"
+      >
+        <Sparkles size={14} className="text-blue-600" />
+        CraftODev Panel
+      </motion.div>
+
+      <motion.div
+        initial={{ opacity: 0, y: 22, scale: 0.98 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        transition={{ duration: 0.65, ease: "easeOut" }}
+        className="relative z-10 w-full max-w-[430px]"
+      >
+        {/* Branding */}
+        <div className="mb-5 flex flex-col items-center text-center">
+          <Image
+            src="/craftodev-logo.png"
+            alt="CraftODev Logo"
+            width={210}
+            height={60}
+            priority
+            className="mb-4 h-auto w-auto max-w-[190px]"
+          />
+
+          <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-2xl border border-blue-100 bg-white text-blue-600 shadow-[0_14px_45px_rgba(37,99,235,0.12)]">
+            <ShieldCheck size={22} />
+          </div>
+
+          <span className="text-[10px] font-black uppercase tracking-[0.32em] text-blue-600">
+            Secure Admin Gateway
           </span>
-          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
-            DevCraft <span className="bg-gradient-to-r from-purple-400 via-purple-500 to-indigo-400 bg-clip-text text-transparent">HQ Control</span>
+
+          <h1 className="mt-2 text-2xl font-black tracking-tight text-slate-950 sm:text-3xl">
+            Welcome Back
           </h1>
+
+          <p className="mt-1 text-sm text-slate-500">
+            Sign in to manage your CraftODev website content.
+          </p>
         </div>
 
-        {/* Premium Dark Glassmorphism Container Chassis */}
-        <div className="bg-white/[0.01] border border-white/[0.05] rounded-2xl p-6 sm:p-8 backdrop-blur-xl shadow-[0_25px_50px_-12px_rgba(0,0,0,0.5)] relative overflow-hidden group">
-          
-          {/* Subtle perimeter glow vector animation */}
-          <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-purple-500/30 to-transparent transform -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out" />
+        {/* Login Card */}
+        <div className="relative overflow-hidden rounded-[1.7rem] border border-blue-100 bg-white/90 p-5 shadow-[0_22px_75px_rgba(37,99,235,0.12)] backdrop-blur-xl sm:p-6">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(37,99,235,0.10),transparent_35%)]" />
+          <div className="absolute left-0 top-0 h-[2px] w-full bg-gradient-to-r from-transparent via-blue-500/60 to-transparent" />
 
-          {/* Animated Error Notifications Segment Block */}
           <AnimatePresence mode="wait">
             {errorMessage && (
               <motion.div
-                initial={{ opacity: 0, height: 0, y: -10 }}
+                initial={{ opacity: 0, height: 0, y: -8 }}
                 animate={{ opacity: 1, height: "auto", y: 0 }}
-                exit={{ opacity: 0, height: 0, y: -10 }}
-                className="mb-6 flex items-start gap-3 bg-red-500/10 border border-red-500/20 rounded-xl p-3.5 text-red-400 text-sm overflow-hidden"
+                exit={{ opacity: 0, height: 0, y: -8 }}
+                className="relative z-10 mb-4 flex items-start gap-3 overflow-hidden rounded-2xl border border-red-100 bg-red-50 p-3 text-sm text-red-500"
               >
                 <AlertCircle size={16} className="mt-0.5 flex-shrink-0" />
                 <p className="font-medium leading-relaxed">{errorMessage}</p>
@@ -115,41 +143,39 @@ export default function AdminLoginPage() {
             )}
           </AnimatePresence>
 
-          {/* Main Action Submit Node Block Form */}
-          <form onSubmit={handleLoginSubmit} className="space-y-5">
-            
-            {/* Input Element 1: Email Input Container */}
-            <div className="space-y-2">
-              <label className="text-xs font-semibold uppercase tracking-wider text-gray-400">
-                Administrative Identifier
+          <form onSubmit={handleLoginSubmit} className="relative z-10 space-y-4">
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold uppercase tracking-wider text-slate-500">
+                Admin Email
               </label>
-              <div className="relative group/input">
-                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-500 group-focus-within/input:text-purple-400 transition-colors">
+
+              <div className="group/input relative">
+                <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400 transition-colors group-focus-within/input:text-blue-600">
                   <Mail size={16} />
                 </div>
+
                 <input
                   type="email"
                   required
                   disabled={isLoading}
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="name@devcraft.agency"
-                  className="w-full bg-[#080b1e]/60 border border-white/5 rounded-xl py-3 pl-11 pr-4 text-sm text-white placeholder-gray-600 outline-none focus:border-purple-500/40 focus:ring-1 focus:ring-purple-500/20 transition-all duration-300 shadow-[inset_0_1px_2px_rgba(0,0,0,0.2)] disabled:opacity-50 disabled:cursor-not-allowed"
+                  placeholder="admin@craftodev.com"
+                  className="w-full rounded-2xl border border-blue-100 bg-blue-50/50 py-3 pl-11 pr-4 text-sm font-medium text-slate-900 outline-none transition-all placeholder:text-slate-400 focus:border-blue-300 focus:bg-white focus:ring-4 focus:ring-blue-500/10 disabled:cursor-not-allowed disabled:opacity-50"
                 />
               </div>
             </div>
 
-            {/* Input Element 2: Password Input Container */}
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <label className="text-xs font-semibold uppercase tracking-wider text-gray-400">
-                  Verification Passcode
-                </label>
-              </div>
-              <div className="relative group/input">
-                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-500 group-focus-within/input:text-purple-400 transition-colors">
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold uppercase tracking-wider text-slate-500">
+                Password
+              </label>
+
+              <div className="group/input relative">
+                <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400 transition-colors group-focus-within/input:text-blue-600">
                   <Lock size={16} />
                 </div>
+
                 <input
                   type={showPassword ? "text" : "password"}
                   required
@@ -157,23 +183,23 @@ export default function AdminLoginPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••••••"
-                  className="w-full bg-[#080b1e]/60 border border-white/5 rounded-xl py-3 pl-11 pr-12 text-sm text-white placeholder-gray-600 outline-none focus:border-purple-500/40 focus:ring-1 focus:ring-purple-500/20 transition-all duration-300 shadow-[inset_0_1px_2px_rgba(0,0,0,0.2)] disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full rounded-2xl border border-blue-100 bg-blue-50/50 py-3 pl-11 pr-12 text-sm font-medium text-slate-900 outline-none transition-all placeholder:text-slate-400 focus:border-blue-300 focus:bg-white focus:ring-4 focus:ring-blue-500/10 disabled:cursor-not-allowed disabled:opacity-50"
                 />
+
                 <button
                   type="button"
                   tabIndex={-1}
                   disabled={isLoading}
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-gray-500 hover:text-purple-400 transition-colors outline-none"
+                  className="absolute inset-y-0 right-0 flex items-center pr-3.5 text-slate-400 outline-none transition-colors hover:text-blue-600 disabled:opacity-50"
                 >
                   {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                 </button>
               </div>
             </div>
 
-            {/* Remember Me Option Control Toggles */}
-            <div className="flex items-center justify-between pt-1 pb-2">
-              <label className="flex items-center gap-2.5 text-xs text-gray-400 font-medium cursor-pointer group/check">
+            <div className="flex items-center justify-between pb-1">
+              <label className="group/check flex cursor-pointer items-center gap-2.5 text-xs font-semibold text-slate-500">
                 <div className="relative flex items-center">
                   <input
                     type="checkbox"
@@ -181,38 +207,56 @@ export default function AdminLoginPage() {
                     onChange={(e) => setRememberMe(e.target.checked)}
                     className="sr-only"
                   />
-                  <div className={`w-4 h-4 rounded border transition-colors flex items-center justify-center ${rememberMe ? "bg-purple-500/20 border-purple-500" : "border-white/10 bg-[#080b1e]/60 group-hover/check:border-purple-500/40"}`}>
-                    {rememberMe && <div className="w-1.5 h-1.5 rounded-sm bg-purple-400" />}
+
+                  <div
+                    className={`flex h-4 w-4 items-center justify-center rounded border transition-colors ${
+                      rememberMe
+                        ? "border-blue-600 bg-blue-600"
+                        : "border-blue-200 bg-white group-hover/check:border-blue-400"
+                    }`}
+                  >
+                    {rememberMe && (
+                      <div className="h-1.5 w-1.5 rounded-sm bg-white" />
+                    )}
                   </div>
                 </div>
-                <span>Keep console verified</span>
+
+                <span>Keep me signed in</span>
               </label>
             </div>
 
-            {/* Action Element 3: Hardware Accelerated Submit Pulse Button */}
             <motion.button
               type="submit"
               disabled={isLoading}
-              whileHover={isLoading ? {} : { scale: 1.01, boxShadow: "0 0 20px rgba(168, 85, 247, 0.2)" }}
+              whileHover={
+                isLoading
+                  ? {}
+                  : {
+                      scale: 1.01,
+                      boxShadow: "0 18px 38px rgba(37,99,235,0.20)",
+                    }
+              }
               whileTap={isLoading ? {} : { scale: 0.99 }}
-              className="w-full relative overflow-hidden bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-semibold text-sm py-3.5 px-4 rounded-xl flex items-center justify-center gap-2 transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed group/btn shadow-[0_4px_12px_rgba(147,51,234,0.2)]"
+              className="group/btn relative flex w-full items-center justify-center gap-2 overflow-hidden rounded-2xl bg-blue-600 px-4 py-3.5 text-sm font-bold text-white shadow-lg shadow-blue-600/20 outline-none transition-all hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
             >
               {isLoading ? (
                 <>
-                  <Loader2 size={16} className="animate-spin text-purple-200" />
-                  <span>Validating Credentials...</span>
+                  <Loader2 size={16} className="animate-spin text-blue-100" />
+                  <span>Verifying Access...</span>
                 </>
               ) : (
                 <>
-                  <span>Initialize Connection Matrix</span>
-                  <ArrowRight size={15} className="group-hover/btn:translate-x-1 transition-transform duration-300" />
+                  <span>Login to Dashboard</span>
+                  <ArrowRight
+                    size={15}
+                    className="transition-transform duration-300 group-hover/btn:translate-x-1"
+                  />
                 </>
               )}
             </motion.button>
-
           </form>
         </div>
       </motion.div>
-    </div>
+    </main>
   );
 }

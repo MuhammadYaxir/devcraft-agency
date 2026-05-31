@@ -1,293 +1,352 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
+import Link from "next/link";
 import Navbar from "@/components/navbar/Navbar";
 import Footer from "@/components/footer/Footer";
-import { motion, type Variants } from "framer-motion";
+import { motion } from "framer-motion";
 import {
-  Code2,
-  Cpu,
-  Layers,
-  Sparkles,
-  Terminal,
-  Database,
-  Palette,
-  TrendingUp,
   ArrowRight,
-  CheckCircle2,
+  Rocket,
+  Eye,
+  BriefcaseBusiness,
+  Users,
+  Globe2,
+  Star,
+  Search,
+  PenTool,
+  Code2,
+  Send,
 } from "lucide-react";
 
-import Container from "@/components/ui/Container";
-import SectionHeading from "@/components/ui/SectionHeading";
-import GlowCard from "@/components/ui/GlowCard";
-import PrimaryButton from "@/components/ui/PrimaryButton";
-
-const coreSkills = [
-  { name: "Next.js", desc: "App Router optimization, SSR/ISR architectures & static configurations.", icon: Cpu },
-  { name: "React", desc: "High-performance state pipelines, component isolation & custom hooks.", icon: Code2 },
-  { name: "TypeScript", desc: "Strict end-to-end interface typing, safety bounds & modular scaling.", icon: Terminal },
-  { name: "Tailwind CSS", desc: "Fluid responsive layouts and custom brand theming.", icon: Layers },
-  { name: "Node.js", desc: "Scalable runtime server architectures, secure endpoints & data parsing.", icon: Terminal },
-  { name: "MongoDB", desc: "MERN pipeline structural schemas, clustering & data queries.", icon: Database },
-  { name: "UI/UX Architecture", desc: "Luxury, cinematic micro-interactions, dark glassmorphism & layout flows.", icon: Palette },
-  { name: "SEO Optimization", desc: "Next.js structural meta tags, indexing trees & core web vital metrics.", icon: TrendingUp },
+const team = [
+  { name: "Yasir", role: "Founder & CEO", image: "/yasir.webp" },
+  { name: "Ghulam Yaseen", role: "Seo Expert & Digital Marketer", image: "/team/hamza.webp" },
+  { name: "Shair Afgun", role: "Lead Developer", image: "/team/usama.webp" },
+  { name: "Zafar Iqbal", role: "Project Manager", image: "/team/ayesha.webp" },
 ];
 
-const statisticalMetrics = [
-  { value: "100+", metric: "Projects Engineered" },
-  { value: "2+", metric: "Years Active Experience" },
-  { value: "50+", metric: "Global Clients Served" },
-  { value: "100%", metric: "On-Time Fast Delivery" },
+const stats = [
+  { value: "50+", label: "Projects Delivered", icon: BriefcaseBusiness },
+  { value: "30+", label: "Happy Clients", icon: Users },
+  { value: "5+", label: "Years of Experience", icon: Rocket },
+  { value: "15+", label: "Countries Served", icon: Globe2 },
+  { value: "4.9/5", label: "Client Rating", icon: Star },
 ];
 
-const fadeInUpVariants: Variants = {
-  hidden: { opacity: 0, y: 30 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.8, ease: "easeOut" },
+const process = [
+  {
+    id: "01",
+    title: "Discover",
+    desc: "We understand your business, goals and audience.",
+    icon: Search,
   },
-};
-
-const staggerContainer: Variants = {
-  hidden: {},
-  visible: {
-    transition: { staggerChildren: 0.1 },
+  {
+    id: "02",
+    title: "Strategize",
+    desc: "We plan the right strategy and roadmap tailored to your needs.",
+    icon: PenTool,
   },
-};
+  {
+    id: "03",
+    title: "Design & Build",
+    desc: "We design and develop powerful solutions that deliver results.",
+    icon: Code2,
+  },
+  {
+    id: "04",
+    title: "Launch & Grow",
+    desc: "We launch, optimize and support your growth continuously.",
+    icon: Send,
+  },
+];
 
 export default function AboutPage() {
   return (
     <>
       <Navbar />
 
-      <div className="min-h-screen bg-[#050816] text-white pt-24 overflow-hidden relative">
-        <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-purple-600/[0.03] blur-[150px] rounded-full pointer-events-none" />
-        <div className="absolute top-[40%] right-0 w-[500px] h-[500px] bg-indigo-600/[0.02] blur-[130px] rounded-full pointer-events-none" />
-        <div className="absolute bottom-10 left-10 w-[400px] h-[400px] bg-purple-500/[0.03] blur-[120px] rounded-full pointer-events-none" />
+      <main className="bg-white pt-20 text-[#05070D]">
+        {/* Hero */}
+        <section className="relative overflow-hidden">
+          <div
+            className="absolute inset-0 bg-cover bg-right bg-no-repeat"
+            style={{ backgroundImage: "url('/about-hero.webp')" }}
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-white via-white/90 to-white/20" />
 
-        <section className="py-16 md:py-24 relative z-10">
-          <Container>
-            <div className="text-center max-w-4xl mx-auto space-y-6">
-              <motion.span
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.5 }}
-                className="inline-block text-[10px] md:text-[11px] font-bold uppercase tracking-[0.45em] text-purple-400 bg-purple-500/[0.04] border border-purple-500/15 px-4 py-1.5 rounded-full backdrop-blur-sm"
-              >
-                About DevCraft
-              </motion.span>
-
-              <motion.h1
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.1 }}
-                className="text-4xl sm:text-5xl md:text-7xl font-bold tracking-tight leading-[1.1] text-white"
-              >
-                Building Premium <br />
-                <span className="bg-gradient-to-r from-purple-400 via-purple-500 to-indigo-400 bg-clip-text text-transparent">
-                  Digital Experiences
+          <div className="relative z-10 mx-auto flex min-h-[560px] max-w-[1500px] items-center px-5 sm:px-8 lg:px-12">
+            <motion.div
+              initial={{ opacity: 0, y: 35 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+              className="max-w-[720px]"
+            >
+              <div className="mb-7 flex items-center gap-2">
+                <span className="h-2 w-2 rounded-full bg-[#1463FF]" />
+                <span className="text-[10px] font-black uppercase tracking-[0.18em] text-[#6B7280]">
+                  About CraftoDev
                 </span>
-              </motion.h1>
-
-              <motion.p
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.8, delay: 0.3 }}
-                className="text-gray-400 text-base md:text-xl max-w-2xl mx-auto font-normal leading-relaxed pt-2"
-              >
-                We are a next-gen, full-stack web development agency. We synthesize modern engineering blueprints with high-end aesthetic frameworks to construct blazing fast corporate products.
-              </motion.p>
-            </div>
-          </Container>
-        </section>
-
-        <section className="py-16 md:py-24 border-t border-white/[0.02] bg-white/[0.005]">
-          <Container>
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-              <motion.div
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, margin: "-100px" }}
-                variants={fadeInUpVariants}
-                className="lg:col-span-5 space-y-4"
-              >
-                <div className="w-12 h-12 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-400 mb-2 shadow-[0_0_15px_rgba(147,51,234,0.15)]">
-                  <Sparkles size={20} />
-                </div>
-
-                <h2 className="text-3xl md:text-4xl font-bold tracking-tight">
-                  The Vision & Code Base
-                </h2>
-
-                <p className="text-gray-400 leading-relaxed text-sm md:text-base">
-                  Founded by lead full-stack engineer{" "}
-                  <strong className="text-purple-300 font-semibold">
-                    Muhammad Yasir
-                  </strong>
-                  , DevCraft was engineered from the ground up to solve a critical market issue: the disconnect between cinematic presentation and backend optimization.
-                </p>
-
-                <p className="text-gray-400 leading-relaxed text-sm md:text-base">
-                  Leveraging expertise in{" "}
-                  <span className="text-white font-medium">
-                    Next.js, React, Tailwind CSS, and the MERN stack
-                  </span>
-                  , our agency builds responsive architecture designed to convert traffic into business growth.
-                </p>
-              </motion.div>
-
-              <div className="lg:col-span-7">
-                <GlowCard className="p-8 md:p-10 bg-white/[0.01] border-white/5 relative overflow-hidden group">
-                  <div className="absolute top-0 right-0 w-32 h-32 bg-purple-500/10 blur-2xl rounded-full" />
-
-                  <h3 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
-                    <Terminal size={18} className="text-purple-400" />
-                    Core Engineering Protocol
-                  </h3>
-
-                  <div className="space-y-4">
-                    {[
-                      "Architecting Next.js layouts for search visibility.",
-                      "Writing responsive layouts for all device sizes.",
-                      "Building high-converting visual systems with fast asset loading.",
-                      "Combining MERN data layers with premium design aesthetics.",
-                    ].map((text, idx) => (
-                      <div key={idx} className="flex items-start gap-3">
-                        <CheckCircle2 size={16} className="text-purple-500 mt-1 flex-shrink-0" />
-                        <p className="text-gray-400 text-sm md:text-base">
-                          {text}
-                        </p>
-                      </div>
-                    ))}
-                  </div>
-                </GlowCard>
               </div>
-            </div>
-          </Container>
-        </section>
 
-        <section className="py-12 md:py-20 bg-gradient-to-b from-transparent via-purple-950/[0.02] to-transparent">
-          <Container>
-            <motion.div
-              variants={staggerContainer}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              className="grid grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 text-center"
-            >
-              {statisticalMetrics.map((stat, idx) => (
-                <motion.div
-                  key={idx}
-                  variants={fadeInUpVariants}
-                  className="p-6 md:p-8 bg-white/[0.01] border border-white/5 rounded-2xl backdrop-blur-sm group hover:border-purple-500/20 transition-all duration-300"
+              <h1 className="text-[46px] font-black uppercase leading-[0.95] tracking-[-0.06em] sm:text-[68px] lg:text-[78px]">
+                We Build Digital <br />
+                Experiences <br />
+                <span className="text-[#1463FF]">That Matter.</span>
+              </h1>
+
+              <p className="mt-8 max-w-md text-base font-medium leading-7 text-[#4B5563]">
+                CraftoDev is where creativity meets technology. We help
+                ambitious brands turn ideas into digital experiences that people
+                love.
+              </p>
+
+              <div className="mt-9 flex flex-wrap items-center gap-5">
+                <Link
+                  href="/projects"
+                  className="group flex items-center gap-3 rounded-full bg-[#05070D] px-7 py-4 text-[11px] font-black uppercase tracking-[0.12em] text-white transition hover:bg-[#1463FF]"
                 >
-                  <h4 className="text-4xl md:text-5xl font-extrabold text-white bg-gradient-to-r from-white via-purple-300 to-indigo-200 bg-clip-text text-transparent tracking-tight">
-                    {stat.value}
-                  </h4>
-                  <p className="text-xs md:text-sm text-gray-500 mt-2 font-medium tracking-wider uppercase">
-                    {stat.metric}
-                  </p>
-                </motion.div>
-              ))}
+                  Our Work
+                  <ArrowRight size={15} />
+                </Link>
+
+                <Link
+                  href="/contact"
+                  className="group flex items-center gap-3 text-[11px] font-black uppercase tracking-[0.12em] text-[#05070D]"
+                >
+                  Get To Know Us
+                  <ArrowRight
+                    size={15}
+                    className="transition group-hover:translate-x-1"
+                  />
+                </Link>
+              </div>
             </motion.div>
-          </Container>
+          </div>
         </section>
 
-        <section className="py-16 md:py-28 relative">
-          <Container>
-            <SectionHeading
-              badge="Stack Matrix"
-              title="Our Digital Weaponry"
-              description="We build with advanced web systems to produce clean, scalable, high-performance digital products."
-            />
-
-            <motion.div
-              variants={staggerContainer}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: "-50px" }}
-              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
-            >
-              {coreSkills.map((skill, index) => {
-                const IconComponent = skill.icon;
-
-                return (
-                  <motion.div key={index} variants={fadeInUpVariants}>
-                    <GlowCard className="p-6 flex flex-col justify-between h-full bg-white/[0.01] border-white/5 group">
-                      <div className="space-y-4">
-                        <div className="w-10 h-10 rounded-xl bg-white/[0.02] border border-white/10 flex items-center justify-center text-gray-400 group-hover:text-purple-400 group-hover:border-purple-500/30 group-hover:bg-purple-500/[0.02] transition-all duration-300">
-                          <IconComponent size={18} />
-                        </div>
-
-                        <h3 className="text-lg font-bold text-white group-hover:text-purple-300 transition-colors">
-                          {skill.name}
-                        </h3>
-
-                        <p className="text-xs md:text-sm text-gray-500 group-hover:text-gray-400 leading-relaxed transition-colors">
-                          {skill.desc}
-                        </p>
-                      </div>
-                    </GlowCard>
-                  </motion.div>
-                );
-              })}
-            </motion.div>
-          </Container>
-        </section>
-
-        <section className="py-16 md:py-24 border-t border-white/[0.02] relative">
-          <Container>
-            <div className="max-w-4xl mx-auto text-center space-y-6 relative z-10">
-              <div className="w-10 h-10 rounded-full bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400 mx-auto mb-2">
-                <Cpu size={16} />
+        {/* Mission / Vision */}
+        <section className="bg-[#02060D] text-white">
+          <div className="mx-auto grid max-w-[1500px] grid-cols-1 lg:grid-cols-[1.2fr_0.8fr]">
+            <div className="grid grid-cols-1 gap-0 sm:grid-cols-2">
+              <div className="border-r border-white/10 p-10 sm:p-16">
+                <div className="mb-8 flex items-center gap-2">
+                  <span className="h-2 w-2 rounded-full bg-[#1463FF]" />
+                  <span className="text-[10px] font-black uppercase tracking-[0.16em] text-white/60">
+                    Our Mission
+                  </span>
+                </div>
+                <Rocket className="mb-8 text-[#1463FF]" size={38} />
+                <p className="max-w-sm text-lg leading-8 text-white/80">
+                  To build innovative digital products and solutions that
+                  empower businesses to grow, automate and lead in their
+                  industries.
+                </p>
               </div>
 
-              <h2 className="text-3xl md:text-4xl font-bold tracking-tight">
-                The DevCraft Core Mission
+              <div className="p-10 sm:p-16">
+                <div className="mb-8 flex items-center gap-2">
+                  <span className="h-2 w-2 rounded-full bg-[#1463FF]" />
+                  <span className="text-[10px] font-black uppercase tracking-[0.16em] text-white/60">
+                    Our Vision
+                  </span>
+                </div>
+                <Eye className="mb-8 text-[#1463FF]" size={38} />
+                <p className="max-w-sm text-lg leading-8 text-white/80">
+                  To become a global digital agency recognized for delivering
+                  high-impact solutions through technology, creativity and
+                  trust.
+                </p>
+              </div>
+            </div>
+
+            <div className="relative min-h-[360px]">
+              <Image
+                src="/about-mission.webp"
+                alt="CraftoDev mission"
+                fill
+                className="object-cover grayscale"
+              />
+            </div>
+          </div>
+        </section>
+
+        {/* Team */}
+        <section className="py-20">
+          <div className="mx-auto grid max-w-[1500px] grid-cols-1 gap-12 px-5 sm:px-8 lg:grid-cols-[0.55fr_1.45fr] lg:px-12">
+            <div>
+              <div className="mb-7 flex items-center gap-2">
+                <span className="h-2 w-2 rounded-full bg-[#1463FF]" />
+                <span className="text-[10px] font-black uppercase tracking-[0.18em] text-[#6B7280]">
+                  The Team
+                </span>
+              </div>
+
+              <h2 className="text-[38px] font-black leading-[1] tracking-[-0.05em]">
+                The minds behind <br />
+                CraftoDev.
               </h2>
 
-              <p className="text-gray-400 text-base md:text-lg max-w-3xl mx-auto leading-relaxed font-normal">
-                Our prime objective is simple:{" "}
-                <span className="text-white font-medium">
-                  to scale businesses online.
-                </span>{" "}
-                We replace outdated systems with high-converting custom applications that turn technology into measurable growth.
+              <p className="mt-8 max-w-sm text-base leading-7 text-[#4B5563]">
+                We are a team of creators, engineers, designers and strategists
+                who are passionate about building exceptional digital
+                experiences.
               </p>
+
+              <Link
+                href="/contact"
+                className="mt-10 inline-flex items-center gap-4 text-[11px] font-black uppercase tracking-[0.12em]"
+              >
+                Join Our Team
+                <ArrowRight size={15} />
+              </Link>
             </div>
-          </Container>
-        </section>
 
-        <section className="py-20 md:py-32 border-t border-white/[0.02] bg-gradient-to-b from-transparent to-purple-950/[0.05]">
-          <Container>
-            <GlowCard className="p-8 md:p-16 text-center max-w-4xl mx-auto bg-gradient-to-br from-white/[0.01] to-purple-500/[0.01] border-white/5 relative overflow-hidden">
-              <div className="absolute -bottom-24 left-1/2 -translate-x-1/2 w-80 h-80 bg-purple-600/10 blur-[80px] rounded-full pointer-events-none" />
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+              {team.map((member) => (
+                <div
+                  key={member.name}
+                  className="overflow-hidden rounded-xl border border-[#05070D]/10 bg-white"
+                >
+                  <div className="relative h-[260px] bg-[#F3F4F6]">
+                    <Image
+                      src={member.image}
+                      alt={member.name}
+                      fill
+                      className="object-cover grayscale"
+                    />
+                  </div>
 
-              <div className="space-y-6 max-w-2xl mx-auto relative z-10">
-                <h2 className="text-3xl md:text-5xl font-bold tracking-tight leading-tight">
-                  Let’s Build Your <br />
-                  <span className="bg-gradient-to-r from-purple-400 via-purple-500 to-indigo-400 bg-clip-text text-transparent">
-                    Next Digital Product
-                  </span>
-                </h2>
-
-                <p className="text-gray-400 text-xs md:text-sm max-w-md mx-auto leading-relaxed">
-                  Ready to secure your new product infrastructure? Connect with our team to map out a technical blueprint.
-                </p>
-
-                <div className="pt-4 flex justify-center">
-                  <PrimaryButton onClick={() => (window.location.href = "/contact")}>
-                    <span>Secure Technical Consult</span>
-                    <ArrowRight size={14} />
-                  </PrimaryButton>
+                  <div className="p-5">
+                    <h3 className="text-lg font-black">{member.name}</h3>
+                    <p className="mt-1 text-sm text-[#6B7280]">
+                      {member.role}
+                    </p>
+                    <p className="mt-5 text-sm font-black">in</p>
+                  </div>
                 </div>
-              </div>
-            </GlowCard>
-          </Container>
+              ))}
+            </div>
+          </div>
         </section>
+
+        {/* Stats */}
+        <section className="bg-[#02060D] py-14 text-white">
+          <div className="mx-auto grid max-w-[1500px] grid-cols-2 gap-8 px-5 sm:px-8 md:grid-cols-5 lg:px-12">
+            {stats.map((stat, index) => {
+              const Icon = stat.icon;
+              return (
+                <div
+                  key={stat.label}
+                  className={`${
+                    index !== stats.length - 1
+                      ? "md:border-r md:border-white/10"
+                      : ""
+                  }`}
+                >
+                  <Icon className="mb-5 text-[#1463FF]" size={30} />
+                  <h3 className="text-4xl font-medium tracking-[-0.05em]">
+                    {stat.value}
+                  </h3>
+                  <p className="mt-2 text-sm text-white/70">{stat.label}</p>
+                </div>
+              );
+            })}
+          </div>
+        </section>
+
+        {/* Process */}
+        <section className="py-20">
+          <div className="mx-auto grid max-w-[1500px] grid-cols-1 gap-12 px-5 sm:px-8 lg:grid-cols-[0.55fr_1.45fr] lg:px-12">
+            <div>
+              <div className="mb-7 flex items-center gap-2">
+                <span className="h-2 w-2 rounded-full bg-[#1463FF]" />
+                <span className="text-[10px] font-black uppercase tracking-[0.18em] text-[#6B7280]">
+                  Our Approach
+                </span>
+              </div>
+
+              <h2 className="text-[38px] font-black leading-[1] tracking-[-0.05em]">
+                A proven process <br />
+                for success.
+              </h2>
+            </div>
+
+            <div className="grid grid-cols-1 gap-8 md:grid-cols-4">
+              {process.map((item, index) => {
+                const Icon = item.icon;
+                return (
+                  <div key={item.id} className="relative">
+                    <div className="mb-8 flex h-14 w-14 items-center justify-center rounded-full bg-[#05070D] text-white">
+                      <Icon size={21} />
+                    </div>
+
+                    {index !== process.length - 1 && (
+                      <div className="absolute left-14 top-7 hidden h-px w-full border-t border-dashed border-[#05070D]/30 md:block" />
+                    )}
+
+                    <span className="text-[11px] font-black text-[#6B7280]">
+                      {item.id}
+                    </span>
+                    <h3 className="mt-2 text-sm font-black">
+                      {item.title}
+                    </h3>
+                    <p className="mt-4 text-sm leading-7 text-[#4B5563]">
+                      {item.desc}
+                    </p>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+
+       {/* CTA */}
+<section className="relative min-h-[360px] overflow-hidden bg-[#02060D] py-20 text-white">
+  <Image
+    src="/about-cta.webp"
+    alt="CraftoDev CTA"
+    fill
+    priority
+    className="object-cover object-left-center opacity-80"
+  />
+
+  <div className="absolute inset-0 bg-gradient-to-r from-[#02060D]/20 via-[#02060D]/60 to-[#02060D]/80" />
+
+  <div className="relative z-10 mx-auto grid min-h-[220px] max-w-[1500px] grid-cols-1 items-center gap-10 px-5 sm:px-8 lg:grid-cols-[0.8fr_1.2fr] lg:px-12">
+    <div />
+
+    <div>
+      <div className="mb-7 flex items-center gap-2">
+        <span className="h-2 w-2 rounded-full bg-[#1463FF]" />
+        <span className="text-[10px] font-black uppercase tracking-[0.18em] text-white/70">
+          Ready To Work Together?
+        </span>
       </div>
 
-      <Footer />
+      <div className="flex flex-col justify-between gap-8 lg:flex-row lg:items-center">
+        <h2 className="max-w-xl text-[42px] font-black leading-[1] tracking-[-0.05em]">
+          Let’s build something extraordinary together.
+        </h2>
+
+        <Link
+          href="/contact"
+          className="group flex w-fit items-center gap-4 rounded-full bg-[#1463FF] px-9 py-4 text-[11px] font-black uppercase tracking-[0.12em] text-white transition hover:bg-white hover:text-[#05070D]"
+        >
+          Start a Project
+          <ArrowRight
+            size={16}
+            className="transition group-hover:translate-x-1"
+          />
+        </Link>
+      </div>
+    </div>
+  </div>
+</section>
+      </main>
+
+  
     </>
   );
 }

@@ -11,12 +11,11 @@ import Footer from "@/components/footer/Footer";
 // 2. Original Page Layout Sections (Preserved exact path structures)
 import HeroSection from "@/sections/hero/HeroSection";
 import TrustedSection from "@/sections/trusted/TrustedSection";
-import ServicesSection from "@/sections/services/ServicesSection";
 import ProjectsSection from "@/sections/projects/ProjectsSection";
 import ProcessSection from "@/sections/process/ProcessSection";
 import TestimonialsSection from "@/sections/testimonials/TestimonialsSection";
-import FAQSection from "@/sections/faq/FAQSection";
-import CTASection from "@/sections/cta/CTASection";
+// import FAQSection from "@/sections/faq/FAQSection";
+// import CTASection from "@/sections/cta/CTASection";
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
@@ -59,7 +58,6 @@ export default function Home() {
               
               <TrustedSection />
               
-              <ServicesSection />
               
               <ProjectsSection />
               
@@ -67,9 +65,9 @@ export default function Home() {
               
               <TestimonialsSection />
               
-              <FAQSection />
+              {/* <FAQSection /> */}
               
-              <CTASection />
+              {/* <CTASection /> */}
             </main>
 
             <Footer />

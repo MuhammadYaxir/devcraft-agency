@@ -2,112 +2,205 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, ArrowRight } from "lucide-react";
+import Image from "next/image";
+import { usePathname } from "next/navigation";
+import { AnimatePresence, motion } from "framer-motion";
+import { ArrowUpRight, Menu, X } from "lucide-react";
 
 const navLinks = [
   { name: "Home", href: "/" },
-  { name: "About", href: "/about" },
+  { name: "Work", href: "/projects" },
   { name: "Services", href: "/services" },
-  { name: "Projects", href: "/projects" },
-  { name: "Blog", href: "/blog" },
+  { name: "About", href: "/about" },
+  { name: "Insights", href: "/blog" },
   { name: "Contact", href: "/contact" },
 ];
 
-const Navbar = () => {
+interface NavbarProps {
+  transparent?: boolean;
+}
+
+const Navbar = ({ transparent = false }: NavbarProps) => {
   const [isOpen, setIsOpen] = useState(false);
+  const pathname = usePathname();
+
+  const isWorkPage =
+    pathname === "/projects" || pathname.startsWith("/projects/");
+
+  const isTransparent = transparent || isWorkPage;
+
+  const isActiveLink = (href: string) => {
+    if (href === "/") return pathname === "/";
+    return pathname === href || pathname.startsWith(`${href}/`);
+  };
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-[100] w-full border-b border-white/10 bg-[#050816]/70 backdrop-blur-md shadow-[0_4px_30px_rgba(139,92,246,0.1)]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-20">
-          
-          {/* Logo */}
-          <div className="flex-shrink-0 flex items-center">
-            <Link href="/" className="group flex items-center gap-2">
-              <div className="w-8 h-8 bg-gradient-to-br from-[#8B5CF6] to-[#D8B4FE] rounded-lg rotate-12 group-hover:rotate-0 transition-transform duration-300" />
-              <span className="text-2xl font-bold text-white tracking-tight">
-                YY<span className="text-[#8B5CF6]">Devs</span>
-              </span>
-            </Link>
-          </div>
+    <nav
+      className={`fixed left-0 top-0 z-[100] w-full transition-all duration-300 ${
+        isTransparent
+          ? "bg-transparent"
+          : "border-b border-black/[0.06] bg-white/90 backdrop-blur-2xl"
+      }`}
+    >
+      <div className="mx-auto flex h-20 max-w-[1500px] items-center justify-between px-5 sm:px-8 lg:px-12">
+        {/* Logo */}
+        <Link
+          href="/"
+          className="flex items-center justify-center transition-transform duration-300 hover:scale-[1.02]"
+        >
+          <Image
+            src={isTransparent ? "/craftodev-logo-white.png" : "/craftodev-logo.png"}
+            alt="CraftoDev"
+            width={220}
+            height={60}
+            priority
+            className="h-auto w-[160px] object-contain lg:w-[180px]"
+          />
+        </Link>
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:block">
-            <div className="ml-10 flex items-baseline space-x-8">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.name}
-                  href={link.href}
-                  className="relative group px-1 py-2 text-sm font-medium text-gray-300 hover:text-white transition-colors duration-300"
-                >
-                  {link.name}
-                  {/* Underline Animation */}
-                  <span className="absolute bottom-0 left-0 w-0 h-[2px] bg-[#8B5CF6] shadow-[0_0_8px_#8B5CF6] transition-all duration-300 group-hover:w-full" />
-                </Link>
-              ))}
-            </div>
-          </div>
+        {/* Desktop Nav */}
+        <div className="hidden items-center gap-10 lg:flex">
+          {navLinks.map((link) => {
+            const isActive = isActiveLink(link.href);
 
-          {/* CTA Button */}
-          <div className="hidden md:block">
-              <Link href="/contact">
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="relative group px-6 py-2.5 bg-gradient-to-r from-[#8B5CF6] to-[#7C3AED] text-white rounded-full font-semibold text-sm transition-all duration-300 hover:shadow-[0_0_20px_rgba(139,92,246,0.5)] flex items-center gap-2"
-            >
-              Let's Talk
-              <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
-            </motion.button>
-            </Link>
-          </div>
+            return (
+              <Link
+                key={link.name}
+                href={link.href}
+                className={`group relative text-[11px] font-black uppercase tracking-[0.08em] transition-colors ${
+                  isActive
+                    ? "text-[#1463FF]"
+                    : isTransparent
+                    ? "text-white hover:text-[#1463FF]"
+                    : "text-[#05070D] hover:text-[#1463FF]"
+                }`}
+              >
+                {link.name}
 
-          {/* Mobile menu button */}
-          <div className="md:hidden flex items-center">
-            <button
-              onClick={() => setIsOpen(!isOpen)}
-              className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-white/10 focus:outline-none transition-colors"
-            >
-              {isOpen ? <X size={28} /> : <Menu size={28} />}
-            </button>
-          </div>
+                <span
+                  className={`absolute -bottom-2 left-0 h-[2px] rounded-full bg-[#1463FF] transition-all duration-300 ${
+                    isActive ? "w-full" : "w-0 group-hover:w-full"
+                  }`}
+                />
+              </Link>
+            );
+          })}
         </div>
+
+        {/* Desktop CTA */}
+        <div className="hidden items-center lg:flex">
+          <Link
+            href="/contact"
+            className={`group flex items-center gap-2 rounded-full px-6 py-3 text-[11px] font-black uppercase tracking-[0.08em] transition-all duration-300 ${
+              isTransparent
+                ? "border border-white/25 bg-transparent text-white hover:border-white hover:bg-white hover:text-[#05070D]"
+                : "bg-[#05070D] text-white hover:bg-[#1463FF]"
+            }`}
+          >
+            Start a Project
+            <ArrowUpRight
+              size={15}
+              strokeWidth={3}
+              className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+            />
+          </Link>
+        </div>
+
+        {/* Mobile Button */}
+        <button
+          onClick={() => setIsOpen(true)}
+          className={`flex h-11 w-11 items-center justify-center rounded-full border transition-colors lg:hidden ${
+            isTransparent
+              ? "border-white/25 text-white hover:border-white"
+              : "border-[#05070D]/15 text-[#05070D] hover:border-[#1463FF] hover:text-[#1463FF]"
+          }`}
+          aria-label="Open menu"
+        >
+          <Menu size={20} strokeWidth={2.5} />
+        </button>
       </div>
 
       {/* Mobile Menu */}
       <AnimatePresence>
         {isOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            className="md:hidden bg-[#050816] border-b border-white/10 overflow-hidden"
-          >
-            <div className="px-4 pt-4 pb-8 space-y-4">
-              {navLinks.map((link, i) => (
-                <motion.div
-                  key={link.name}
-                  initial={{ x: -20, opacity: 0 }}
-                  animate={{ x: 0, opacity: 1 }}
-                  transition={{ delay: i * 0.1 }}
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsOpen(false)}
+              className="fixed inset-0 z-[101] bg-black/40 backdrop-blur-sm lg:hidden"
+            />
+
+            <motion.div
+              initial={{ x: "100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "100%" }}
+              transition={{ duration: 0.45, ease: [0.76, 0, 0.24, 1] }}
+              className="fixed right-0 top-0 z-[102] flex h-screen w-full max-w-md flex-col bg-[#05070D] px-8 py-7 text-white lg:hidden"
+            >
+              <div className="flex items-center justify-between">
+                <Image
+                  src="/craftodev-logo-white.png"
+                  alt="CraftoDev"
+                  width={180}
+                  height={50}
+                  priority
+                  className="h-auto w-[150px] object-contain"
+                />
+
+                <button
+                  onClick={() => setIsOpen(false)}
+                  className="flex h-11 w-11 items-center justify-center rounded-full border border-white/15 text-white transition-colors hover:bg-white hover:text-black"
+                  aria-label="Close menu"
                 >
-                  <Link
-                    href={link.href}
-                    onClick={() => setIsOpen(false)}
-                    className="block px-3 py-2 text-base font-medium text-gray-300 hover:text-[#8B5CF6] transition-colors"
-                  >
-                    {link.name}
-                  </Link>
-                </motion.div>
-              ))}
-              <div className="pt-4 px-3">
-                <button className="w-full py-3 bg-gradient-to-r from-[#8B5CF6] to-[#7C3AED] text-white rounded-xl font-bold">
-                  Let's Talk
+                  <X size={20} />
                 </button>
               </div>
-            </div>
-          </motion.div>
+
+              <div className="mt-16 flex flex-col gap-6">
+                {navLinks.map((link, index) => {
+                  const isActive = isActiveLink(link.href);
+
+                  return (
+                    <motion.div
+                      key={link.name}
+                      initial={{ x: 30, opacity: 0 }}
+                      animate={{ x: 0, opacity: 1 }}
+                      transition={{ delay: index * 0.06 }}
+                    >
+                      <Link
+                        href={link.href}
+                        onClick={() => setIsOpen(false)}
+                        className={`group flex items-center justify-between border-b pb-5 text-3xl font-black uppercase tracking-tight transition-colors ${
+                          isActive
+                            ? "border-[#1463FF] text-[#1463FF]"
+                            : "border-white/10 text-white hover:text-[#1463FF]"
+                        }`}
+                      >
+                        {link.name}
+                        <ArrowUpRight
+                          size={24}
+                          className={`transition-all group-hover:translate-x-1 group-hover:-translate-y-1 ${
+                            isActive ? "opacity-100" : "opacity-40"
+                          }`}
+                        />
+                      </Link>
+                    </motion.div>
+                  );
+                })}
+              </div>
+
+              <Link
+                href="/contact"
+                onClick={() => setIsOpen(false)}
+                className="mt-auto flex items-center justify-center gap-2 rounded-full bg-[#1463FF] px-6 py-4 text-xs font-black uppercase tracking-[0.12em] text-white"
+              >
+                Start a Project
+                <ArrowUpRight size={16} />
+              </Link>
+            </motion.div>
+          </>
         )}
       </AnimatePresence>
     </nav>

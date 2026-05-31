@@ -1,189 +1,204 @@
 "use client";
 
 import React from "react";
-import { motion, type Variants } from "framer-motion";
+import Image from "next/image";
+import Link from "next/link";
+import Navbar from "@/components/navbar/Navbar";
+
 import {
-  Code2,
-  Layers,
-  ShoppingCart,
-  Palette,
-  Zap,
-  Globe,
-  Cpu,
-  Settings,
   ArrowRight,
+  Code2,
+  Bot,
+  Cloud,
+  PenTool,
+  TrendingUp,
 } from "lucide-react";
 
 const services = [
   {
+    id: "01",
     title: "Web Development",
-    description:
-      "Crafting high-performance, responsive websites using the latest modern frameworks.",
-    icon: <Globe size={24} />,
+    desc: "High-performance websites and web applications built with clean code, modern technologies and scalable architecture.",
+    icon: Code2,
+    image: "/services/web-development.webp",
   },
   {
-    title: "Full Stack Apps",
-    description:
-      "Scalable end-to-end applications with robust architectures and seamless integrations.",
-    icon: <Layers size={24} />,
+    id: "02",
+    title: "AI & Automation",
+    desc: "Smart automation systems and AI solutions that save time, reduce costs and help you scale faster.",
+    icon: Bot,
+    image: "/services/ai-automation.webp",
   },
   {
-    title: "E-Commerce",
-    description:
-      "Custom online storefronts designed to maximize conversions and user engagement.",
-    icon: <ShoppingCart size={24} />,
-  },
-  {
-    title: "UI/UX Design",
-    description:
-      "User-centric interfaces that blend stunning aesthetics with intuitive functionality.",
-    icon: <Palette size={24} />,
-  },
-  {
+    id: "03",
     title: "SaaS Development",
-    description:
-      "Building cloud-based software solutions with multi-tenancy and subscription models.",
-    icon: <Cpu size={24} />,
+    desc: "End-to-end SaaS product development from idea to launch. Scalable, secure and built for growth.",
+    icon: Cloud,
+    image: "/services/saas-development.webp",
   },
   {
-    title: "API Development",
-    description:
-      "Secure, efficient, and well-documented APIs to power your digital ecosystem.",
-    icon: <Code2 size={24} />,
+    id: "04",
+    title: "UI/UX Design",
+    desc: "Beautiful, intuitive and conversion-focused designs that create unforgettable user experiences.",
+    icon: PenTool,
+    image: "/services/ui-ux.webp",
   },
   {
-    title: "Performance & SEO",
-    description:
-      "Optimizing speed and visibility to ensure your brand stands out in search results.",
-    icon: <Zap size={24} />,
-  },
-  {
-    title: "Maintenance",
-    description:
-      "Continuous support and updates to keep your platform secure and up-to-date.",
-    icon: <Settings size={24} />,
+    id: "05",
+    title: "Digital Marketing",
+    desc: "Data-driven SEO, content and performance marketing strategies that bring traffic, leads and results.",
+    icon: TrendingUp,
+    image: "/services/digital-marketing.webp",
   },
 ];
 
-const containerVariants: Variants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.1,
-    },
-  },
-};
-
-const itemVariants: Variants = {
-  hidden: {
-    opacity: 0,
-    y: 20,
-  },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.6,
-      ease: "easeOut",
-    },
-  },
-};
-
-const ServicesSection = () => {
+export default function ServicesPage() {
   return (
-    <section className="relative w-full py-24 bg-[#050816] overflow-hidden">
-      {/* Background Glow Effects */}
-      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-purple-600/5 blur-[120px] rounded-full pointer-events-none" />
-      <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-blue-600/5 blur-[120px] rounded-full pointer-events-none" />
+    <>
+      <Navbar />
 
-      <div className="max-w-7xl mx-auto px-6 relative z-10">
-        {/* Header */}
-        <div className="text-center mb-20">
-          <motion.span
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-            className="text-[10px] font-bold uppercase tracking-[0.4em] text-purple-400"
-          >
-            OUR SERVICES
-          </motion.span>
+      <main className="bg-white pt-12 text-[#05070D]">
+        {/* Hero */}
+        <section className="relative h-[calc(100vh-80px)] min-h-[620px] overflow-hidden">
+          <div
+            className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+            style={{
+              backgroundImage: "url('/hero-crystal-fulll.webp')",
+            }}
+          />
 
-          <motion.h2
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            className="text-4xl md:text-5xl font-bold text-white mt-4 mb-6 tracking-tight"
-          >
-            What We Can Do For You
-          </motion.h2>
+          <div className="absolute inset-0 bg-gradient-to-r   to-transparent" />
 
-          <motion.p
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="max-w-2xl mx-auto text-gray-400 text-lg"
-          >
-            We combine luxury aesthetics with cutting-edge technology to help
-            your brand lead the future.
-          </motion.p>
-        </div>
+          <div className="relative z-10 mx-auto flex h-full max-w-[1500px] items-center px-5 sm:px-8 lg:px-12">
+            <div className="max-w-[720px]">
+              <div className="mb-7 flex items-center gap-2">
+                <span className="h-2 w-2 rounded-full bg-[#1463FF]" />
+                <span className="text-[10px] font-black uppercase tracking-[0.18em] text-[#6B7280]">
+                  What We Do
+                </span>
+              </div>
 
-        {/* Services Grid */}
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
-        >
-          {services.map((service, index) => (
-            <motion.div
-              key={index}
-              variants={itemVariants}
-              whileHover={{ y: -10, scale: 1.02 }}
-              transition={{ duration: 0.3 }}
-              className="group relative p-[1px] rounded-2xl overflow-hidden"
-            >
-              {/* Animated Gradient Border */}
-              <div className="absolute inset-0 bg-gradient-to-br from-purple-600/0 via-purple-600/0 to-purple-600/0 group-hover:from-purple-600 group-hover:via-blue-500 group-hover:to-purple-600 transition-all duration-500 opacity-0 group-hover:opacity-100" />
+              <h1 className="text-[48px] font-black uppercase leading-[0.92] tracking-[-0.06em] sm:text-[72px] lg:text-[86px]">
+                Services <br />
+                Designed For <br />
+                <span className="text-[#1463FF]">Growth</span>
+              </h1>
 
-              {/* Card */}
-              <div className="relative h-full bg-white/[0.04] border border-white/10 backdrop-blur-md rounded-2xl p-8 flex flex-col items-start shadow-2xl group-hover:shadow-purple-500/10 transition-all duration-500">
-                
-                {/* Icon */}
-                <div className="w-12 h-12 rounded-xl bg-purple-500/10 flex items-center justify-center text-purple-400 mb-6 group-hover:bg-purple-500 group-hover:text-white transition-all duration-500">
-                  {service.icon}
+              <p className="mt-8 max-w-md text-base font-medium leading-7 text-[#4B5563]">
+                We help ambitious businesses build powerful digital experiences,
+                automate operations and scale faster with technology.
+              </p>
+
+              <Link
+                href="/contact"
+                className="mt-9 inline-flex items-center gap-4 rounded-full bg-[#05070D] px-7 py-4 text-[11px] font-black uppercase tracking-[0.12em] text-white transition hover:bg-[#1463FF]"
+              >
+                Let&apos;s Work Together
+                <ArrowRight size={15} />
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        {/* Services */}
+        <section>
+          {services.map((service, index) => {
+            const Icon = service.icon;
+            const imageFirst = index % 2 === 1;
+
+            return (
+              <div
+                key={service.id}
+                className="grid min-h-[380px] grid-cols-1 border-t border-[#05070D]/10 lg:grid-cols-2"
+              >
+                <div
+                  className={`flex items-center px-5 py-16 sm:px-8 lg:px-24 ${
+                    imageFirst ? "lg:order-2" : "lg:order-1"
+                  }`}
+                >
+                  <div className="max-w-md">
+                    <span className="mb-8 block text-sm font-black">
+                      {service.id}
+                    </span>
+
+                    <div className="mb-10 flex h-16 w-16 items-center justify-center rounded-xl border border-[#05070D]/15 text-[#1463FF]">
+                      <Icon size={32} />
+                    </div>
+
+                    <h2 className="mb-6 text-[36px] font-black leading-none tracking-[-0.05em]">
+                      {service.title}
+                    </h2>
+
+                    <p className="mb-10 text-sm font-medium leading-7 text-[#4B5563]">
+                      {service.desc}
+                    </p>
+
+                    <Link
+                      href="/contact"
+                      className="group inline-flex items-center gap-5 text-[11px] font-black uppercase tracking-[0.12em]"
+                    >
+                      Learn More
+                      <ArrowRight
+                        size={16}
+                        className="transition group-hover:translate-x-1"
+                      />
+                    </Link>
+
+                    <div className="mt-3 h-[2px] w-24 bg-[#1463FF]" />
+                  </div>
                 </div>
 
-                {/* Title */}
-                <h3 className="text-xl font-bold text-white mb-3 tracking-tight">
-                  {service.title}
-                </h3>
-
-                {/* Description */}
-                <p className="text-gray-400 text-sm leading-relaxed mb-6">
-                  {service.description}
-                </p>
-
-                {/* CTA */}
-                <button className="mt-auto flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-purple-400 group-hover:text-white transition-colors">
-                  Learn More
-                  <ArrowRight
-                    size={14}
-                    className="group-hover:translate-x-1 transition-transform"
+                <div
+                  className={`relative min-h-[330px] overflow-hidden bg-[#F5F7FB] ${
+                    imageFirst ? "lg:order-1" : "lg:order-2"
+                  }`}
+                >
+                  <Image
+                    src={service.image}
+                    alt={service.title}
+                    fill
+                    sizes="(max-width: 1024px) 100vw, 50vw"
+                    className="object-cover transition duration-700 hover:scale-105"
                   />
-                </button>
+                </div>
               </div>
-            </motion.div>
-          ))}
-        </motion.div>
-      </div>
-    </section>
-  );
-};
+            );
+          })}
+        </section>
 
-export default ServicesSection;
+        {/* CTA */}
+        <section className="relative overflow-hidden bg-[#02060D] py-20 text-white">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,#1463FF25,transparent_35%)]" />
+
+          <div className="relative z-10 mx-auto grid max-w-[1500px] grid-cols-1 items-center gap-10 px-5 sm:px-8 lg:grid-cols-2 lg:px-12">
+            <div>
+              <div className="mb-7 flex items-center gap-2">
+                <span className="h-2 w-2 rounded-full bg-[#1463FF]" />
+                <span className="text-[10px] font-black uppercase tracking-[0.18em] text-white/60">
+                  Have a project in mind?
+                </span>
+              </div>
+
+              <h2 className="max-w-xl text-[42px] font-black leading-[1] tracking-[-0.05em]">
+                Let’s build something extraordinary together.
+              </h2>
+            </div>
+
+            <div className="flex lg:justify-end">
+              <Link
+                href="/contact"
+                className="group flex w-fit items-center gap-4 rounded-full bg-[#1463FF] px-9 py-4 text-[11px] font-black uppercase tracking-[0.12em] text-white transition hover:bg-white hover:text-[#05070D]"
+              >
+                Start a Project
+                <ArrowRight
+                  size={16}
+                  className="transition group-hover:translate-x-1"
+                />
+              </Link>
+            </div>
+          </div>
+        </section>
+      </main>
+    </>
+  );
+}

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence, type Variants } from "framer-motion";
 import {
@@ -20,36 +21,22 @@ import {
   ArrowUpRight,
   ShieldAlert,
   Loader2,
+  Sparkles,
 } from "lucide-react";
 
 const sidebarVariants: Variants = {
-  open: {
-    x: 0,
-    opacity: 1,
-    transition: { type: "spring", stiffness: 300, damping: 30 },
-  },
-  closed: {
-    x: "-100%",
-    opacity: 0,
-    transition: { type: "spring", stiffness: 300, damping: 30 },
-  },
+  open: { x: 0, opacity: 1, transition: { type: "spring", stiffness: 300, damping: 30 } },
+  closed: { x: "-100%", opacity: 0, transition: { type: "spring", stiffness: 300, damping: 30 } },
 };
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
-  show: {
-    opacity: 1,
-    transition: { staggerChildren: 0.08, delayChildren: 0.15 },
-  },
+  show: { opacity: 1, transition: { staggerChildren: 0.05, delayChildren: 0.08 } },
 };
 
 const itemVariants: Variants = {
-  hidden: { y: 20, opacity: 0 },
-  show: {
-    y: 0,
-    opacity: 1,
-    transition: { ease: "easeOut", duration: 0.6 },
-  },
+  hidden: { y: 12, opacity: 0 },
+  show: { y: 0, opacity: 1, transition: { ease: "easeOut", duration: 0.4 } },
 };
 
 type AdminUser = {
@@ -74,8 +61,8 @@ export default function AdminDashboardPage() {
   const [isAuthorized, setIsAuthorized] = useState<boolean | null>(null);
   const [adminUser, setAdminUser] = useState<AdminUser | null>(null);
   const [activeTab, setActiveTab] = useState<string>("Dashboard");
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
-  const [isLoggingOut, setIsLoggingOut] = useState<boolean>(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   const [dashboardStats, setDashboardStats] = useState<DashboardStats>({
     totalBlogs: 0,
@@ -144,10 +131,7 @@ export default function AdminDashboardPage() {
 
     try {
       const response = await fetch("/api/admin/logout", { method: "POST" });
-
-      if (response.ok) {
-        router.push("/admin/login");
-      }
+      if (response.ok) router.push("/admin/login");
     } catch (err) {
       console.error("Logout pipeline interrupt exception:", err);
     } finally {
@@ -157,17 +141,19 @@ export default function AdminDashboardPage() {
 
   if (isAuthorized === null || !isAuthorized) {
     return (
-      <div className="min-h-screen bg-[#050816] flex flex-col items-center justify-center gap-4 text-white">
+      <div className="relative flex min-h-screen flex-col items-center justify-center gap-4 overflow-hidden bg-[#F8FBFF] text-slate-900">
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(59,130,246,0.06)_1px,transparent_1px),linear-gradient(to_bottom,rgba(59,130,246,0.06)_1px,transparent_1px)] bg-[size:52px_52px]" />
+
         <motion.div
           animate={{ rotate: 360 }}
           transition={{ duration: 1.2, repeat: Infinity, ease: "linear" }}
-          className="p-3 bg-purple-500/10 border border-purple-500/20 rounded-full text-purple-400 shadow-[0_0_30px_rgba(147,51,234,0.2)]"
+          className="relative z-10 rounded-full border border-blue-100 bg-white p-3 text-blue-600 shadow-[0_20px_60px_rgba(37,99,235,0.15)]"
         >
-          <Loader2 size={28} className="animate-spin" />
+          <Loader2 size={24} className="animate-spin" />
         </motion.div>
 
-        <p className="text-xs uppercase tracking-[0.3em] text-gray-400 font-bold animate-pulse">
-          Synchronizing Security Layer Matrix...
+        <p className="relative z-10 text-[11px] font-bold uppercase tracking-[0.25em] text-blue-600 animate-pulse">
+          Verifying Secure Admin Access...
         </p>
       </div>
     );
@@ -184,43 +170,44 @@ export default function AdminDashboardPage() {
     {
       title: "Total Blogs",
       value: dashboardStats.totalBlogs.toString(),
-      desc: "All blog articles in database",
+      desc: "All blog articles",
       icon: BookOpen,
     },
     {
-      title: "Total Projects",
+      title: "Projects",
       value: dashboardStats.totalProjects.toString(),
-      desc: "Projects stored in portfolio",
+      desc: "Portfolio projects",
       icon: FolderGit2,
     },
     {
-      title: "Published Posts",
+      title: "Published",
       value: dashboardStats.publishedBlogs.toString(),
-      desc: "Live published blog posts",
+      desc: "Live blog posts",
       icon: FileText,
     },
     {
-      title: "Draft Posts",
+      title: "Drafts",
       value: dashboardStats.draftBlogs.toString(),
-      desc: "Pending unpublished drafts",
+      desc: "Unpublished drafts",
       icon: Edit3,
     },
   ];
 
   return (
-    <div className="min-h-screen bg-[#050816] text-white flex overflow-hidden font-sans select-none relative">
-      <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-purple-600/[0.02] blur-[150px] rounded-full pointer-events-none z-0" />
-      <div className="absolute bottom-0 left-[20%] w-[500px] h-[500px] bg-indigo-600/[0.015] blur-[130px] rounded-full pointer-events-none z-0" />
+    <div className="relative flex h-screen overflow-hidden bg-[#F8FBFF] text-slate-900 font-sans">
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(59,130,246,0.045)_1px,transparent_1px),linear-gradient(to_bottom,rgba(59,130,246,0.045)_1px,transparent_1px)] bg-[size:48px_48px]" />
 
-      <aside className="hidden lg:flex flex-col w-64 bg-white/[0.01] border-r border-white/[0.04] p-6 backdrop-blur-2xl z-20">
-        <div className="flex items-center gap-3 mb-10 px-2">
-          <div className="w-8 h-8 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-400 shadow-[0_0_15px_rgba(147,51,234,0.15)]">
-            <TrendingUp size={16} />
-          </div>
-
-          <span className="font-extrabold text-lg tracking-tight bg-gradient-to-r from-purple-200 to-white bg-clip-text text-transparent">
-            DevCraft Panel
-          </span>
+      {/* Desktop Sidebar */}
+      <aside className="relative z-20 hidden w-[245px] shrink-0 flex-col border-r border-blue-100 bg-white/80 px-5 py-6 shadow-[16px_0_60px_rgba(37,99,235,0.05)] backdrop-blur-2xl lg:flex">
+        <div className="mb-8 px-1">
+          <Image
+            src="/craftodev-logo.png"
+            alt="CraftODev Logo"
+            width={155}
+            height={45}
+            priority
+            className="h-auto w-auto max-w-[155px]"
+          />
         </div>
 
         <nav className="flex-1 space-y-1.5">
@@ -232,27 +219,19 @@ export default function AdminDashboardPage() {
               <button
                 key={item.name}
                 onClick={() => setActiveTab(item.name)}
-                className={`w-full flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-300 relative group outline-none ${
+                className={`group relative flex w-full items-center gap-3 rounded-2xl px-3.5 py-2.5 text-sm font-semibold outline-none transition-all ${
                   isActive
-                    ? "text-purple-400 bg-purple-500/[0.06] border border-purple-500/10"
-                    : "text-gray-400 hover:text-white hover:bg-white/[0.02]"
+                    ? "bg-blue-600 text-white shadow-lg shadow-blue-600/20"
+                    : "text-slate-500 hover:bg-blue-50 hover:text-blue-700"
                 }`}
               >
-                <Icon
-                  size={18}
-                  className={
-                    isActive
-                      ? "text-purple-400"
-                      : "text-gray-400 group-hover:text-purple-300 transition-colors"
-                  }
-                />
-
+                <Icon size={17} />
                 <span>{item.name}</span>
 
                 {isActive && (
                   <motion.div
                     layoutId="activeTabIndicator"
-                    className="absolute left-0 w-[3px] h-5 bg-purple-500 rounded-r-full"
+                    className="absolute right-3 h-2 w-2 rounded-full bg-white"
                   />
                 )}
               </button>
@@ -260,20 +239,27 @@ export default function AdminDashboardPage() {
           })}
         </nav>
 
+        <div className="rounded-2xl border border-blue-100 bg-blue-50/70 p-3">
+          <div className="mb-2 flex h-8 w-8 items-center justify-center rounded-xl bg-white text-blue-600 shadow-sm">
+            <Sparkles size={15} />
+          </div>
+          <p className="text-xs font-bold text-slate-900">CraftODev Admin</p>
+          <p className="mt-1 text-[11px] leading-relaxed text-slate-500">
+            Manage website content fast.
+          </p>
+        </div>
+
         <button
           onClick={handleSystemLogout}
           disabled={isLoggingOut}
-          className="flex items-center gap-3.5 px-4 py-3 text-sm font-medium text-red-400/80 hover:text-red-400 hover:bg-red-500/[0.04] rounded-xl border border-transparent hover:border-red-500/10 transition-all duration-300 outline-none disabled:opacity-50"
+          className="mt-4 flex items-center gap-3 rounded-2xl border border-red-100 bg-red-50 px-3.5 py-2.5 text-sm font-semibold text-red-500 outline-none hover:bg-red-100 disabled:opacity-50"
         >
-          {isLoggingOut ? (
-            <Loader2 size={18} className="animate-spin" />
-          ) : (
-            <LogOut size={18} />
-          )}
-          <span>Disconnect Panel</span>
+          {isLoggingOut ? <Loader2 size={17} className="animate-spin" /> : <LogOut size={17} />}
+          <span>Logout</span>
         </button>
       </aside>
 
+      {/* Mobile Sidebar */}
       <AnimatePresence>
         {isMobileMenuOpen && (
           <>
@@ -282,7 +268,7 @@ export default function AdminDashboardPage() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setIsMobileMenuOpen(false)}
-              className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 lg:hidden"
+              className="fixed inset-0 z-40 bg-slate-950/40 backdrop-blur-sm lg:hidden"
             />
 
             <motion.aside
@@ -290,16 +276,21 @@ export default function AdminDashboardPage() {
               initial="closed"
               animate="open"
               exit="closed"
-              className="fixed inset-y-0 left-0 w-64 bg-[#060919] border-r border-white/[0.06] p-6 z-50 flex flex-col lg:hidden"
+              className="fixed inset-y-0 left-0 z-50 flex w-64 flex-col border-r border-blue-100 bg-white p-5 shadow-2xl lg:hidden"
             >
-              <div className="flex items-center justify-between mb-10">
-                <span className="font-extrabold tracking-tight text-white">
-                  DevCraft Base
-                </span>
+              <div className="mb-8 flex items-center justify-between">
+                <Image
+                  src="/craftodev-logo.png"
+                  alt="CraftODev Logo"
+                  width={140}
+                  height={42}
+                  priority
+                  className="h-auto w-auto max-w-[140px]"
+                />
 
                 <button
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="p-1.5 rounded-lg bg-white/5 border border-white/10 text-gray-400 outline-none"
+                  className="rounded-xl border border-blue-100 bg-blue-50 p-2 text-blue-600 outline-none"
                 >
                   <X size={16} />
                 </button>
@@ -317,13 +308,13 @@ export default function AdminDashboardPage() {
                         setActiveTab(item.name);
                         setIsMobileMenuOpen(false);
                       }}
-                      className={`w-full flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-medium outline-none ${
+                      className={`flex w-full items-center gap-3 rounded-2xl px-3.5 py-2.5 text-sm font-semibold outline-none ${
                         isActive
-                          ? "text-purple-400 bg-purple-500/[0.05] border border-purple-500/10"
-                          : "text-gray-400"
+                          ? "bg-blue-600 text-white shadow-lg shadow-blue-600/20"
+                          : "text-slate-500 hover:bg-blue-50 hover:text-blue-700"
                       }`}
                     >
-                      <Icon size={18} />
+                      <Icon size={17} />
                       <span>{item.name}</span>
                     </button>
                   );
@@ -333,262 +324,257 @@ export default function AdminDashboardPage() {
               <button
                 onClick={handleSystemLogout}
                 disabled={isLoggingOut}
-                className="flex items-center gap-3.5 px-4 py-3 text-sm font-medium text-red-400 hover:bg-red-500/[0.03] rounded-xl outline-none disabled:opacity-50"
+                className="mt-4 flex items-center gap-3 rounded-2xl border border-red-100 bg-red-50 px-3.5 py-2.5 text-sm font-semibold text-red-500 outline-none disabled:opacity-50"
               >
-                {isLoggingOut ? (
-                  <Loader2 size={18} className="animate-spin" />
-                ) : (
-                  <LogOut size={18} />
-                )}
-                <span>Disconnect Panel</span>
+                {isLoggingOut ? <Loader2 size={17} className="animate-spin" /> : <LogOut size={17} />}
+                <span>Logout</span>
               </button>
             </motion.aside>
           </>
         )}
       </AnimatePresence>
 
-      <div className="flex-1 flex flex-col min-w-0 overflow-y-auto relative z-10">
-        <header className="h-20 border-b border-white/[0.04] px-6 sm:px-10 flex items-center justify-between bg-[#050816]/30 backdrop-blur-md sticky top-0 z-30">
-          <div className="flex items-center gap-4">
+      {/* Main Area */}
+      <div className="relative z-10 flex min-w-0 flex-1 flex-col">
+        <header className="flex h-16 shrink-0 items-center justify-between border-b border-blue-100 bg-white/80 px-5 shadow-sm backdrop-blur-xl sm:px-8">
+          <div className="flex items-center gap-3">
             <button
               onClick={() => setIsMobileMenuOpen(true)}
-              className="p-2 rounded-xl bg-white/[0.02] border border-white/5 text-gray-400 hover:text-white lg:hidden transition-all outline-none"
+              className="rounded-xl border border-blue-100 bg-blue-50 p-2 text-blue-600 outline-none hover:bg-blue-100 lg:hidden"
             >
-              <Menu size={20} />
+              <Menu size={18} />
             </button>
 
-            <h2 className="text-sm font-bold uppercase tracking-widest text-gray-400 hidden sm:block">
-              Core Console /{" "}
-              <span className="text-purple-400 font-extrabold">
-                {activeTab}
-              </span>
+            <h2 className="hidden text-xs font-black uppercase tracking-[0.22em] text-slate-500 sm:block">
+              Admin Panel / <span className="text-blue-600">{activeTab}</span>
             </h2>
           </div>
 
-          <div className="flex items-center gap-4">
-            <button className="p-2.5 rounded-xl bg-white/[0.02] border border-white/5 text-gray-400 hover:text-purple-400 transition-all outline-none relative group">
-              <Bell size={18} />
-              <span className="absolute top-2.5 right-2.5 w-1.5 h-1.5 bg-purple-500 rounded-full ring-2 ring-[#050816] group-hover:scale-110 transition-transform" />
+          <div className="flex items-center gap-3">
+            <button className="group relative rounded-xl border border-blue-100 bg-blue-50 p-2 text-blue-600 outline-none hover:bg-blue-100">
+              <Bell size={17} />
+              <span className="absolute right-2 top-2 h-1.5 w-1.5 rounded-full bg-cyan-400 ring-2 ring-white" />
             </button>
 
-            <div className="h-8 w-[1px] bg-white/[0.05]" />
-
-            <div className="flex items-center gap-3 bg-white/[0.02] border border-white/5 px-3.5 py-1.5 rounded-xl">
-              <div className="w-6 h-6 rounded-lg bg-gradient-to-tr from-purple-500 to-indigo-500 flex items-center justify-center text-[11px] font-black">
+            <div className="flex items-center gap-2 rounded-2xl border border-blue-100 bg-white px-3 py-1.5 shadow-sm">
+              <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-blue-600 text-[11px] font-black text-white">
                 AD
               </div>
 
-              <span className="text-xs font-semibold text-gray-300 hidden md:block max-w-[120px] truncate">
-                {adminUser?.email}
-              </span>
+              <div className="hidden md:block">
+                <p className="max-w-[150px] truncate text-xs font-bold text-slate-700">
+                  {adminUser?.email}
+                </p>
+                <p className="text-[10px] font-bold uppercase tracking-wider text-blue-500">
+                  {adminUser?.role || "Admin"}
+                </p>
+              </div>
             </div>
           </div>
         </header>
 
-        <main className="flex-1 p-6 sm:p-10 max-w-7xl w-full mx-auto space-y-8">
-          <motion.div
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: "easeOut" }}
-            className="relative bg-gradient-to-r from-purple-900/10 via-indigo-900/5 to-transparent border border-purple-500/10 rounded-2xl p-6 sm:p-8 overflow-hidden backdrop-blur-xl shadow-[0_20px_40px_-15px_rgba(0,0,0,0.7)] group"
-          >
-            <div className="absolute top-0 right-0 w-[300px] h-full bg-gradient-to-l from-purple-500/[0.03] to-transparent pointer-events-none" />
+        <main className="h-[calc(100vh-4rem)] overflow-y-auto p-5 sm:p-7">
+          <div className="mx-auto max-w-6xl space-y-5">
+            {/* Welcome Card */}
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.45, ease: "easeOut" }}
+              className="relative overflow-hidden rounded-[1.6rem] border border-blue-100 bg-white/85 p-5 shadow-[0_18px_55px_rgba(37,99,235,0.07)] backdrop-blur-xl sm:p-6"
+            >
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(37,99,235,0.10),transparent_35%)]" />
 
-            <div className="relative z-10 space-y-2">
-              <span className="text-[10px] font-bold uppercase tracking-[0.35em] text-purple-400">
-                System Interface Active
-              </span>
+              <div className="relative z-10">
+                <span className="inline-flex items-center gap-2 rounded-full border border-blue-100 bg-blue-50 px-3.5 py-1.5 text-[9px] font-black uppercase tracking-[0.22em] text-blue-600">
+                  <TrendingUp size={13} />
+                  System Interface Active
+                </span>
 
-              <h1 className="text-2xl sm:text-3xl font-black tracking-tight">
-                Welcome back, Agent Hub.
-              </h1>
+                <h1 className="mt-3 text-2xl font-black tracking-tight text-slate-950 sm:text-3xl">
+                  Welcome back, Yasir.
+                </h1>
 
-              <p className="text-sm text-gray-400 max-w-xl leading-relaxed">
-                Your creative ecosystem pipeline is fully functioning. Track
-                live database nodes, compile new content modules, or review
-                agency incoming transaction footprints.
-              </p>
-            </div>
-          </motion.div>
+                <p className="mt-2 max-w-2xl text-sm leading-relaxed text-slate-600">
+                  Manage CraftODev blogs, portfolio projects, and website content
+                  from a clean admin dashboard.
+                </p>
+              </div>
+            </motion.div>
 
-          <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            animate="show"
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5"
-          >
-            {statCards.map((card, i) => {
-              const Icon = card.icon;
+            {/* Stats */}
+            <motion.div
+              variants={containerVariants}
+              initial="hidden"
+              animate="show"
+              className="grid grid-cols-2 gap-4 xl:grid-cols-4"
+            >
+              {statCards.map((card) => {
+                const Icon = card.icon;
 
-              return (
-                <motion.div
-                  key={card.title}
-                  variants={itemVariants}
-                  whileHover={{
-                    y: -4,
-                    borderColor: "rgba(147, 51, 234, 0.25)",
-                    boxShadow: "0 10px 30px -10px rgba(147,51,234,0.15)",
-                  }}
-                  className="bg-white/[0.01] border border-white/[0.04] rounded-2xl p-5 backdrop-blur-xl transition-colors duration-300 flex items-start justify-between group relative overflow-hidden"
-                >
-                  <div className="space-y-3.5 relative z-10">
-                    <span className="text-xs text-gray-400 font-semibold uppercase tracking-wider">
-                      {card.title}
-                    </span>
+                return (
+                  <motion.div
+                    key={card.title}
+                    variants={itemVariants}
+                    whileHover={{
+                      y: -3,
+                      boxShadow: "0 18px 50px rgba(37,99,235,0.10)",
+                    }}
+                    className="group relative flex items-start justify-between overflow-hidden rounded-[1.35rem] border border-blue-100 bg-white/85 p-4 shadow-[0_14px_45px_rgba(37,99,235,0.05)] backdrop-blur-xl"
+                  >
+                    <div className="relative z-10">
+                      <span className="text-[11px] font-black uppercase tracking-wider text-slate-500">
+                        {card.title}
+                      </span>
 
-                    <div className="space-y-1">
-                      <h3 className="text-3xl font-black tracking-tight group-hover:text-purple-400 transition-colors">
+                      <h3 className="mt-2 text-3xl font-black leading-none tracking-tight text-slate-950 group-hover:text-blue-600">
                         {card.value}
                       </h3>
 
-                      <p className="text-[11px] text-gray-500 font-medium">
+                      <p className="mt-2 text-[11px] font-medium text-slate-500">
                         {card.desc}
                       </p>
                     </div>
+
+                    <div className="relative z-10 rounded-2xl border border-blue-100 bg-blue-50 p-2.5 text-blue-600 group-hover:bg-blue-600 group-hover:text-white">
+                      <Icon size={17} />
+                    </div>
+                  </motion.div>
+                );
+              })}
+            </motion.div>
+
+            {/* Bottom Cards */}
+            <div className="grid grid-cols-1 gap-5 lg:grid-cols-3">
+              <motion.div
+                initial={{ opacity: 0, y: 14 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2, duration: 0.45, ease: "easeOut" }}
+                className="flex flex-col rounded-[1.5rem] border border-blue-100 bg-white/85 p-5 shadow-[0_18px_55px_rgba(37,99,235,0.06)] backdrop-blur-xl lg:col-span-2"
+              >
+                <div className="mb-4 flex items-center justify-between gap-4">
+                  <div>
+                    <h3 className="text-lg font-black tracking-tight text-slate-950">
+                      Recent Website Activity
+                    </h3>
+
+                    <p className="text-xs text-slate-500">
+                      Latest content actions from dashboard
+                    </p>
                   </div>
 
-                  <div className="p-3 bg-white/[0.02] group-hover:bg-purple-500/10 border border-white/5 group-hover:border-purple-500/20 rounded-xl text-gray-400 group-hover:text-purple-400 transition-all duration-300 shadow-inner">
-                    <Icon size={18} />
-                  </div>
-                </motion.div>
-              );
-            })}
-          </motion.div>
+                  <button className="flex items-center gap-1 text-xs font-bold text-blue-600 outline-none hover:text-blue-700">
+                    <span>View All</span>
+                    <ArrowUpRight size={14} />
+                  </button>
+                </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3, duration: 0.6, ease: "easeOut" }}
-              className="lg:col-span-2 bg-white/[0.01] border border-white/[0.04] rounded-2xl p-6 backdrop-blur-xl flex flex-col space-y-6"
-            >
-              <div className="flex items-center justify-between">
-                <div className="space-y-1">
-                  <h3 className="text-lg font-bold tracking-tight">
-                    Recent Ecosystem Events
+                <div className="space-y-3">
+                  {[
+                    {
+                      text: "New case study added to CraftODev portfolio",
+                      time: "2 hours ago",
+                      author: "YasirTech",
+                      category: "Project",
+                    },
+                    {
+                      text: "Published blog article about Next.js development",
+                      time: "1 day ago",
+                      author: "System Hook",
+                      category: "Blog",
+                    },
+                    {
+                      text: "Draft created for upcoming SaaS project showcase",
+                      time: "3 days ago",
+                      author: "YasirTech",
+                      category: "Draft",
+                    },
+                  ].map((act, idx) => (
+                    <div
+                      key={idx}
+                      className="group flex items-start gap-3 rounded-2xl border border-blue-100 bg-blue-50/40 p-3 transition-all hover:bg-white hover:shadow-sm"
+                    >
+                      <div
+                        className={`mt-1.5 h-2.5 w-2.5 shrink-0 rounded-full ${
+                          act.category === "Project"
+                            ? "bg-emerald-400"
+                            : act.category === "Blog"
+                            ? "bg-blue-500"
+                            : "bg-amber-400"
+                        }`}
+                      />
+
+                      <div className="min-w-0 flex-1">
+                        <p className="truncate text-sm font-semibold text-slate-700 group-hover:text-slate-950">
+                          {act.text}
+                        </p>
+
+                        <div className="mt-1 flex items-center gap-2 text-[11px] text-slate-500">
+                          <span>{act.time}</span>
+                          <span>•</span>
+                          <span className="font-bold text-blue-600">
+                            {act.author}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 14 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.25, duration: 0.45, ease: "easeOut" }}
+                className="flex flex-col rounded-[1.5rem] border border-blue-100 bg-white/85 p-5 shadow-[0_18px_55px_rgba(37,99,235,0.06)] backdrop-blur-xl"
+              >
+                <div className="mb-4">
+                  <h3 className="text-lg font-black tracking-tight text-slate-950">
+                    Quick Actions
                   </h3>
 
-                  <p className="text-xs text-gray-500">
-                    Live configuration actions tracked on cloud datastores
+                  <p className="text-xs text-slate-500">
+                    Create and manage content fast
                   </p>
                 </div>
 
-                <button className="text-xs text-purple-400 hover:text-purple-300 font-semibold flex items-center gap-1 transition-colors outline-none">
-                  <span>View All logs</span>
-                  <ArrowUpRight size={14} />
-                </button>
-              </div>
-
-              <div className="flex-1 space-y-4">
-                {[
-                  {
-                    text: "New case study added to DevCraft portfolio matrix",
-                    time: "2 hours ago",
-                    author: "YasirTech",
-                    category: "Project",
-                  },
-                  {
-                    text: "Published blog architecture node regarding Next.js 15 frameworks",
-                    time: "1 day ago",
-                    author: "System Hook",
-                    category: "Blog",
-                  },
-                  {
-                    text: "Draft layout assembled for pending luxury SaaS project mockup",
-                    time: "3 days ago",
-                    author: "YasirTech",
-                    category: "Draft",
-                  },
-                ].map((act, idx) => (
-                  <div
-                    key={idx}
-                    className="flex items-start gap-4 p-3.5 bg-white/[0.01] border border-white/5 hover:border-purple-500/10 rounded-xl transition-all group"
+                <div className="flex flex-col gap-3">
+                  <motion.button
+                    onClick={() => router.push("/admin/blogs/create")}
+                    whileHover={{ scale: 1.01, x: 2 }}
+                    whileTap={{ scale: 0.99 }}
+                    className="group flex w-full items-center justify-center gap-2 rounded-2xl bg-blue-600 px-4 py-3 text-xs font-bold text-white shadow-lg shadow-blue-600/20 outline-none hover:bg-blue-700"
                   >
-                    <div
-                      className={`mt-1 w-2 h-2 rounded-full flex-shrink-0 ${
-                        act.category === "Project"
-                          ? "bg-emerald-400"
-                          : act.category === "Blog"
-                          ? "bg-purple-400"
-                          : "bg-amber-400"
-                      }`}
+                    <PlusCircle
+                      size={15}
+                      className="transition-transform group-hover:rotate-90"
                     />
+                    <span>Create New Blog</span>
+                  </motion.button>
 
-                    <div className="flex-1 space-y-1 min-w-0">
-                      <p className="text-xs text-gray-300 font-medium group-hover:text-white transition-colors truncate">
-                        {act.text}
-                      </p>
+                  <motion.button
+                    onClick={() => router.push("/admin/projects/create")}
+                    whileHover={{ scale: 1.01, x: 2 }}
+                    whileTap={{ scale: 0.99 }}
+                    className="flex w-full items-center justify-center gap-2 rounded-2xl border border-blue-100 bg-blue-50 px-4 py-3 text-xs font-bold text-blue-700 outline-none hover:bg-blue-100"
+                  >
+                    <PlusCircle size={15} />
+                    <span>Create New Project</span>
+                  </motion.button>
+                </div>
 
-                      <div className="flex items-center gap-2 text-[10px] text-gray-500">
-                        <span>{act.time}</span>
-                        <span>•</span>
-                        <span className="text-purple-400/80 font-semibold">
-                          {act.author}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4, duration: 0.6, ease: "easeOut" }}
-              className="bg-white/[0.01] border border-white/[0.04] rounded-2xl p-6 backdrop-blur-xl flex flex-col space-y-6"
-            >
-              <div className="space-y-1">
-                <h3 className="text-lg font-bold tracking-tight">
-                  Quick Action Consoles
-                </h3>
-
-                <p className="text-xs text-gray-500">
-                  Initialize compilation macros instantly
-                </p>
-              </div>
-
-              <div className="flex flex-col gap-3">
-                <motion.button
-                  onClick={() => router.push("/admin/blogs/create")}
-                  whileHover={{
-                    scale: 1.01,
-                    x: 2,
-                    boxShadow: "0 0 15px rgba(168,85,247,0.15)",
-                  }}
-                  whileTap={{ scale: 0.99 }}
-                  className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-semibold text-xs py-3.5 px-4 rounded-xl flex items-center justify-center gap-2 transition-all shadow-[0_4px_12px_rgba(147,51,234,0.15)] outline-none group"
-                >
-                  <PlusCircle
+                <div className="mt-4 flex items-start gap-3 rounded-2xl border border-blue-100 bg-blue-50/70 p-3 text-[11px] leading-relaxed text-slate-500">
+                  <ShieldAlert
                     size={15}
-                    className="group-hover:rotate-90 transition-transform duration-300"
+                    className="mt-0.5 shrink-0 text-blue-600"
                   />
-                  <span>Compile New Blog Node</span>
-                </motion.button>
 
-                <motion.button
-                  onClick={() => router.push("/admin/projects/create")}
-                  whileHover={{ scale: 1.01, x: 2 }}
-                  whileTap={{ scale: 0.99 }}
-                  className="w-full bg-white/[0.02] hover:bg-white/[0.04] border border-white/5 hover:border-purple-500/20 text-gray-300 hover:text-white font-semibold text-xs py-3.5 px-4 rounded-xl flex items-center justify-center gap-2 transition-all outline-none"
-                >
-                  <PlusCircle size={15} />
-                  <span>Initialize New Project Brief</span>
-                </motion.button>
-              </div>
-
-              <div className="pt-4 border-t border-white/[0.04] flex items-center gap-3 text-gray-500 text-[11px] leading-relaxed">
-                <ShieldAlert
-                  size={14}
-                  className="text-purple-400/60 flex-shrink-0"
-                />
-
-                <p>
-                  All core write transactions executed from this cockpit are
-                  cryptographic bound to your identity signature trace.
-                </p>
-              </div>
-            </motion.div>
+                  <p>
+                    Admin actions are protected by your secure session and
+                    connected to your website database.
+                  </p>
+                </div>
+              </motion.div>
+            </div>
           </div>
         </main>
       </div>

@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import type { Variants } from "framer-motion";
 
 interface LoaderScreenProps {
   onComplete?: () => void;
@@ -16,7 +16,7 @@ export default function LoaderScreen({ onComplete }: LoaderScreenProps) {
 
     const timer = setTimeout(() => {
       setLoading(false);
-      if (onComplete) onComplete();
+      onComplete?.();
       document.body.style.overflow = "unset";
     }, 2500);
 
@@ -26,110 +26,104 @@ export default function LoaderScreen({ onComplete }: LoaderScreenProps) {
     };
   }, [onComplete]);
 
-  // Separate character arrays for animation tracking
-  const logoTextArray = ["Y", "Y"];
-  const gradientTextArray = ["D", "e", "v", "s"];
-
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: { staggerChildren: 0.06, delayChildren: 0.2 },
-    },
-  };
-
-  const letterVariants: Variants = {
-  hidden: {
-    opacity: 0,
-    y: 20,
-    filter: "blur(8px)",
-  },
-  visible: {
-    opacity: 1,
-    y: 0,
-    filter: "blur(0px)",
-    transition: {
-      duration: 0.6,
-      ease: "easeOut",
-    },
-  },
-};
-
   return (
     <AnimatePresence mode="wait">
       {loading && (
         <motion.div
           initial={{ opacity: 1 }}
-          exit={{ 
+          exit={{
             opacity: 0,
-            filter: "blur(10px)",
-            transition: { duration: 0.8, ease: "easeInOut" }
+            scale: 1.02,
+            filter: "blur(14px)",
+            transition: { duration: 0.75, ease: "easeInOut" },
           }}
-          className="fixed inset-0 z- flex flex-col items-center justify-center bg-[#050816] backdrop-blur-md"
+          className="fixed inset-0 z-[9999] flex items-center justify-center overflow-hidden bg-[#f7fbff]"
         >
-          {/* Ambient Background Glow Layer */}
+          {/* Soft Grid Background */}
+          <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(37,99,235,0.07)_1px,transparent_1px),linear-gradient(to_bottom,rgba(37,99,235,0.07)_1px,transparent_1px)] bg-[size:46px_46px]" />
+
+          {/* Blue Glow Effects */}
           <motion.div
             animate={{
-              scale: [1, 1.15, 1],
-              opacity: [0.3, 0.5, 0.3],
+              scale: [1, 1.18, 1],
+              opacity: [0.35, 0.6, 0.35],
             }}
             transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute w-[400px] h-[400px] bg-purple-600/10 blur-[100px] rounded-full pointer-events-none"
+            className="absolute -top-20 -left-20 h-[360px] w-[360px] rounded-full bg-blue-500/20 blur-[100px]"
           />
 
-          {/* Central Content */}
-          <div className="flex flex-col items-center gap-6 relative z-10 select-none">
-            
-            {/* 1. Brand Heading Reveal */}
-            <motion.h1
-              variants={containerVariants}
-              initial="hidden"
-              animate="visible"
-              className="text-4xl md:text-5xl font-bold tracking-tight flex items-center justify-center"
-            >
-              {/* White Text Segment: "Dev" */}
-              <span className="flex text-white">
-                {logoTextArray.map((char, index) => (
-                  <motion.span key={`dev-${index}`} variants={letterVariants}>
-                    {char}
-                  </motion.span>
-                ))}
-              </span>
-              
-              {/* Premium Purple Gradient Segment: "Craft" */}
-              <span className="flex bg-gradient-to-r from-purple-400 via-purple-500 to-indigo-500 bg-clip-text text-transparent px-[2px]">
-                {gradientTextArray.map((char, index) => (
-                  <motion.span 
-                    key={`craft-${index}`} 
-                    variants={letterVariants}
-                    className="bg-gradient-to-r from-purple-400 via-purple-500 to-indigo-500 bg-clip-text text-transparent inline-block"
-                  >
-                    {char}
-                  </motion.span>
-                ))}
-              </span>
-            </motion.h1>
+          <motion.div
+            animate={{
+              scale: [1.1, 1, 1.1],
+              opacity: [0.25, 0.45, 0.25],
+            }}
+            transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut" }}
+            className="absolute -bottom-24 -right-24 h-[420px] w-[420px] rounded-full bg-cyan-400/20 blur-[110px]"
+          />
 
-            {/* 2. Loading Spinner */}
-            <div className="relative w-12 h-12 mt-2">
-              <div className="absolute inset-0 rounded-full border border-white/5" />
+          {/* Loader Card */}
+          <motion.div
+            initial={{ opacity: 0, y: 24, scale: 0.96 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ duration: 0.7, ease: "easeOut" }}
+            className="relative z-10 flex flex-col items-center rounded-[2rem] border border-blue-100 bg-white/80 px-10 py-9 shadow-[0_30px_90px_rgba(37,99,235,0.14)] backdrop-blur-xl"
+          >
+            {/* Animated Logo Wrapper */}
+            <motion.div
+              animate={{
+                y: [0, -8, 0],
+              }}
+              transition={{
+                duration: 2.2,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
+              className="relative flex h-24 w-64 items-center justify-center"
+            >
+              <motion.div
+                animate={{
+                  scale: [1, 1.08, 1],
+                  opacity: [0.35, 0.65, 0.35],
+                }}
+                transition={{
+                  duration: 2,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
+                className="absolute inset-0 rounded-full bg-blue-500/10 blur-2xl"
+              />
+
+              <Image
+                src="/craftodev-logo.png"
+                alt="CraftODev Logo"
+                width={260}
+                height={80}
+                priority
+                className="relative z-10 h-auto w-auto max-w-[230px]"
+              />
+            </motion.div>
+
+            {/* Loading Ring */}
+            <div className="relative mt-5 h-12 w-12">
+              <div className="absolute inset-0 rounded-full border border-blue-100" />
+
               <motion.div
                 animate={{ rotate: 360 }}
-                transition={{ duration: 1.2, repeat: Infinity, ease: "linear" }}
-                className="w-full h-full rounded-full border-t border-r border-transparent border-t-purple-500 border-r-purple-500/40 shadow-[0_0_15px_rgba(147,51,234,0.3)]"
+                transition={{ duration: 1.1, repeat: Infinity, ease: "linear" }}
+                className="h-full w-full rounded-full border-2 border-transparent border-t-blue-600 border-r-cyan-400 shadow-[0_0_20px_rgba(37,99,235,0.25)]"
               />
             </div>
 
-            {/* 3. Luxury Micro Caption */}
+            {/* Caption */}
             <motion.p
               initial={{ opacity: 0 }}
-              animate={{ opacity: [0, 0.5, 0] }}
+              animate={{ opacity: [0.35, 0.8, 0.35] }}
               transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-              className="text-[9px] font-medium tracking-[0.6em] uppercase text-gray-500 mt-2 pl-[0.6em]"
+              className="mt-6 pl-[0.45em] text-[10px] font-semibold uppercase tracking-[0.45em] text-blue-500"
             >
-              Initializing Core
+              Building Experience
             </motion.p>
-          </div>
+          </motion.div>
         </motion.div>
       )}
     </AnimatePresence>
