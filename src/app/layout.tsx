@@ -3,6 +3,7 @@ import SmoothScrollProvider from "@/providers/SmoothScrollProvider";
 import CursorGlow from "@/components/animations/CursorGlow";
 import MobileStickyCTA from "@/components/mobile/MobileStickyCTA";
 import "./globals.css";
+import { GoogleAnalytics } from "@next/third-parties/google";
 
 const siteUrl =
   process.env.NEXT_PUBLIC_SITE_URL || "https://devcraft.agency";
@@ -85,6 +86,7 @@ export default function RootLayout({
           {children}
           <CursorGlow />
         </SmoothScrollProvider>
+        <GoogleAnalytics gaId="G-8DFR6LFFRM" />
       </body>
     </html>
   );
