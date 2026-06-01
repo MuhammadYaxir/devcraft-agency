@@ -21,10 +21,9 @@ import {
 } from "lucide-react";
 
 const team = [
-  { name: "Yasir", role: "Founder & CEO", image: "/yasir.webp" },
-  { name: "Ghulam Yaseen", role: "Seo Expert & Digital Marketer", image: "/team/hamza.webp" },
-  { name: "Shair Afgun", role: "Lead Developer", image: "/team/usama.webp" },
-  { name: "Zafar Iqbal", role: "Project Manager", image: "/team/ayesha.webp" },
+  { name: "Yasir", role: "Founder & CEO", image: "/yasir-founder.webp" },
+  { name: "Ghulam Yaseen", role: "Seo Expert & Digital Marketer", image: "/yaseen.webp" },
+  { name: "Shair Afgun", role: "Lead Developer", image: "/shair-afgun.webp" },
 ];
 
 const stats = [
@@ -203,31 +202,35 @@ export default function AboutPage() {
               </Link>
             </div>
 
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-              {team.map((member) => (
-                <div
-                  key={member.name}
-                  className="overflow-hidden rounded-xl border border-[#05070D]/10 bg-white"
-                >
-                  <div className="relative h-[260px] bg-[#F3F4F6]">
-                    <Image
-                      src={member.image}
-                      alt={member.name}
-                      fill
-                      className="object-cover grayscale"
-                    />
-                  </div>
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+  {team.map((member) => (
+    <div
+      key={member.name}
+      className="overflow-hidden rounded-xl border border-[#05070D]/10 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+    >
+      <div className="relative h-[320px] bg-[#F3F4F6]">
+        <Image
+          src={member.image}
+          alt={member.name}
+          fill
+          className="object-cover"
+        />
+      </div>
 
-                  <div className="p-5">
-                    <h3 className="text-lg font-black">{member.name}</h3>
-                    <p className="mt-1 text-sm text-[#6B7280]">
-                      {member.role}
-                    </p>
-                    <p className="mt-5 text-sm font-black">in</p>
-                  </div>
-                </div>
-              ))}
-            </div>
+      <div className="p-5 text-center">
+        <h3 className="text-xl font-black text-[#05070D]">
+          {member.name}
+        </h3>
+
+        <p className="mt-2 text-sm font-medium text-[#2563EB]">
+          {member.role}
+        </p>
+
+        
+      </div>
+    </div>
+  ))}
+</div>
           </div>
         </section>
 

@@ -14,6 +14,9 @@ const footerLinks = {
     { name: "About", href: "/about" },
     { name: "Insights", href: "/insights" },
     { name: "Contact", href: "/contact" },
+    { name: "Privacy Policy", href: "/privacy-policy" },
+    { name: "Terms of Service", href: "/terms-and-conditions" },
+
   ],
   services: [
     { name: "AI Powered Websites", href: "/services" },
