@@ -2,7 +2,7 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import { FaGithub, FaLinkedinIn, FaXTwitter, FaDribbble } from "react-icons/fa6";
+import { FaGithub, FaLinkedinIn, FaFacebook } from "react-icons/fa6";
 import { Mail, Phone, MapPin, ArrowUpRight, Sparkles } from "lucide-react";
 import Image from "next/image";
 
@@ -26,10 +26,10 @@ const footerLinks = {
     { name: "Automation Systems", href: "/services" },
   ],
   socials: [
-    { icon: FaGithub, href: "#" },
-    { icon: FaLinkedinIn, href: "#" },
-    { icon: FaXTwitter, href: "#" },
-    { icon: FaDribbble, href: "#" },
+    { icon: FaGithub, href: "https://github.com/MuhammadYaxir" },
+    { icon: FaLinkedinIn, href: "https://www.linkedin.com/in/muhammad-yasir-dev" },
+    { icon: FaFacebook, href: "https://www.facebook.com/muhammadyasir.yasir.982" },
+    
   ],
 };
 
@@ -104,6 +104,8 @@ export default function Footer() {
                 <motion.a
                   key={idx}
                   href={social.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   whileHover={{ y: -4 }}
                   className="h-10 w-10 rounded-xl bg-white border border-blue-100 text-slate-600 flex items-center justify-center shadow-sm hover:text-blue-600 hover:border-blue-200 hover:shadow-md transition-all"
                 >
