@@ -21,7 +21,7 @@ import {
 } from "lucide-react";
 
 const team = [
-  { name: "Yasir", role: "Founder & CEO", image: "/yasir-founder.webp" },
+  { name: "Muhammad Yasir", role: "Founder & CEO", image: "/muhammad-yasir-founder-ceo.webp" },
   { name: "Ghulam Yaseen", role: "Seo Expert & Digital Marketer", image: "/yaseen.webp" },
   { name: "Shair Afgun", role: "Lead Developer", image: "/shair-afgun.webp" },
 ];
