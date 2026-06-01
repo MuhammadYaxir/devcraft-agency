@@ -7,14 +7,11 @@ import {
   ArrowRight,
   Building2,
   CalendarDays,
-  Check,
   CheckCircle2,
   Mail,
   MapPin,
-  MessageSquare,
   Pencil,
   Play,
-  Send,
   ShieldCheck,
   User,
 } from "lucide-react";
@@ -29,12 +26,7 @@ const projectTypes = [
   "AI Automation",
 ];
 
-const budgets = [
-  "$500 – $1k",
-  "$1k – $3k",
-  "$3k – $5k",
-  "$5k+",
-];
+const budgets = ["$500 – $1k", "$1k – $3k", "$3k – $5k", "$5k+"];
 
 const contactCards = [
   {
@@ -79,7 +71,9 @@ export default function ContactFormSection() {
   const [error, setError] = useState("");
 
   const updateField = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
   ) => {
     const { name, value } = e.target;
 
@@ -97,12 +91,21 @@ export default function ContactFormSection() {
     setError("");
 
     try {
+      const payload = {
+        name: formData.name,
+        email: formData.email,
+        company: formData.company,
+        projectType: formData.projectType,
+        budget: formData.budget,
+        message: formData.message,
+      };
+
       const response = await fetch("/api/contact", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(payload),
       });
 
       const data = await response.json();
@@ -131,44 +134,45 @@ export default function ContactFormSection() {
 
   return (
     <main className="bg-[#f7f8fb] text-black">
-      <section className="relative overflow-hidden px-6 pb-16 pt-20">
-        <div className="absolute bottom-0 left-0 h-[360px] w-[360px] rounded-full bg-blue-100/70 blur-3xl" />
-        <div className="mx-auto grid max-w-[1320px] grid-cols-1 gap-14 lg:grid-cols-[1fr_560px] lg:items-center">
+      <section className="relative overflow-hidden px-6 pb-10 pt-14">
+        <div className="absolute bottom-0 left-0 h-[300px] w-[300px] rounded-full bg-blue-100/70 blur-3xl" />
+
+        <div className="mx-auto grid max-w-[1320px] grid-cols-1 gap-8 lg:grid-cols-[1fr_520px] lg:items-center">
           <motion.div
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
           >
-            <div className="mb-8 flex items-center gap-3 text-xs font-black uppercase tracking-wide">
+            <div className="mb-6 flex items-center gap-3 text-xs font-black uppercase tracking-wide">
               <span className="h-2 w-2 rounded-full bg-blue-600" />
               Let’s Connect
             </div>
 
-            <h1 className="max-w-xl text-5xl font-black uppercase leading-[1.05] tracking-[-0.05em] md:text-7xl">
+            <h1 className="max-w-xl text-4xl font-black uppercase leading-[1.05] tracking-[-0.05em] md:text-6xl">
               Let’s Build Something{" "}
               <span className="text-blue-600">Extraordinary</span> Together.
             </h1>
 
-            <p className="mt-8 max-w-md text-lg leading-8 text-gray-600">
-              Have a project in mind or just want to say hello? Fill out the form
-              and we’ll get back to you within 24 hours.
+            <p className="mt-6 max-w-md text-base leading-7 text-gray-600">
+              Have a project in mind or just want to say hello? Fill out the
+              form and we’ll get back to you within 24 hours.
             </p>
 
             <a
               href="https://wa.me/923099997547?text=Hello%20Muhammad%20Yasir%2C%20I%20want%20to%20discuss%20a%20project."
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-8 inline-flex items-center gap-4"
+              className="mt-6 inline-flex items-center gap-4"
             >
-              <span className="flex h-12 w-12 items-center justify-center rounded-full bg-black text-white">
+              <span className="flex h-11 w-11 items-center justify-center rounded-full bg-black text-white">
                 <Play className="h-4 w-4 fill-white" />
               </span>
               <span className="border-b border-blue-600 pb-1 text-sm font-black uppercase">
-                Schedule a call instead
+                Whatsapp Us
               </span>
             </a>
 
-            <div className="mt-14">
-              <p className="mb-5 text-xs font-black uppercase tracking-wider text-gray-500">
+            <div className="mt-10">
+              <p className="mb-4 text-xs font-black uppercase tracking-wider text-gray-500">
                 We respond fast
               </p>
 
@@ -177,12 +181,12 @@ export default function ContactFormSection() {
                   {["Y", "C", "D", "A"].map((item) => (
                     <div
                       key={item}
-                      className="flex h-10 w-10 items-center justify-center rounded-full border-2 border-white bg-black text-xs font-black text-white"
+                      className="flex h-9 w-9 items-center justify-center rounded-full border-2 border-white bg-black text-xs font-black text-white"
                     >
                       {item}
                     </div>
                   ))}
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full border-2 border-white bg-blue-600 text-white">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-full border-2 border-white bg-blue-600 text-white">
                     +
                   </div>
                 </div>
@@ -200,13 +204,13 @@ export default function ContactFormSection() {
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.15 }}
-            className="rounded-xl bg-white p-8 shadow-[0_25px_80px_rgba(0,0,0,0.08)] md:p-10"
+            className="rounded-xl bg-white p-5 shadow-[0_25px_80px_rgba(0,0,0,0.08)] md:p-6"
           >
-            <h2 className="mb-8 text-lg font-black uppercase">
+            <h2 className="mb-5 text-lg font-black uppercase">
               Send us a message
             </h2>
 
-            <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+            <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
               <div className="relative">
                 <User className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
                 <input
@@ -214,7 +218,8 @@ export default function ContactFormSection() {
                   value={formData.name}
                   onChange={updateField}
                   placeholder="Your Name"
-                  className="h-14 w-full rounded-lg border border-gray-200 bg-white pl-11 pr-4 text-sm outline-none focus:border-blue-600"
+                  required
+                  className="h-10 w-full rounded-lg border border-gray-200 bg-white pl-11 pr-4 text-sm outline-none focus:border-blue-600"
                 />
               </div>
 
@@ -226,32 +231,33 @@ export default function ContactFormSection() {
                   onChange={updateField}
                   type="email"
                   placeholder="Email Address"
-                  className="h-14 w-full rounded-lg border border-gray-200 bg-white pl-11 pr-4 text-sm outline-none focus:border-blue-600"
+                  required
+                  className="h-10 w-full rounded-lg border border-gray-200 bg-white pl-11 pr-4 text-sm outline-none focus:border-blue-600"
                 />
               </div>
             </div>
 
-            <div className="relative mt-5">
+            <div className="relative mt-3">
               <Building2 className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
               <input
                 name="company"
                 value={formData.company}
                 onChange={updateField}
                 placeholder="Company / Organization"
-                className="h-14 w-full rounded-lg border border-gray-200 bg-white pl-11 pr-4 text-sm outline-none focus:border-blue-600"
+                className="h-10 w-full rounded-lg border border-gray-200 bg-white pl-11 pr-4 text-sm outline-none focus:border-blue-600"
               />
             </div>
 
-            <div className="mt-5 grid grid-cols-1 gap-5 md:grid-cols-2">
+            <div className="mt-3 grid grid-cols-1 gap-3 md:grid-cols-2">
               <div>
-                <label className="mb-2 block text-xs text-gray-600">
+                <label className="mb-1.5 block text-xs text-gray-600">
                   Project Type
                 </label>
                 <select
                   name="projectType"
                   value={formData.projectType}
                   onChange={updateField}
-                  className="h-14 w-full rounded-lg border border-gray-200 bg-white px-4 text-sm text-gray-600 outline-none focus:border-blue-600"
+                  className="h-10 w-full rounded-lg border border-gray-200 bg-white px-4 text-sm text-gray-600 outline-none focus:border-blue-600"
                 >
                   <option value="">Select a service</option>
                   {projectTypes.map((type) => (
@@ -263,14 +269,14 @@ export default function ContactFormSection() {
               </div>
 
               <div>
-                <label className="mb-2 block text-xs text-gray-600">
+                <label className="mb-1.5 block text-xs text-gray-600">
                   Budget Range
                 </label>
                 <select
                   name="budget"
                   value={formData.budget}
                   onChange={updateField}
-                  className="h-14 w-full rounded-lg border border-gray-200 bg-white px-4 text-sm text-gray-600 outline-none focus:border-blue-600"
+                  className="h-10 w-full rounded-lg border border-gray-200 bg-white px-4 text-sm text-gray-600 outline-none focus:border-blue-600"
                 >
                   <option value="">Select your budget</option>
                   {budgets.map((budget) => (
@@ -282,19 +288,20 @@ export default function ContactFormSection() {
               </div>
             </div>
 
-            <div className="relative mt-5">
-              <Pencil className="absolute left-4 top-5 h-4 w-4 text-gray-400" />
+            <div className="relative mt-3">
+              <Pencil className="absolute left-4 top-4 h-4 w-4 text-gray-400" />
               <textarea
                 name="message"
                 value={formData.message}
                 onChange={updateField}
                 placeholder="Tell us about your project"
-                rows={6}
-                className="w-full resize-none rounded-lg border border-gray-200 bg-white p-4 pl-11 text-sm outline-none focus:border-blue-600"
+                rows={3}
+                required
+                className="w-full resize-none rounded-lg border border-gray-200 bg-white p-3 pl-11 text-sm outline-none focus:border-blue-600"
               />
             </div>
 
-            <label className="mt-4 flex items-center gap-3 text-xs text-gray-600">
+            <label className="mt-3 flex items-center gap-3 text-xs text-gray-600">
               <input
                 type="checkbox"
                 checked={formData.agree}
@@ -304,20 +311,21 @@ export default function ContactFormSection() {
                     agree: e.target.checked,
                   }))
                 }
-                className="h-5 w-5 accent-blue-600"
+                className="h-4 w-4 accent-blue-600"
               />
-              I agree to the <span className="text-blue-600">Privacy Policy</span>
+              I agree to the{" "}
+              <span className="text-blue-600">Privacy Policy</span>
             </label>
 
             {success && (
-              <div className="mt-5 flex items-center gap-3 text-sm text-green-600">
+              <div className="mt-3 flex items-center gap-3 text-sm text-green-600">
                 <CheckCircle2 className="h-4 w-4" />
                 {success}
               </div>
             )}
 
             {error && (
-              <div className="mt-5 flex items-center gap-3 text-sm text-red-600">
+              <div className="mt-3 flex items-center gap-3 text-sm text-red-600">
                 <AlertCircle className="h-4 w-4" />
                 {error}
               </div>
@@ -326,13 +334,13 @@ export default function ContactFormSection() {
             <button
               type="submit"
               disabled={loading || !formData.agree}
-              className="mt-8 flex h-14 w-full items-center justify-center gap-3 rounded-full bg-black text-sm font-black uppercase tracking-wide text-white transition hover:bg-blue-600 disabled:cursor-not-allowed disabled:opacity-60"
+              className="mt-5 flex h-11 w-full items-center justify-center gap-3 rounded-full bg-black text-sm font-black uppercase tracking-wide text-white transition hover:bg-blue-600 disabled:cursor-not-allowed disabled:opacity-60"
             >
               {loading ? "Sending..." : "Send Message"}
               <ArrowRight className="h-4 w-4" />
             </button>
 
-            <div className="mt-5 flex items-center justify-center gap-2 text-xs text-gray-500">
+            <div className="mt-4 flex items-center justify-center gap-2 text-xs text-gray-500">
               <ShieldCheck className="h-4 w-4 text-blue-600" />
               Your information is 100% secure and confidential.
             </div>
@@ -429,31 +437,6 @@ export default function ContactFormSection() {
               </div>
             ))}
           </div>
-        </div>
-      </section>
-
-      <section className="bg-black px-6 py-14 text-white">
-        <div className="mx-auto flex max-w-[1320px] flex-col items-start justify-between gap-8 md:flex-row md:items-center">
-          <div>
-            <div className="mb-4 flex items-center gap-2 text-xs font-black uppercase tracking-wider text-gray-400">
-              <span className="h-2 w-2 rounded-full bg-blue-600" />
-              Ready to start?
-            </div>
-
-            <h2 className="max-w-3xl text-4xl font-black leading-tight md:text-5xl">
-              Let’s turn your idea into a powerful digital experience.
-            </h2>
-          </div>
-
-          <a
-            href="https://wa.me/923099997547?text=Hello%20Muhammad%20Yasir%2C%20I%20want%20to%20start%20a%20project."
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-3 rounded-full bg-blue-600 px-10 py-5 text-sm font-black uppercase text-white transition hover:bg-blue-700"
-          >
-            Start a Project
-            <ArrowRight className="h-4 w-4" />
-          </a>
         </div>
       </section>
     </main>

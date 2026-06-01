@@ -44,19 +44,23 @@ const Navbar = ({ transparent = false }: NavbarProps) => {
     >
       <div className="mx-auto flex h-20 max-w-[1500px] items-center justify-between px-5 sm:px-8 lg:px-12">
         {/* Logo */}
-        <Link
-          href="/"
-          className="flex items-center justify-center transition-transform duration-300 hover:scale-[1.02]"
-        >
-          <Image
-            src={isTransparent ? "/craftodev-logo-white.png" : "/craftodev-logo.png"}
-            alt="CraftoDev"
-            width={220}
-            height={60}
-            priority
-            className="h-auto w-[160px] object-contain lg:w-[180px]"
-          />
-        </Link>
+<Link
+  href="/"
+  className="flex items-center justify-center transition-transform duration-300 hover:scale-[1.02]"
+>
+  <Image
+    src={
+      isTransparent
+        ? "/craftodev-logo-white.png"
+        : "/craftodev-logo.png"
+    }
+    alt="CraftoDev"
+    width={180}
+    height={50}
+    priority
+    className="h-auto w-[120px] object-contain lg:w-[140px]"
+  />
+</Link>
 
         {/* Desktop Nav */}
         <div className="hidden items-center gap-10 lg:flex">
