@@ -201,13 +201,13 @@ export default function AdminDashboardPage() {
       <aside className="relative z-20 hidden w-[245px] shrink-0 flex-col border-r border-blue-100 bg-white/80 px-5 py-6 shadow-[16px_0_60px_rgba(37,99,235,0.05)] backdrop-blur-2xl lg:flex">
         <div className="mb-8 px-1">
           <Image
-            src="/craftodev-logo.png"
-            alt="CraftODev Logo"
-            width={155}
-            height={45}
-            priority
-            className="h-auto w-auto max-w-[155px]"
-          />
+  src="/craftodev-logo.webp"
+  alt="CraftODev Logo"
+  width={155}
+  height={45}
+  priority
+  className="w-auto h-auto max-w-[155px] object-contain"
+/>
         </div>
 
         <nav className="flex-1 space-y-1.5">
@@ -279,14 +279,14 @@ export default function AdminDashboardPage() {
               className="fixed inset-y-0 left-0 z-50 flex w-64 flex-col border-r border-blue-100 bg-white p-5 shadow-2xl lg:hidden"
             >
               <div className="mb-8 flex items-center justify-between">
-                <Image
-                  src="/craftodev-logo.png"
-                  alt="CraftODev Logo"
-                  width={140}
-                  height={42}
-                  priority
-                  className="h-auto w-auto max-w-[140px]"
-                />
+               <Image
+  src="/craftodev-logo.webp"
+  alt="CraftODev Logo"
+  width={140}
+  height={42}
+  priority
+  className="w-auto h-auto max-w-[120px] sm:max-w-[140px] object-contain"
+/>
 
                 <button
                   onClick={() => setIsMobileMenuOpen(false)}

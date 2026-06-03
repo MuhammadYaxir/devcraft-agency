@@ -48,18 +48,18 @@ const Navbar = ({ transparent = false }: NavbarProps) => {
   href="/"
   className="flex items-center justify-center transition-transform duration-300 hover:scale-[1.02]"
 >
-  <Image
-    src={
-      isTransparent
-        ? "/craftodev-logo-white.png"
-        : "/craftodev-logo.png"
-    }
-    alt="CraftoDev"
-    width={180}
-    height={50}
-    priority
-    className="h-auto w-[120px] object-contain lg:w-[140px]"
-  />
+ <Image
+  src={
+    isTransparent
+      ? "/craftodev-logo-white.webp"
+      : "/craftodev-logo.webp"
+  }
+  alt="CraftoDev"
+  width={180}
+  height={50}
+  priority
+  className="w-auto h-auto max-w-[120px] lg:max-w-[140px] object-contain"
+/>
 </Link>
 
         {/* Desktop Nav */}
@@ -144,14 +144,14 @@ const Navbar = ({ transparent = false }: NavbarProps) => {
               className="fixed right-0 top-0 z-[102] flex h-screen w-full max-w-md flex-col bg-[#05070D] px-8 py-7 text-white lg:hidden"
             >
               <div className="flex items-center justify-between">
-                <Image
-                  src="/craftodev-logo-white.png"
-                  alt="CraftoDev"
-                  width={180}
-                  height={50}
-                  priority
-                  className="h-auto w-[150px] object-contain"
-                />
+               <Image
+  src="/craftodev-logo-white.webp"
+  alt="CraftoDev"
+  width={180}
+  height={50}
+  priority
+  className="w-auto h-auto max-w-[120px] sm:max-w-[150px] object-contain"
+/>
 
                 <button
                   onClick={() => setIsOpen(false)}

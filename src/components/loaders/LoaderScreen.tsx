@@ -94,13 +94,13 @@ export default function LoaderScreen({ onComplete }: LoaderScreenProps) {
               />
 
               <Image
-                src="/craftodev-logo.png"
-                alt="CraftODev Logo"
-                width={260}
-                height={80}
-                priority
-                className="relative z-10 h-auto w-auto max-w-[230px]"
-              />
+  src="/craftodev-logo.webp"
+  alt="CraftODev Logo"
+  width={260}
+  height={80}
+  priority
+  className="relative z-10 w-auto h-auto max-w-[180px] sm:max-w-[230px] object-contain"
+ />
             </motion.div>
 
             {/* Loading Ring */}

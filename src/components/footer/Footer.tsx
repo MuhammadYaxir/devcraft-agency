@@ -81,7 +81,7 @@ export default function Footer() {
           >
             <div className="flex flex-col gap-3">
   <Image
-    src="/craftodev-logo.png"
+    src="/craftodev-logo.webp"
     alt="CraftODev Logo"
     width={220}
     height={60}

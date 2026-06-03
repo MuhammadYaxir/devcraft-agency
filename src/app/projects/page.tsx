@@ -27,51 +27,8 @@ const categories = [
   "Branding",
 ];
 
-const fallbackProjects: Project[] = [
-  {
-    _id: "1",
-    title: "Finex.",
-    slug: "finex",
-    category: "Fintech",
-    description:
-      "Next-gen banking platform with AI-powered financial insights and automation.",
-    featuredImage: "/projects/finex.webp",
-    techStack: ["Next.js", "AI", "Dashboard"],
-  },
-  {
-    _id: "2",
-    title: "Shoply.",
-    slug: "shoply",
-    category: "E-Commerce",
-    description:
-      "High-converting e-commerce store built for performance and scalability.",
-    featuredImage: "/projects/shoply.webp",
-    techStack: ["Next.js", "Stripe", "Commerce"],
-  },
-  {
-    _id: "3",
-    title: "AI Chatbot.",
-    slug: "ai-chatbot",
-    category: "AI Solution",
-    description:
-      "Intelligent chatbot solution that automates customer support and boosts retention.",
-    featuredImage: "/projects/ai-chatbot.webp",
-    techStack: ["AI", "Automation", "Chatbot"],
-  },
-  {
-    _id: "4",
-    title: "MediCare.",
-    slug: "medicare",
-    category: "Healthcare",
-    description:
-      "Secure patient portal with appointment booking and telehealth functionality.",
-    featuredImage: "/projects/medicare.webp",
-    techStack: ["Healthcare", "Portal", "SaaS"],
-  },
-];
-
 export default function PublicProjectsListingPage() {
-  const [projects, setProjects] = useState<Project[]>(fallbackProjects);
+  const [projects, setProjects] = useState<Project[]>([]);
   const [activeCategory, setActiveCategory] = useState("All");
   const [isLoading, setIsLoading] = useState(true);
   const [hasFetchError, setHasFetchError] = useState(false);
@@ -82,15 +39,21 @@ export default function PublicProjectsListingPage() {
         setIsLoading(true);
         setHasFetchError(false);
 
-        const response = await fetch("/api/projects?status=published");
+        const response = await fetch("/api/projects?status=published", {
+          cache: "no-store",
+        });
+
         const json = await response.json();
 
-        if (json.success && Array.isArray(json.data) && json.data.length > 0) {
+        if (json.success && Array.isArray(json.data)) {
           setProjects(json.data);
+        } else {
+          setProjects([]);
         }
       } catch (err) {
         console.error("Failed loading projects:", err);
         setHasFetchError(true);
+        setProjects([]);
       } finally {
         setIsLoading(false);
       }
@@ -108,13 +71,12 @@ export default function PublicProjectsListingPage() {
 
   return (
     <>
-      <Navbar transparent/>
-      <main className="min-h-screen bg-[#02060D]  text-white">
+      <Navbar transparent />
+      <main className="min-h-screen bg-[#02060D] text-white">
         <section className="relative overflow-hidden px-5 py-20 sm:px-8 lg:px-12">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,#1463FF22,transparent_35%),radial-gradient(circle_at_bottom_right,#0F172A,transparent_35%)]" />
 
           <div className="relative z-10 mx-auto max-w-[1500px]">
-            {/* Header */}
             <div className="mb-16 grid gap-10 lg:grid-cols-[1fr_0.9fr] lg:items-end">
               <div>
                 <div className="mb-6 flex items-center gap-2">
@@ -130,8 +92,6 @@ export default function PublicProjectsListingPage() {
               </div>
 
               <div className="flex flex-col gap-10 lg:items-end">
-                
-
                 <Link
                   href="/contact"
                   className="hidden h-28 w-28 items-center justify-center rounded-full border border-white/15 text-center text-[10px] font-black uppercase tracking-[0.16em] text-white/70 transition hover:border-[#1463FF] hover:text-[#1463FF] lg:flex"
@@ -141,7 +101,6 @@ export default function PublicProjectsListingPage() {
               </div>
             </div>
 
-            {/* Filters */}
             <div className="mb-10 flex flex-wrap items-center justify-between gap-6">
               <div className="flex flex-wrap gap-8">
                 {categories.map((category) => (
@@ -163,31 +122,30 @@ export default function PublicProjectsListingPage() {
                   </button>
                 ))}
               </div>
-
-              <Link
-                href="/projects"
-                className="group flex items-center gap-4 text-[11px] font-black uppercase tracking-[0.12em] text-white"
-              >
-                View All Projects
-                <span className="flex h-9 w-9 items-center justify-center rounded-full border border-white/20 transition group-hover:border-[#1463FF] group-hover:text-[#1463FF]">
-                  <ArrowRight size={15} />
-                </span>
-              </Link>
             </div>
 
-            {/* Loading */}
             {isLoading ? (
               <div className="flex min-h-[400px] items-center justify-center">
                 <Loader2 className="animate-spin text-[#1463FF]" size={42} />
               </div>
-            ) : hasFetchError && filteredProjects.length === 0 ? (
+            ) : hasFetchError ? (
+              <div className="mx-auto flex max-w-md flex-col items-center justify-center rounded-3xl border border-white/10 bg-white/[0.03] p-14 text-center">
+                <HelpCircle className="mb-4 text-[#1463FF]" size={36} />
+                <h3 className="mb-2 text-lg font-black uppercase">
+                  Failed to Load Projects
+                </h3>
+                <p className="text-sm text-white/50">
+                  Please check your database connection or API route.
+                </p>
+              </div>
+            ) : filteredProjects.length === 0 ? (
               <div className="mx-auto flex max-w-md flex-col items-center justify-center rounded-3xl border border-white/10 bg-white/[0.03] p-14 text-center">
                 <HelpCircle className="mb-4 text-[#1463FF]" size={36} />
                 <h3 className="mb-2 text-lg font-black uppercase">
                   No Projects Found
                 </h3>
                 <p className="text-sm text-white/50">
-                  No published projects are available right now.
+                  Publish projects from the dashboard to display them here.
                 </p>
               </div>
             ) : (
@@ -201,7 +159,6 @@ export default function PublicProjectsListingPage() {
                     transition={{ duration: 0.65, delay: index * 0.05 }}
                     className="group grid min-h-[310px] overflow-hidden rounded-xl border border-white/10 bg-black/40 lg:grid-cols-[420px_1fr]"
                   >
-                    {/* Text */}
                     <div className="flex flex-col justify-between border-b border-white/10 p-8 lg:border-b-0 lg:border-r">
                       <div>
                         <div className="mb-10 flex items-center gap-10">
@@ -233,21 +190,24 @@ export default function PublicProjectsListingPage() {
                       </Link>
                     </div>
 
-                    {/* Image */}
                     <Link
                       href={`/projects/${project.slug}`}
                       className="relative min-h-[300px] overflow-hidden"
                     >
-                      <Image
-                        src={
-                          project.featuredImage ||
-                          "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1400"
-                        }
-                        alt={project.title}
-                        fill
-                        sizes="(max-width: 1024px) 100vw, 70vw"
-                        className="object-cover transition duration-700 group-hover:scale-105"
-                      />
+                      {project.featuredImage ? (
+                        <Image
+                          src={project.featuredImage}
+                          alt={project.title}
+                          fill
+                          sizes="(max-width: 1024px) 100vw, 70vw"
+                          className="object-cover transition duration-700 group-hover:scale-105"
+                        />
+                      ) : (
+                        <div className="flex h-full min-h-[300px] items-center justify-center bg-white/[0.04] text-sm font-bold uppercase tracking-[0.16em] text-white/40">
+                          No Image
+                        </div>
+                      )}
+
                       <div className="absolute inset-0 bg-gradient-to-r from-black/20 to-transparent" />
                     </Link>
                   </motion.article>
@@ -255,7 +215,6 @@ export default function PublicProjectsListingPage() {
               </div>
             )}
 
-            {/* CTA */}
             <div className="mt-8 rounded-xl border border-white/10 bg-white/[0.03] p-10">
               <div className="grid gap-8 lg:grid-cols-2 lg:items-center">
                 <div>

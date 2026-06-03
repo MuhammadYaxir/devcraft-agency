@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Loader2 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -21,62 +21,31 @@ interface Project {
   createdAt: string;
 }
 
-const fallbackProjects: Project[] = [
-  {
-    _id: "1",
-    title: "Finex.",
-    slug: "finex",
-    description:
-      "Next-gen banking platform for the modern world with powerful insights.",
-    category: "Fintech",
-    featuredImage: "/projects/finex.webp",
-    techStack: ["Next.js"],
-    featured: true,
-    status: "published",
-    createdAt: new Date().toISOString(),
-  },
-  {
-    _id: "2",
-    title: "Husky.",
-    slug: "husky",
-    description:
-      "Sustainable living made simple through a clean digital experience.",
-    category: "Lifestyle",
-    featuredImage: "/projects/husky.webp",
-    techStack: ["Next.js"],
-    featured: true,
-    status: "published",
-    createdAt: new Date().toISOString(),
-  },
-  {
-    _id: "3",
-    title: "Tankly.",
-    slug: "tankly",
-    description:
-      "Project management dashboard built to help teams deliver faster.",
-    category: "SaaS",
-    featuredImage: "/projects/tankly.webp",
-    techStack: ["Next.js"],
-    featured: true,
-    status: "published",
-    createdAt: new Date().toISOString(),
-  },
-];
-
 const ProjectsSection = () => {
-  const [projects, setProjects] = useState<Project[]>(fallbackProjects);
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchProjects = async () => {
       try {
-        const response = await fetch("/api/projects?status=published");
+        setIsLoading(true);
+
+        const response = await fetch("/api/projects?status=published", {
+          cache: "no-store",
+        });
+
         const json = await response.json();
 
-        if (json.success && Array.isArray(json.data) && json.data.length > 0) {
+        if (json.success && Array.isArray(json.data)) {
           setProjects(json.data.slice(0, 3));
+        } else {
+          setProjects([]);
         }
       } catch (error) {
         console.error("Failed loading projects:", error);
+        setProjects([]);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -112,96 +81,116 @@ const ProjectsSection = () => {
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
-          {projects.map((project, index) => {
-            const isLightCard = index === 1;
+        {isLoading ? (
+          <div className="flex min-h-[300px] items-center justify-center">
+            <Loader2 className="animate-spin text-[#1463FF]" size={38} />
+          </div>
+        ) : projects.length === 0 ? (
+          <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-10 text-center">
+            <h3 className="mb-2 text-xl font-bold">No projects found</h3>
+            <p className="text-sm text-white/55">
+              Add published projects from your dashboard to show them here.
+            </p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
+            {projects.map((project, index) => {
+              const isLightCard = index === 1;
 
-            return (
-              <motion.article
-                key={project._id}
-                initial={{ opacity: 0, y: 25 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.55, delay: index * 0.08 }}
-                className={`group overflow-hidden border ${
-                  isLightCard
-                    ? "border-white/20 bg-white text-[#05070D]"
-                    : "border-white/15 bg-black text-white"
-                }`}
-              >
-                {/* Image */}
-                <Link
-                  href={`/projects/${project.slug}`}
-                  className="relative block h-[230px] overflow-hidden"
+              return (
+                <motion.article
+                  key={project._id}
+                  initial={{ opacity: 0, y: 25 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.55, delay: index * 0.08 }}
+                  className={`group overflow-hidden border ${
+                    isLightCard
+                      ? "border-white/20 bg-white text-[#05070D]"
+                      : "border-white/15 bg-black text-white"
+                  }`}
                 >
-                  <Image
-                    src={
-                      project.featuredImage ||
-                      "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1200"
-                    }
-                    alt={project.title}
-                    fill
-                    sizes="(max-width: 1024px) 100vw, 33vw"
-                    className="object-cover transition duration-700 group-hover:scale-105"
-                  />
-
-                  <div
-                    className={`absolute inset-0 ${
-                      isLightCard
-                        ? "bg-white/5"
-                        : "bg-gradient-to-t from-black/35 to-transparent"
-                    }`}
-                  />
-
-                  <span
-                    className={`absolute left-5 top-5 text-[9px] font-black uppercase tracking-[0.16em] ${
-                      isLightCard ? "text-[#05070D]/55" : "text-white/60"
-                    }`}
-                  >
-                    {project.category}
-                  </span>
-                </Link>
-
-                {/* Content Under Image */}
-                <div className="p-6">
-                  <h3
-                    className={`mb-3 text-[30px] font-black leading-[1] tracking-[-0.05em] ${
-                      isLightCard ? "text-[#05070D]" : "text-white"
-                    }`}
-                  >
-                    {project.title}
-                  </h3>
-
-                  <p
-                    className={`mb-7 line-clamp-2 max-w-sm text-sm leading-6 ${
-                      isLightCard ? "text-[#05070D]/65" : "text-white/60"
-                    }`}
-                  >
-                    {project.description}
-                  </p>
-
                   <Link
                     href={`/projects/${project.slug}`}
-                    className={`group/link flex items-center gap-4 text-[11px] font-black uppercase tracking-[0.12em] ${
-                      isLightCard ? "text-[#05070D]" : "text-white"
-                    }`}
+                    className="relative block h-[230px] overflow-hidden"
                   >
-                    View Case Study
-                    <span
-                      className={`flex h-9 w-9 items-center justify-center rounded-full border transition ${
+                    {project.featuredImage ? (
+                      <Image
+                        src={project.featuredImage}
+                        alt={project.title}
+                        fill
+                        sizes="(max-width: 1024px) 100vw, 33vw"
+                        className="object-cover transition duration-700 group-hover:scale-105"
+                      />
+                    ) : (
+                      <div
+                        className={`flex h-full w-full items-center justify-center text-xs font-black uppercase tracking-[0.16em] ${
+                          isLightCard
+                            ? "bg-[#05070D]/5 text-[#05070D]/40"
+                            : "bg-white/[0.04] text-white/35"
+                        }`}
+                      >
+                        No Image
+                      </div>
+                    )}
+
+                    <div
+                      className={`absolute inset-0 ${
                         isLightCard
-                          ? "border-[#05070D]/25 group-hover/link:bg-[#05070D] group-hover/link:text-white"
-                          : "border-white/25 group-hover/link:border-[#1463FF] group-hover/link:text-[#1463FF]"
+                          ? "bg-white/5"
+                          : "bg-gradient-to-t from-black/35 to-transparent"
+                      }`}
+                    />
+
+                    <span
+                      className={`absolute left-5 top-5 text-[9px] font-black uppercase tracking-[0.16em] ${
+                        isLightCard ? "text-[#05070D]/55" : "text-white/60"
                       }`}
                     >
-                      <ArrowRight size={15} />
+                      {project.category}
                     </span>
                   </Link>
-                </div>
-              </motion.article>
-            );
-          })}
-        </div>
+
+                  <div className="p-6">
+                    <h3
+                      className={`mb-3 text-[30px] font-black leading-[1] tracking-[-0.05em] ${
+                        isLightCard ? "text-[#05070D]" : "text-white"
+                      }`}
+                    >
+                      {project.title}
+                    </h3>
+
+                    <p
+                      className={`mb-7 line-clamp-2 max-w-sm text-sm leading-6 ${
+                        isLightCard ? "text-[#05070D]/65" : "text-white/60"
+                      }`}
+                    >
+                      {project.description}
+                    </p>
+
+                    <Link
+                      href={`/projects/${project.slug}`}
+                      className={`group/link flex items-center gap-4 text-[11px] font-black uppercase tracking-[0.12em] ${
+                        isLightCard ? "text-[#05070D]" : "text-white"
+                      }`}
+                    >
+                      View Case Study
+                      <span
+                        className={`flex h-9 w-9 items-center justify-center rounded-full border transition ${
+                          isLightCard
+                            ? "border-[#05070D]/25 group-hover/link:bg-[#05070D] group-hover/link:text-white"
+                            : "border-white/25 group-hover/link:border-[#1463FF] group-hover/link:text-[#1463FF]"
+                        }`}
+                      >
+                        <ArrowRight size={15} />
+                      </span>
+                    </Link>
+                  </div>
+                </motion.article>
+              );
+            })}
+          </div>
+        )}
       </div>
     </section>
   );

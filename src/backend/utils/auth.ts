@@ -1,6 +1,6 @@
-import jwt from "jsonwebtoken";
+import jwt, { type Secret } from "jsonwebtoken";
 
-const JWT_SECRET = process.env.JWT_SECRET;
+const JWT_SECRET: Secret = process.env.JWT_SECRET || "";
 
 if (!JWT_SECRET) {
   throw new Error(
@@ -21,20 +21,10 @@ export function signAdminToken(payload: AdminJwtPayload): string {
 
 export function verifyAdminToken(token: string): AdminJwtPayload | null {
   try {
-    const decoded = jwt.verify(token, JWT_SECRET);
+    const decoded = jwt.verify(token, JWT_SECRET) as AdminJwtPayload;
 
-    if (
-      decoded &&
-      typeof decoded === "object" &&
-      "email" in decoded &&
-      "role" in decoded &&
-      decoded.role === "admin" &&
-      typeof decoded.email === "string"
-    ) {
-      return {
-        email: decoded.email,
-        role: "admin",
-      };
+    if (decoded?.email && decoded?.role === "admin") {
+      return decoded;
     }
 
     return null;

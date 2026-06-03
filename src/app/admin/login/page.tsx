@@ -98,14 +98,14 @@ export default function AdminLoginPage() {
       >
         {/* Branding */}
         <div className="mb-5 flex flex-col items-center text-center">
-          <Image
-            src="/craftodev-logo.png"
-            alt="CraftODev Logo"
-            width={210}
-            height={60}
-            priority
-            className="mb-4 h-auto w-auto max-w-[190px]"
-          />
+<Image
+  src="/craftodev-logo.webp"
+  alt="CraftODev Logo"
+  width={210}
+  height={60}
+  priority
+  className="mb-4 w-auto h-auto max-w-[160px] sm:max-w-[190px] object-contain"
+/>
 
           <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-2xl border border-blue-100 bg-white text-blue-600 shadow-[0_14px_45px_rgba(37,99,235,0.12)]">
             <ShieldCheck size={22} />
