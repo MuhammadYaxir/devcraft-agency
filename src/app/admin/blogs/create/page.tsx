@@ -85,9 +85,15 @@ export default function CreateBlogNodePage() {
         router.push("/admin/blogs");
       }, 1400);
 
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Data post validation interrupt crash:", err);
-      setErrorMessage(err.message || "An unhandled transaction pipeline crash occurred during execution.");
+
+      const message =
+        err instanceof Error
+          ? err.message
+          : "An unhandled transaction pipeline crash occurred during execution.";
+
+      setErrorMessage(message);
     } finally {
       setIsLoading(false);
     }

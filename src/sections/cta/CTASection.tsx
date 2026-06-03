@@ -1,129 +1,104 @@
 "use client";
 
-import React from 'react';
-import { motion } from 'framer-motion';
-import { ArrowRight, Calendar } from 'lucide-react';
+import React from "react";
+import { motion } from "framer-motion";
+import { ArrowRight, Calendar } from "lucide-react";
 import Link from "next/link";
+
+const particles = [
+  { top: "12%", left: "18%", duration: 6 },
+  { top: "28%", left: "76%", duration: 8 },
+  { top: "68%", left: "22%", duration: 7 },
+];
 
 export default function CTASection() {
   return (
-    <section className="relative w-full py-24 bg-[#050816] overflow-hidden">
-      {/* Background Effects: Mesh & Glows */}
-      <div className="absolute inset-0 z-0">
-        <motion.div 
-          animate={{
-            scale: [1, 1.2, 1],
-            opacity: [0.3, 0.5, 0.3],
-          }}
-          transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
-          className="absolute top-[-10%] left-[-10%] w-[60%] h-[60%] bg-purple-600/20 blur-[120px] rounded-full"
-        />
-        <motion.div 
-          animate={{
-            scale: [1.2, 1, 1.2],
-            opacity: [0.2, 0.4, 0.2],
-          }}
+    <section className="relative w-full overflow-hidden bg-[#050816] py-24">
+      <div className="absolute inset-0 z-0 pointer-events-none">
+        <motion.div
+          animate={{ scale: [1, 1.08, 1], opacity: [0.25, 0.4, 0.25] }}
           transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
-          className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-blue-600/10 blur-[100px] rounded-full"
+          className="absolute left-[-10%] top-[-10%] h-[50%] w-[50%] rounded-full bg-purple-600/20 blur-[80px]"
+        />
+
+        <motion.div
+          animate={{ scale: [1.05, 1, 1.05], opacity: [0.2, 0.35, 0.2] }}
+          transition={{ duration: 14, repeat: Infinity, ease: "linear" }}
+          className="absolute bottom-[-10%] right-[-10%] h-[45%] w-[45%] rounded-full bg-blue-600/10 blur-[70px]"
         />
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 relative z-10">
-        {/* Main CTA Container */}
-        <motion.div 
-          initial={{ opacity: 0, y: 30 }}
+      <div className="relative z-10 mx-auto max-w-7xl px-6">
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="relative overflow-hidden rounded-[2.5rem] border border-white/10 bg-white/[0.02] backdrop-blur-3xl px-8 py-20 md:py-28 text-center"
+          viewport={{ once: true, margin: "-80px" }}
+          transition={{ duration: 0.5, ease: "easeOut" }}
+          className="relative overflow-hidden rounded-[2.5rem] border border-white/10 bg-white/[0.02] px-8 py-20 text-center backdrop-blur-2xl md:py-28"
         >
-          {/* Internal Animated Mesh Overlay */}
-          <div className="absolute inset-0 pointer-events-none opacity-30">
-            <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_50%_50%,rgba(147,51,234,0.1),transparent_50%)]" />
+          <div className="pointer-events-none absolute inset-0 opacity-25">
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(147,51,234,0.1),transparent_50%)]" />
           </div>
 
-          <div className="relative z-10 max-w-4xl mx-auto">
-            {/* Label */}
-            <motion.span 
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              transition={{ delay: 0.2 }}
-              className="text-[10px] font-bold uppercase tracking-[0.5em] text-purple-500 mb-6 block"
-            >
-              LET'S WORK TOGETHER
-            </motion.span>
+          <div className="relative z-10 mx-auto max-w-4xl">
+            <span className="mb-6 block text-[10px] font-bold uppercase tracking-[0.5em] text-purple-500">
+              LET&apos;S WORK TOGETHER
+            </span>
 
-            {/* Heading */}
-            <motion.h2 
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
-              className="text-4xl md:text-6xl font-bold text-white mb-8 leading-[1.1]"
-            >
+            <h2 className="mb-8 text-4xl font-bold leading-[1.1] text-white md:text-6xl">
               Ready To Build Your Next <br />
               <span className="bg-gradient-to-r from-purple-400 via-purple-600 to-blue-500 bg-clip-text text-transparent">
                 Digital Experience?
               </span>
-            </motion.h2>
+            </h2>
 
-            {/* Description */}
-            <motion.p 
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4 }}
-              className="text-gray-400 text-lg md:text-xl mb-12 max-w-2xl mx-auto leading-relaxed"
-            >
-              Join forward-thinking brands and let's craft a high-performance digital product that scales with your ambition.
-            </motion.p>
+            <p className="mx-auto mb-12 max-w-2xl text-lg leading-relaxed text-gray-400 md:text-xl">
+              Join forward-thinking brands and let&apos;s craft a
+              high-performance digital product that scales with your ambition.
+            </p>
 
-            {/* Buttons */}
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5 }}
-              className="flex flex-col sm:flex-row gap-4 justify-center items-center"
-            >
-              {/* Primary Button */}
-              <button className="group relative px-8 py-4 bg-gradient-to-r from-purple-600 to-purple-800 text-white rounded-xl font-bold transition-all duration-300 hover:scale-105 active:scale-95 shadow-[0_0_20px_rgba(147,51,234,0.3)] hover:shadow-[0_0_30px_rgba(147,51,234,0.5)] flex items-center gap-2">
-                <Link href="/contact" className="flex items-center gap-2">
-                  Start Your Project
-                  <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
-                </Link>
-              </button>
+            <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
+              <Link
+                href="/contact"
+                className="group relative flex items-center gap-2 rounded-xl bg-gradient-to-r from-purple-600 to-purple-800 px-8 py-4 font-bold text-white shadow-[0_0_20px_rgba(147,51,234,0.3)] transition-transform duration-300 hover:scale-105 hover:shadow-[0_0_30px_rgba(147,51,234,0.5)] active:scale-95"
+              >
+                Start Your Project
+                <ArrowRight
+                  size={18}
+                  className="transition-transform group-hover:translate-x-1"
+                />
+              </Link>
 
-              {/* Secondary Button */}
               <a
-  href="https://calendly.com/yasirtech129/free-project-consultation"
-  target="_blank"
-  rel="noopener noreferrer"
-  className="px-8 py-4 bg-white/5 border border-white/10 text-white rounded-xl font-bold transition-all duration-300 hover:bg-white/10 hover:backdrop-blur-lg active:scale-95 flex items-center gap-2"
->
-  <Calendar size={18} />
-  Schedule A Call
-</a>
-            </motion.div>
+                href="https://calendly.com/yasirtech129/free-project-consultation"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-8 py-4 font-bold text-white transition-colors duration-300 hover:bg-white/10 active:scale-95"
+              >
+                <Calendar size={18} />
+                Schedule A Call
+              </a>
+            </div>
           </div>
 
-          {/* Floating Particles (Simplified CSS Animation) */}
-          <div className="absolute inset-0 pointer-events-none">
-             {[...Array(5)].map((_, i) => (
-               <motion.div
-                key={i}
-                animate={{
-                  y: [0, -40, 0],
-                  opacity: [0, 0.5, 0],
-                }}
+          <div className="pointer-events-none absolute inset-0">
+            {particles.map((particle, index) => (
+              <motion.div
+                key={`${particle.top}-${particle.left}`}
+                animate={{ y: [0, -32, 0], opacity: [0, 0.45, 0] }}
                 transition={{
-                  duration: Math.random() * 5 + 5,
+                  duration: particle.duration,
                   repeat: Infinity,
-                  delay: i * 2,
+                  delay: index * 1.5,
+                  ease: "easeInOut",
                 }}
-                className="absolute w-1 h-1 bg-purple-500 rounded-full"
+                className="absolute h-1 w-1 rounded-full bg-purple-500"
                 style={{
-                  top: `${Math.random() * 100}%`,
-                  left: `${Math.random() * 100}%`,
+                  top: particle.top,
+                  left: particle.left,
                 }}
-               />
-             ))}
+              />
+            ))}
           </div>
         </motion.div>
       </div>

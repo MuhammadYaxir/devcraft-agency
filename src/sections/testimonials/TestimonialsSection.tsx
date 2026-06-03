@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useRef, useState } from "react";
+import Image from "next/image";
+import Link from "next/link";
 import { Star, Quote, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -127,20 +129,18 @@ export default function TestimonialsSection() {
 
   return (
     <section className="relative w-full overflow-hidden bg-[#F8FBFF] py-24">
-      {/* Background Grid */}
       <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(59,130,246,0.06)_1px,transparent_1px),linear-gradient(to_bottom,rgba(59,130,246,0.06)_1px,transparent_1px)] bg-[size:52px_52px]" />
 
-      {/* Soft Glows */}
-      <div className="absolute left-[-120px] top-[-120px] h-[380px] w-[380px] rounded-full bg-blue-500/10 blur-[110px]" />
-      <div className="absolute bottom-[-140px] right-[-120px] h-[420px] w-[420px] rounded-full bg-cyan-400/10 blur-[120px]" />
+      <div className="absolute left-[-120px] top-[-120px] h-[340px] w-[340px] rounded-full bg-blue-500/10 blur-[70px]" />
+      <div className="absolute bottom-[-140px] right-[-120px] h-[360px] w-[360px] rounded-full bg-cyan-400/10 blur-[80px]" />
 
       <div className="relative z-10 mx-auto max-w-7xl px-6">
-        {/* Heading */}
         <div className="mb-16 text-center">
           <motion.span
             initial={{ opacity: 0, y: 14 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            viewport={{ once: true, margin: "-60px" }}
+            transition={{ duration: 0.35, ease: "easeOut" }}
             className="inline-flex items-center gap-2 rounded-full border border-blue-100 bg-white/80 px-4 py-2 text-[11px] font-bold uppercase tracking-[0.28em] text-blue-600 shadow-sm"
           >
             <Star size={14} className="fill-blue-500 text-blue-500" />
@@ -150,8 +150,8 @@ export default function TestimonialsSection() {
           <motion.h2
             initial={{ opacity: 0, y: 18 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.08 }}
+            viewport={{ once: true, margin: "-60px" }}
+            transition={{ duration: 0.35, delay: 0.06, ease: "easeOut" }}
             className="mt-5 text-4xl font-black tracking-tight text-slate-950 md:text-5xl"
           >
             What Our Clients Say
@@ -160,8 +160,8 @@ export default function TestimonialsSection() {
           <motion.p
             initial={{ opacity: 0, y: 18 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.16 }}
+            viewport={{ once: true, margin: "-60px" }}
+            transition={{ duration: 0.35, delay: 0.1, ease: "easeOut" }}
             className="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-slate-600"
           >
             Trusted by founders, startups, and growing brands who need modern
@@ -170,7 +170,6 @@ export default function TestimonialsSection() {
           </motion.p>
         </div>
 
-        {/* Testimonials Slider */}
         <div
           ref={scrollRef}
           onScroll={handleScroll}
@@ -182,12 +181,15 @@ export default function TestimonialsSection() {
               key={t.id}
               initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.04 }}
-              className="group relative flex-shrink-0 snap-center overflow-hidden rounded-[1.7rem] border border-blue-100 bg-white/85 p-7 shadow-[0_20px_60px_rgba(37,99,235,0.08)] backdrop-blur-xl transition-all duration-500 hover:-translate-y-1 hover:border-blue-200 hover:shadow-[0_28px_80px_rgba(37,99,235,0.14)] w-[85vw] md:w-[calc(33.333%-16px)]"
+              viewport={{ once: true, margin: "-80px" }}
+              transition={{
+                duration: 0.35,
+                delay: index * 0.02,
+                ease: "easeOut",
+              }}
+              className="group relative flex-shrink-0 snap-center overflow-hidden rounded-[1.7rem] border border-blue-100 bg-white/85 p-7 shadow-[0_20px_60px_rgba(37,99,235,0.08)] backdrop-blur-xl transition-transform duration-300 hover:-translate-y-1 hover:border-blue-200 hover:shadow-[0_28px_80px_rgba(37,99,235,0.14)] w-[85vw] md:w-[calc(33.333%-16px)]"
             >
-              {/* Card Gradient */}
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(37,99,235,0.10),transparent_35%)] opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(37,99,235,0.10),transparent_35%)] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
 
               <div className="relative z-10 flex h-full flex-col">
                 <div className="mb-6 flex items-center justify-between">
@@ -216,10 +218,14 @@ export default function TestimonialsSection() {
 
                 <div className="mt-auto flex items-center gap-4">
                   <div className="h-12 w-12 overflow-hidden rounded-full border border-blue-100 bg-blue-50 shadow-sm">
-                    <img
+                    <Image
                       src={t.image ?? `https://i.pravatar.cc/150?u=${t.id}`}
                       alt={t.name}
-                      className="h-full w-full object-cover grayscale transition-all duration-500 group-hover:grayscale-0"
+                      width={48}
+                      height={48}
+                      sizes="48px"
+                      loading="lazy"
+                      className="h-full w-full object-cover grayscale transition-all duration-300 group-hover:grayscale-0"
                     />
                   </div>
 
@@ -235,7 +241,6 @@ export default function TestimonialsSection() {
           ))}
         </div>
 
-        {/* Dots + CTA */}
         <div className="flex flex-col items-center justify-center gap-7">
           <div className="flex justify-center gap-3">
             {[0, 1, 2].map((i) => (
@@ -252,7 +257,7 @@ export default function TestimonialsSection() {
             ))}
           </div>
 
-          <a
+          <Link
             href="/contact"
             className="group inline-flex items-center gap-2 rounded-full bg-blue-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-600/20 transition-all duration-300 hover:-translate-y-0.5 hover:bg-blue-700"
           >
@@ -261,7 +266,7 @@ export default function TestimonialsSection() {
               size={16}
               className="transition-transform duration-300 group-hover:translate-x-1"
             />
-          </a>
+          </Link>
         </div>
       </div>
     </section>

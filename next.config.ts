@@ -11,6 +11,14 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "devcraft-agency-kappa.vercel.app",
       },
+      {
+        protocol: "https",
+        hostname: "www.vectorlogo.zone",
+      },
+      {
+        protocol: "https",
+        hostname: "i.pravatar.cc",
+      },
     ],
   },
 };

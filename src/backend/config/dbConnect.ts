@@ -1,18 +1,27 @@
 import mongoose from "mongoose";
 
-const MONGODB_URI = process.env.MONGODB_URI!;
+const MONGODB_URI = process.env.MONGODB_URI;
 
 if (!MONGODB_URI) {
   throw new Error("Please define MONGODB_URI");
 }
 
-let cached = (global as any).mongoose;
+interface MongooseCache {
+  conn: typeof mongoose | null;
+  promise: Promise<typeof mongoose> | null;
+}
 
-if (!cached) {
-  cached = (global as any).mongoose = {
-    conn: null,
-    promise: null,
-  };
+declare global {
+  var mongooseCache: MongooseCache | undefined;
+}
+
+const cached: MongooseCache = global.mongooseCache || {
+  conn: null,
+  promise: null,
+};
+
+if (!global.mongooseCache) {
+  global.mongooseCache = cached;
 }
 
 async function dbConnect() {
@@ -21,13 +30,9 @@ async function dbConnect() {
   }
 
   if (!cached.promise) {
-    cached.promise = mongoose
-      .connect(MONGODB_URI, {
-        dbName: "devcraft-agency",
-      })
-      .then((mongoose) => {
-        return mongoose;
-      });
+    cached.promise = mongoose.connect(MONGODB_URI as string, {
+      dbName: "devcraft-agency",
+    });
   }
 
   cached.conn = await cached.promise;
