@@ -4,6 +4,7 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { FaGithub } from "react-icons/fa";
+// import Navbar from "@/components/navbar/Navbar";
 import {
   ArrowLeft,
   Calendar,
@@ -12,6 +13,7 @@ import {
   ExternalLink,
   Terminal,
   ShieldCheck,
+  ArrowUpRight,
 } from "lucide-react";
 
 import dbConnect from "@/backend/config/dbConnect";
@@ -76,12 +78,12 @@ export async function generateMetadata({
 
   if (!project) {
     return {
-      title: "Project Not Found | YYDevs Agency",
+      title: "Project Not Found | CraftoDev",
     };
   }
 
   return {
-    title: `${project.title} | YYDevs Agency`,
+    title: `${project.title} | CraftoDev`,
     description: project.description,
     openGraph: {
       title: project.title,
@@ -100,86 +102,105 @@ export default async function ProjectDetailPage({ params }: PageProps) {
   }
 
   return (
-    <main className="min-h-screen bg-[#050816] text-white pt-32 pb-24 px-6 sm:px-8 lg:px-10 relative overflow-x-hidden">
-      <div className="max-w-5xl mx-auto space-y-12">
-        <div className="flex items-center justify-between">
-          <Link href="/projects">
-            <button className="inline-flex items-center gap-2 text-xs font-bold text-gray-400 hover:text-purple-400 transition-colors">
-              <ArrowLeft size={14} />
-              <span>Back to Projects</span>
-            </button>
+    <main className="relative min-h-screen overflow-hidden bg-[#F7FBFF] pt-28 text-[#05070D]">
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(20,99,255,0.06)_1px,transparent_1px),linear-gradient(to_bottom,rgba(20,99,255,0.06)_1px,transparent_1px)] bg-[size:72px_72px]" />
+      <div className="absolute left-[-160px] top-[160px] h-[420px] w-[420px] rounded-full bg-[#1463FF]/10 blur-[110px]" />
+      <div className="absolute right-[-160px] top-[420px] h-[420px] w-[420px] rounded-full bg-cyan-400/10 blur-[110px]" />
+
+      <section className="relative z-10 mx-auto max-w-[1500px] px-5 pb-24 sm:px-8 lg:px-12">
+        <div className="mb-10 flex items-center justify-between gap-6">
+          <Link
+            href="/projects"
+            className="group inline-flex items-center gap-3 rounded-full border border-[#D9E3F0] bg-white/80 px-5 py-3 text-[10px] font-black uppercase tracking-[0.14em] text-[#05070D] shadow-[0_14px_35px_rgba(15,23,42,0.06)] backdrop-blur-md transition-all hover:-translate-y-0.5 hover:border-[#1463FF]/40 hover:text-[#1463FF]"
+          >
+            <ArrowLeft
+              size={14}
+              className="transition-transform group-hover:-translate-x-1"
+            />
+            Back to Projects
           </Link>
 
           <div className="flex items-center gap-2">
             {project.githubUrl && (
-              <a href={project.githubUrl} target="_blank" rel="noopener noreferrer">
-                <button className="p-2.5 rounded-xl bg-white/[0.02] border border-white/5 hover:border-purple-500/20 text-gray-400 hover:text-white transition-all">
-                  <FaGithub size={15} />
-                </button>
+              <a
+                href={project.githubUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex h-11 w-11 items-center justify-center rounded-full border border-[#D9E3F0] bg-white/80 text-[#05070D] shadow-[0_14px_35px_rgba(15,23,42,0.06)] transition-all hover:-translate-y-0.5 hover:border-[#1463FF]/40 hover:text-[#1463FF]"
+              >
+                <FaGithub size={16} />
               </a>
             )}
 
             {project.liveUrl && (
-              <a href={project.liveUrl} target="_blank" rel="noopener noreferrer">
-                <button className="px-4 py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-xs font-bold flex items-center gap-2 transition-all">
-                  <span>Live Demo</span>
-                  <ExternalLink size={13} />
-                </button>
+              <a
+                href={project.liveUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-[#1463FF] to-[#05C8F7] px-5 py-3 text-[10px] font-black uppercase tracking-[0.14em] text-white shadow-[0_18px_40px_rgba(20,99,255,0.28)] transition-all hover:-translate-y-0.5"
+              >
+                Live Demo
+                <ExternalLink
+                  size={14}
+                  className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                />
               </a>
             )}
           </div>
         </div>
 
-        <div className="space-y-5">
-          <div className="flex flex-wrap items-center gap-4 text-xs text-gray-400">
-            <span className="px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-400 flex items-center gap-2">
+        <div className="mx-auto max-w-5xl text-center">
+          <div className="mb-6 flex flex-wrap items-center justify-center gap-3 text-[10px] font-black uppercase tracking-[0.14em]">
+            <span className="inline-flex items-center gap-2 rounded-full border border-[#1463FF]/15 bg-[#1463FF]/5 px-4 py-2 text-[#1463FF]">
               <Layers size={12} />
               {project.category || "Web Development"}
             </span>
 
-            <span className="flex items-center gap-2">
+            <span className="inline-flex items-center gap-2 rounded-full border border-[#D9E3F0] bg-white/80 px-4 py-2 text-[#5F6B7A]">
               <Calendar size={12} />
               {formatDate(project.createdAt)}
             </span>
 
-            <span className="flex items-center gap-2 text-emerald-400">
+            <span className="inline-flex items-center gap-2 rounded-full border border-emerald-500/15 bg-emerald-500/5 px-4 py-2 text-emerald-600">
               <ShieldCheck size={12} />
               Production Ready
             </span>
           </div>
 
-          <h1 className="text-4xl sm:text-5xl font-black leading-tight">
+          <h1 className="text-[42px] font-black uppercase leading-[0.95] tracking-[-0.06em] text-[#05070D] sm:text-[58px] lg:text-[76px]">
             {project.title}
           </h1>
 
-          <p className="text-gray-400 leading-relaxed text-sm sm:text-base max-w-3xl">
+          <p className="mx-auto mt-6 max-w-3xl text-base font-medium leading-8 text-[#4B5563] sm:text-lg">
             {project.description}
           </p>
         </div>
 
-        <div className="aspect-[16/9] rounded-3xl overflow-hidden border border-white/5 relative">
-          <Image
-            src={
-              project.featuredImage ||
-              "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1600"
-            }
-            alt={project.title}
-            fill
-            priority
-            className="object-cover"
-          />
+        <div className="relative mt-14 overflow-hidden rounded-[32px] border border-[#D9E3F0] bg-white p-3 shadow-[0_30px_90px_rgba(15,23,42,0.12)]">
+          <div className="relative aspect-[16/9] overflow-hidden rounded-[24px] bg-[#020817]">
+            <Image
+              src={
+                project.featuredImage ||
+                "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1600"
+              }
+              alt={project.title}
+              fill
+              priority
+              className="object-cover"
+            />
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-          <div className="lg:col-span-8 bg-white/[0.02] border border-white/[0.05] rounded-3xl p-6 sm:p-8 space-y-6">
-            <div className="flex items-center gap-2 text-purple-400 border-b border-white/5 pb-3">
-              <Terminal size={14} />
-              <h2 className="text-xs font-bold uppercase tracking-widest">
+        <div className="mt-10 grid grid-cols-1 gap-6 lg:grid-cols-12">
+          <div className="rounded-[28px] border border-[#D9E3F0] bg-white/90 p-6 shadow-[0_24px_70px_rgba(15,23,42,0.08)] backdrop-blur-md sm:p-8 lg:col-span-8">
+            <div className="mb-6 flex items-center gap-2 border-b border-[#E6EDF7] pb-4 text-[#1463FF]">
+              <Terminal size={15} />
+              <h2 className="text-[11px] font-black uppercase tracking-[0.18em]">
                 Project Overview
               </h2>
             </div>
 
-            <div className="space-y-4 text-gray-400 text-sm leading-relaxed">
+            <div className="space-y-5 text-[15px] font-medium leading-8 text-[#4B5563]">
               {project.longDescription ? (
                 project.longDescription
                   .split("\n")
@@ -192,27 +213,51 @@ export default async function ProjectDetailPage({ params }: PageProps) {
             </div>
           </div>
 
-          <div className="lg:col-span-4 bg-white/[0.02] border border-white/[0.05] rounded-3xl p-6 space-y-5">
-            <div className="flex items-center gap-2 text-indigo-400 border-b border-white/5 pb-3">
-              <Cpu size={14} />
-              <h2 className="text-xs font-bold uppercase tracking-widest">
+          <div className="rounded-[28px] border border-[#D9E3F0] bg-[#020817] p-6 text-white shadow-[0_24px_70px_rgba(15,23,42,0.12)] sm:p-8 lg:col-span-4">
+            <div className="mb-6 flex items-center gap-2 border-b border-white/10 pb-4 text-[#18C8F6]">
+              <Cpu size={15} />
+              <h2 className="text-[11px] font-black uppercase tracking-[0.18em]">
                 Tech Stack
               </h2>
             </div>
 
-            <div className="flex flex-wrap gap-2">
-              {(project.techStack || []).map((tech, idx) => (
-                <div
-                  key={idx}
-                  className="px-3 py-2 rounded-xl bg-white/[0.03] border border-white/5 text-xs text-gray-300"
-                >
-                  {tech}
-                </div>
-              ))}
+            {project.techStack && project.techStack.length > 0 ? (
+              <div className="flex flex-wrap gap-2">
+                {project.techStack.map((tech, idx) => (
+                  <div
+                    key={idx}
+                    className="rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-xs font-bold text-white/80"
+                  >
+                    {tech}
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-sm leading-7 text-white/55">
+                Tech stack will be added soon.
+              </p>
+            )}
+
+            <div className="mt-8 rounded-3xl border border-white/10 bg-white/[0.04] p-5">
+              <p className="text-[11px] font-black uppercase tracking-[0.16em] text-white/45">
+                Need Similar Project?
+              </p>
+
+              <h3 className="mt-3 text-2xl font-black leading-tight tracking-[-0.04em]">
+                Let&apos;s build your next product.
+              </h3>
+
+              <Link
+                href="/contact"
+                className="mt-5 inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-[#1463FF] to-[#05C8F7] px-5 py-3 text-[10px] font-black uppercase tracking-[0.14em] text-white"
+              >
+                Start a Project
+                <ArrowUpRight size={14} />
+              </Link>
             </div>
           </div>
         </div>
-      </div>
+      </section>
     </main>
   );
 }

@@ -4,9 +4,10 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import Navbar from "@/components/navbar/Navbar";
-
+import { motion } from "framer-motion";
 import {
   ArrowRight,
+  ArrowUpRight,
   Code2,
   Bot,
   Cloud,
@@ -57,144 +58,181 @@ export default function ServicesPage() {
     <>
       <Navbar />
 
-      <main className="bg-white pt-12 text-[#05070D]">
-        {/* Hero */}
-        <section className="relative h-[calc(100vh-80px)] min-h-[620px] overflow-hidden">
-          <div
-            className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+      <main className="bg-[#F7FBFF] text-[#05070D]">
+        {/* Hero - Same as Home Hero */}
+        <section className="relative min-h-[720px] overflow-hidden bg-[#F7FBFF] pt-24 text-[#05070D]">
+          <div className="absolute inset-0 bg-gradient-to-br from-white via-[#F8FBFF] to-[#EAF6FF]" />
+
+          <motion.div
+            initial={{ opacity: 0, scale: 0.96, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            transition={{ duration: 0.9, ease: "easeOut" }}
+            className="pointer-events-none absolute right-[-120px] top-[-80px] hidden h-[950px] w-[1500px] bg-contain bg-center bg-no-repeat lg:block xl:right-[-20px]"
             style={{
               backgroundImage: "url('/hero-crystal-fulll.webp')",
             }}
           />
 
-          <div className="absolute inset-0 bg-gradient-to-r   to-transparent" />
+          <div className="absolute left-[53%] top-[36%] hidden h-2 w-2 rounded-full bg-cyan-400 lg:block" />
+          <div className="absolute left-[60%] top-[48%] hidden h-1.5 w-1.5 rounded-full bg-cyan-400 lg:block" />
 
-          <div className="relative z-10 mx-auto flex h-full max-w-[1500px] items-center px-5 sm:px-8 lg:px-12">
-            <div className="max-w-[720px]">
-              <div className="mb-7 flex items-center gap-2">
-                <span className="h-2 w-2 rounded-full bg-[#1463FF]" />
-                <span className="text-[10px] font-black uppercase tracking-[0.18em] text-[#6B7280]">
+          <div className="relative z-10 mx-auto flex min-h-[620px] max-w-[1500px] items-center px-5 sm:px-8 lg:px-12">
+            <motion.div
+              initial={{ opacity: 0, y: 35 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+              className="max-w-[720px]"
+            >
+              <div className="mb-6 flex items-center gap-2">
+                <span className="text-[#1463FF]">✦</span>
+                <span className="text-[10px] font-black uppercase tracking-[0.22em] text-[#1463FF] sm:text-[11px]">
                   What We Do
                 </span>
               </div>
 
-              <h1 className="text-[48px] font-black uppercase leading-[0.92] tracking-[-0.06em] sm:text-[72px] lg:text-[86px]">
+              <h1 className="text-[46px] font-black uppercase leading-[0.92] tracking-[-0.055em] text-[#05070D] sm:text-[64px] md:text-[78px] lg:text-[92px] xl:text-[104px]">
                 Services <br />
                 Designed For <br />
                 <span className="text-[#1463FF]">Growth</span>
               </h1>
 
-              <p className="mt-8 max-w-md text-base font-medium leading-7 text-[#4B5563]">
-                We help ambitious businesses build powerful digital experiences,
-                automate operations and scale faster with technology.
+              <p className="mt-6 max-w-[500px] text-[15px] font-medium leading-7 text-[#4B5563] sm:text-base">
+                We help ambitious businesses build powerful websites, AI
+                automation systems, SaaS products, and digital experiences that
+                drive measurable growth.
               </p>
 
-              <Link
-                href="/contact"
-                className="mt-9 inline-flex items-center gap-4 rounded-full bg-[#05070D] px-7 py-4 text-[11px] font-black uppercase tracking-[0.12em] text-white transition hover:bg-[#1463FF]"
-              >
-                Let&apos;s Work Together
-                <ArrowRight size={15} />
-              </Link>
-            </div>
+              <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center">
+                <Link
+                  href="/contact"
+                  className="group inline-flex w-fit items-center gap-3 rounded-full bg-gradient-to-r from-[#1463FF] to-[#05C8F7] px-6 py-4 text-[11px] font-black uppercase tracking-[0.12em] text-white shadow-[0_18px_40px_rgba(20,99,255,0.28)] transition-all duration-300 hover:-translate-y-0.5"
+                >
+                  Let&apos;s Work Together
+                  <ArrowRight
+                    size={15}
+                    strokeWidth={3}
+                    className="transition-transform duration-300 group-hover:translate-x-1"
+                  />
+                </Link>
+
+                <Link
+                  href="/projects"
+                  className="group inline-flex w-fit items-center gap-2 rounded-full border border-[#D9E3F0] bg-white px-6 py-4 text-[11px] font-black uppercase tracking-[0.12em] text-[#05070D] shadow-[0_14px_35px_rgba(15,23,42,0.06)] transition-all duration-300 hover:-translate-y-0.5 hover:border-[#1463FF]/40 hover:text-[#1463FF]"
+                >
+                  View Work
+                  <ArrowUpRight
+                    size={15}
+                    strokeWidth={3}
+                    className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                  />
+                </Link>
+              </div>
+            </motion.div>
           </div>
+
+          <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-[#F7FBFF] to-transparent" />
         </section>
 
         {/* Services */}
-        <section>
-          {services.map((service, index) => {
-            const Icon = service.icon;
-            const imageFirst = index % 2 === 1;
+        <section className="mx-auto max-w-[1500px] px-5 pb-8 sm:px-8 lg:px-12">
+          <div className="overflow-hidden rounded-[18px] bg-white shadow-[0_24px_80px_rgba(15,23,42,0.08)]">
+            {services.map((service, index) => {
+              const Icon = service.icon;
+              const imageFirst = index % 2 === 1;
 
-            return (
-              <div
-                key={service.id}
-                className="grid min-h-[380px] grid-cols-1 border-t border-[#05070D]/10 lg:grid-cols-2"
-              >
+              return (
                 <div
-                  className={`flex items-center px-5 py-16 sm:px-8 lg:px-24 ${
-                    imageFirst ? "lg:order-2" : "lg:order-1"
-                  }`}
+                  key={service.id}
+                  className="grid min-h-[430px] grid-cols-1 overflow-hidden border-b border-[#E6EDF7] last:border-b-0 lg:grid-cols-2"
                 >
-                  <div className="max-w-md">
-                    <span className="mb-8 block text-sm font-black">
-                      {service.id}
-                    </span>
+                  <div
+                    className={`flex items-center bg-white px-7 py-16 sm:px-10 lg:px-12 ${
+                      imageFirst ? "lg:order-2" : "lg:order-1"
+                    }`}
+                  >
+                    <div className="max-w-md">
+                      <span className="mb-8 block text-xl font-black text-[#1463FF]">
+                        {service.id}
+                      </span>
 
-                    <div className="mb-10 flex h-16 w-16 items-center justify-center rounded-xl border border-[#05070D]/15 text-[#1463FF]">
-                      <Icon size={32} />
+                      <div className="mb-9 flex h-16 w-16 items-center justify-center rounded-2xl bg-[#1463FF]/5 text-[#1463FF] shadow-[0_14px_35px_rgba(20,99,255,0.08)]">
+                        <Icon size={30} strokeWidth={2.2} />
+                      </div>
+
+                      <h2 className="mb-5 text-[34px] font-black leading-none tracking-[-0.05em] sm:text-[38px]">
+                        {service.title}
+                      </h2>
+
+                      <p className="mb-8 max-w-sm text-sm font-medium leading-7 text-[#4B5563]">
+                        {service.desc}
+                      </p>
+
+                      <Link
+                        href="/contact"
+                        className="group inline-flex items-center gap-5 text-[11px] font-black uppercase tracking-[0.12em] text-[#1463FF]"
+                      >
+                        Learn More
+                        <ArrowRight
+                          size={16}
+                          className="transition group-hover:translate-x-1"
+                        />
+                      </Link>
+
+                      <div className="mt-3 h-[2px] w-20 bg-[#1463FF]" />
                     </div>
+                  </div>
 
-                    <h2 className="mb-6 text-[36px] font-black leading-none tracking-[-0.05em]">
-                      {service.title}
-                    </h2>
-
-                    <p className="mb-10 text-sm font-medium leading-7 text-[#4B5563]">
-                      {service.desc}
-                    </p>
-
-                    <Link
-                      href="/contact"
-                      className="group inline-flex items-center gap-5 text-[11px] font-black uppercase tracking-[0.12em]"
-                    >
-                      Learn More
-                      <ArrowRight
-                        size={16}
-                        className="transition group-hover:translate-x-1"
-                      />
-                    </Link>
-
-                    <div className="mt-3 h-[2px] w-24 bg-[#1463FF]" />
+                  <div
+                    className={`relative min-h-[330px] overflow-hidden bg-[#EAF3FF] ${
+                      imageFirst ? "lg:order-1" : "lg:order-2"
+                    }`}
+                  >
+                    <Image
+                      src={service.image}
+                      alt={service.title}
+                      fill
+                      sizes="(max-width: 1024px) 100vw, 50vw"
+                      className="object-cover transition duration-700 hover:scale-105"
+                    />
                   </div>
                 </div>
-
-                <div
-                  className={`relative min-h-[330px] overflow-hidden bg-[#F5F7FB] ${
-                    imageFirst ? "lg:order-1" : "lg:order-2"
-                  }`}
-                >
-                  <Image
-                    src={service.image}
-                    alt={service.title}
-                    fill
-                    sizes="(max-width: 1024px) 100vw, 50vw"
-                    className="object-cover transition duration-700 hover:scale-105"
-                  />
-                </div>
-              </div>
-            );
-          })}
+              );
+            })}
+          </div>
         </section>
 
         {/* CTA */}
-        <section className="relative overflow-hidden bg-[#02060D] py-20 text-white">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,#1463FF25,transparent_35%)]" />
+        <section className="mx-auto max-w-[1500px] px-5 pb-12 sm:px-8 lg:px-12">
+          <div className="relative overflow-hidden rounded-[20px] bg-[#020817] px-8 py-10 text-white shadow-[0_24px_80px_rgba(15,23,42,0.16)] sm:px-12">
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(20,99,255,0.35),transparent_34%)]" />
+            <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(20,99,255,0.22),transparent_45%,rgba(5,200,247,0.18))]" />
 
-          <div className="relative z-10 mx-auto grid max-w-[1500px] grid-cols-1 items-center gap-10 px-5 sm:px-8 lg:grid-cols-2 lg:px-12">
-            <div>
-              <div className="mb-7 flex items-center gap-2">
-                <span className="h-2 w-2 rounded-full bg-[#1463FF]" />
-                <span className="text-[10px] font-black uppercase tracking-[0.18em] text-white/60">
-                  Have a project in mind?
-                </span>
+            <div className="relative z-10 grid gap-8 lg:grid-cols-2 lg:items-center">
+              <div>
+                <div className="mb-4 flex items-center gap-2">
+                  <span className="h-2 w-2 rounded-full bg-[#1463FF]" />
+                  <span className="text-[10px] font-black uppercase tracking-[0.18em] text-white/70">
+                    Have a project in mind?
+                  </span>
+                </div>
+
+                <h2 className="max-w-xl text-[34px] font-black leading-[1] tracking-[-0.05em] sm:text-[42px]">
+                  Let&apos;s build something extraordinary together.
+                </h2>
               </div>
 
-              <h2 className="max-w-xl text-[42px] font-black leading-[1] tracking-[-0.05em]">
-                Let’s build something extraordinary together.
-              </h2>
-            </div>
-
-            <div className="flex lg:justify-end">
-              <Link
-                href="/contact"
-                className="group flex w-fit items-center gap-4 rounded-full bg-[#1463FF] px-9 py-4 text-[11px] font-black uppercase tracking-[0.12em] text-white transition hover:bg-white hover:text-[#05070D]"
-              >
-                Start a Project
-                <ArrowRight
-                  size={16}
-                  className="transition group-hover:translate-x-1"
-                />
-              </Link>
+              <div className="flex lg:justify-end">
+                <Link
+                  href="/contact"
+                  className="group flex w-fit items-center gap-4 rounded-full bg-gradient-to-r from-[#1463FF] to-[#05C8F7] px-9 py-4 text-[11px] font-black uppercase tracking-[0.12em] text-white shadow-[0_18px_40px_rgba(20,99,255,0.28)] transition hover:-translate-y-0.5"
+                >
+                  Start a Project
+                  <ArrowRight
+                    size={16}
+                    className="transition group-hover:translate-x-1"
+                  />
+                </Link>
+              </div>
             </div>
           </div>
         </section>

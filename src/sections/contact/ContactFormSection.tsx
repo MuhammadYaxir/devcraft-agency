@@ -1,61 +1,68 @@
 "use client";
 
 import React, { useState } from "react";
-import { motion } from "framer-motion";
-import {
-  AlertCircle,
-  ArrowRight,
-  Building2,
-  CalendarDays,
-  CheckCircle2,
-  Mail,
-  MapPin,
-  Pencil,
-  Play,
-  ShieldCheck,
-  User,
-} from "lucide-react";
+import Link from "next/link";
+import Image from "next/image";
+import Navbar from "@/components/navbar/Navbar";
 import { FaWhatsapp } from "react-icons/fa";
+import {
+  ArrowRight,
+  Mail,
+  Phone,
+  CalendarDays,
+  MapPin,
+  User,
+  Building2,
+  Pencil,
+  Lock,
+  Globe2,
+  Plus,
+} from "lucide-react";
 
-const projectTypes = [
-  "Business Website",
-  "SaaS Platform",
-  "E-Commerce",
-  "Portfolio",
-  "Dashboard",
-  "AI Automation",
-];
-
-const budgets = ["$500 – $1k", "$1k – $3k", "$3k – $5k", "$5k+"];
+const calendlyLink = "https://calendly.com/craftodev/30min";
 
 const contactCards = [
   {
-    icon: Mail,
     title: "Email Us",
-    text: "Drop us a line anytime.",
+    desc: "Drop us a line anytime.",
     value: "craftodevtech@gmail.com",
+    icon: Mail,
+    href: "mailto:craftodevtech@gmail.com",
   },
   {
-    icon: FaWhatsapp,
     title: "WhatsApp",
-    text: "Chat with our team.",
-    value: "+92 309 9997547",
+    desc: "Chat with our team.",
+    value: "+92 300 0907547",
+    icon: Phone,
+    href: "https://wa.me/923000907547",
   },
   {
-    icon: CalendarDays,
     title: "Book a Call",
-    text: "Schedule a free strategy call.",
-    value: "calendly.com/craftodev",
+    desc: "Schedule a free strategy call.",
+    value: "30 Minute Discovery Call",
+    icon: CalendarDays,
+    href: calendlyLink,
   },
   {
-    icon: MapPin,
     title: "Our Office",
-    text: "We work globally.",
+    desc: "We work globally.",
     value: "Lahore, Pakistan",
+    icon: MapPin,
+    href: "#",
   },
 ];
 
-export default function ContactFormSection() {
+const locations = [
+  { name: "Canada", className: "left-[24%] top-[22%]" },
+  { name: "USA", className: "left-[20%] top-[42%]" },
+  { name: "UK", className: "left-[50%] top-[22%]" },
+  { name: "Pakistan", className: "left-[65%] top-[38%]" },
+  { name: "UAE", className: "left-[58%] top-[50%]" },
+  { name: "Singapore", className: "left-[82%] top-[52%]" },
+  { name: "Australia", className: "left-[85%] top-[74%]" },
+];
+
+export default function ContactPage() {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -66,11 +73,10 @@ export default function ContactFormSection() {
     agree: true,
   });
 
-  const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState("");
-  const [error, setError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [statusMessage, setStatusMessage] = useState("");
 
-  const updateField = (
+  const handleChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
     >
@@ -86,35 +92,37 @@ export default function ContactFormSection() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    setLoading(true);
-    setSuccess("");
-    setError("");
+    if (!formData.agree) {
+      setStatusMessage("Please agree to the privacy policy.");
+      return;
+    }
 
     try {
-      const payload = {
-        name: formData.name,
-        email: formData.email,
-        company: formData.company,
-        projectType: formData.projectType,
-        budget: formData.budget,
-        message: formData.message,
-      };
+      setIsSubmitting(true);
+      setStatusMessage("");
 
       const response = await fetch("/api/contact", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(payload),
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          company: formData.company,
+          projectType: formData.projectType,
+          budget: formData.budget,
+          message: formData.message,
+        }),
       });
 
       const data = await response.json();
 
-      if (!response.ok) {
-        throw new Error(data.error || "Something went wrong.");
+      if (!response.ok || !data.success) {
+        throw new Error(data.message || "Something went wrong.");
       }
 
-      setSuccess("Message sent successfully. I will contact you soon.");
+      setStatusMessage("Message sent successfully. We will contact you soon.");
 
       setFormData({
         name: "",
@@ -125,320 +133,382 @@ export default function ContactFormSection() {
         message: "",
         agree: true,
       });
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to send message.");
+    } catch (error) {
+      console.error(error);
+      setStatusMessage("Failed to send message. Please try again.");
     } finally {
-      setLoading(false);
+      setIsSubmitting(false);
     }
   };
 
   return (
-    <main className="bg-[#f7f8fb] text-black">
-      <section className="relative overflow-hidden px-6 pb-10 pt-14">
-        <div className="absolute bottom-0 left-0 h-[300px] w-[300px] rounded-full bg-blue-100/70 blur-3xl" />
+    <>
+      <Navbar />
 
-        <div className="mx-auto grid max-w-[1320px] grid-cols-1 gap-8 lg:grid-cols-[1fr_520px] lg:items-center">
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-          >
-            <div className="mb-6 flex items-center gap-3 text-xs font-black uppercase tracking-wide">
-              <span className="h-2 w-2 rounded-full bg-blue-600" />
-              Let’s Connect
-            </div>
+      <main className="bg-white text-[#05070D]">
+        <section className="relative overflow-hidden bg-[#F7FBFF] pt-[86px]">
+          <div className="absolute inset-0 bg-gradient-to-br from-white via-[#F8FBFF] to-[#EAF6FF]" />
+          <div className="absolute left-0 top-0 h-full w-full bg-[radial-gradient(circle_at_43%_45%,rgba(20,99,255,0.1),transparent_24%)]" />
+          <div className="absolute bottom-0 left-[35%] h-[300px] w-[480px] rounded-full bg-[#1463FF]/10 blur-[90px]" />
 
-            <h1 className="max-w-xl text-4xl font-black uppercase leading-[1.05] tracking-[-0.05em] md:text-6xl">
-              Let’s Build Something{" "}
-              <span className="text-blue-600">Extraordinary</span> Together.
-            </h1>
+          <div className="relative z-10 mx-auto grid min-h-[560px] max-w-[1500px] grid-cols-1 gap-10 px-5 pb-10 sm:px-8 lg:grid-cols-2 lg:px-12">
+            <div className="flex flex-col justify-center">
+              <h1 className="max-w-[680px] text-[42px] font-black uppercase leading-[0.94] tracking-[-0.06em] sm:text-[62px] lg:text-[72px] xl:text-[82px]">
+                Let&apos;s Build <br />
+                Something <br />
+                <span className="bg-gradient-to-r from-[#1463FF] to-[#05C8F7] bg-clip-text text-transparent">
+                  Extraordinary
+                </span>{" "}
+                <br />
+                Together.
+              </h1>
 
-            <p className="mt-6 max-w-md text-base leading-7 text-gray-600">
-              Have a project in mind or just want to say hello? Fill out the
-              form and we’ll get back to you within 24 hours.
-            </p>
-
-            <a
-              href="https://wa.me/923099997547?text=Hello%20Muhammad%20Yasir%2C%20I%20want%20to%20discuss%20a%20project."
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-6 inline-flex items-center gap-4"
-            >
-              <span className="flex h-11 w-11 items-center justify-center rounded-full bg-black text-white">
-                <Play className="h-4 w-4 fill-white" />
-              </span>
-              <span className="border-b border-blue-600 pb-1 text-sm font-black uppercase">
-                Whatsapp Us
-              </span>
-            </a>
-
-            <div className="mt-10">
-              <p className="mb-4 text-xs font-black uppercase tracking-wider text-gray-500">
-                We respond fast
+              <p className="mt-6 max-w-md text-base font-medium leading-8 text-[#4B5563]">
+                Have a project in mind or just want to say hello? Fill out the
+                form and we&apos;ll get back to you within 24 hours.
               </p>
 
-              <div className="flex items-center gap-5">
-                <div className="flex -space-x-3">
-                  {["Y", "C", "D", "A"].map((item) => (
-                    <div
-                      key={item}
-                      className="flex h-9 w-9 items-center justify-center rounded-full border-2 border-white bg-black text-xs font-black text-white"
-                    >
-                      {item}
-                    </div>
-                  ))}
-                  <div className="flex h-9 w-9 items-center justify-center rounded-full border-2 border-white bg-blue-600 text-white">
-                    +
+              <div className="mt-8 flex flex-wrap gap-4">
+                <Link
+                  href="https://wa.me/923000907547"
+                  target="_blank"
+                  className="inline-flex items-center gap-4 text-[11px] font-black uppercase tracking-[0.12em] text-[#25D366]"
+                >
+                  <span className="flex h-12 w-12 items-center justify-center rounded-full bg-[#25D366] text-white shadow-[0_18px_40px_rgba(37,211,102,0.28)]">
+                    <FaWhatsapp size={22} />
+                  </span>
+                  WhatsApp Us
+                </Link>
+
+                <Link
+                  href={calendlyLink}
+                  target="_blank"
+                  className="group inline-flex items-center gap-3 rounded-full border border-[#1463FF]/15 bg-white px-6 py-3 text-[11px] font-black uppercase tracking-[0.12em] text-[#1463FF] shadow-sm transition-all hover:border-[#1463FF] hover:bg-[#1463FF] hover:text-white"
+                >
+                  <CalendarDays size={16} />
+                  Book Free 30 Min Call
+                  <ArrowRight
+                    size={14}
+                    className="transition-transform group-hover:translate-x-1"
+                  />
+                </Link>
+              </div>
+
+              <div className="mt-10">
+                <p className="mb-4 text-[11px] font-black uppercase tracking-[0.14em] text-[#1463FF]">
+                  We Respond Fast
+                </p>
+
+                <div className="flex items-center gap-5">
+                  <div className="flex -space-x-3">
+                    <Image
+                      src="/muhammad-yasir-founder-ceo.webp"
+                      alt="Team member"
+                      width={44}
+                      height={44}
+                      className="h-11 w-11 rounded-full border-2 border-white object-cover"
+                    />
+                    <Image
+                      src="/yaseen.webp"
+                      alt="Team member"
+                      width={44}
+                      height={44}
+                      className="h-11 w-11 rounded-full border-2 border-white object-cover"
+                    />
+                    <Image
+                      src="/shair-afgun.webp"
+                      alt="Team member"
+                      width={44}
+                      height={44}
+                      className="h-11 w-11 rounded-full border-2 border-white object-cover"
+                    />
+                    <span className="flex h-11 w-11 items-center justify-center rounded-full border-2 border-white bg-[#1463FF] text-white">
+                      <Plus size={18} />
+                    </span>
+                  </div>
+
+                  <div>
+                    <p className="text-sm text-[#4B5563]">
+                      Average response time
+                    </p>
+                    <p className="text-lg font-black">Under 2 hours</p>
                   </div>
                 </div>
-
-                <div>
-                  <p className="text-sm text-gray-500">Average response time</p>
-                  <p className="font-black">Under 2 hours</p>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-
-          <motion.form
-            onSubmit={handleSubmit}
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.15 }}
-            className="rounded-xl bg-white p-5 shadow-[0_25px_80px_rgba(0,0,0,0.08)] md:p-6"
-          >
-            <h2 className="mb-5 text-lg font-black uppercase">
-              Send us a message
-            </h2>
-
-            <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-              <div className="relative">
-                <User className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
-                <input
-                  name="name"
-                  value={formData.name}
-                  onChange={updateField}
-                  placeholder="Your Name"
-                  required
-                  className="h-10 w-full rounded-lg border border-gray-200 bg-white pl-11 pr-4 text-sm outline-none focus:border-blue-600"
-                />
-              </div>
-
-              <div className="relative">
-                <Mail className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
-                <input
-                  name="email"
-                  value={formData.email}
-                  onChange={updateField}
-                  type="email"
-                  placeholder="Email Address"
-                  required
-                  className="h-10 w-full rounded-lg border border-gray-200 bg-white pl-11 pr-4 text-sm outline-none focus:border-blue-600"
-                />
               </div>
             </div>
 
-            <div className="relative mt-3">
-              <Building2 className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
-              <input
-                name="company"
-                value={formData.company}
-                onChange={updateField}
-                placeholder="Company / Organization"
-                className="h-10 w-full rounded-lg border border-gray-200 bg-white pl-11 pr-4 text-sm outline-none focus:border-blue-600"
-              />
-            </div>
-
-            <div className="mt-3 grid grid-cols-1 gap-3 md:grid-cols-2">
-              <div>
-                <label className="mb-1.5 block text-xs text-gray-600">
-                  Project Type
-                </label>
-                <select
-                  name="projectType"
-                  value={formData.projectType}
-                  onChange={updateField}
-                  className="h-10 w-full rounded-lg border border-gray-200 bg-white px-4 text-sm text-gray-600 outline-none focus:border-blue-600"
-                >
-                  <option value="">Select a service</option>
-                  {projectTypes.map((type) => (
-                    <option key={type} value={type}>
-                      {type}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div>
-                <label className="mb-1.5 block text-xs text-gray-600">
-                  Budget Range
-                </label>
-                <select
-                  name="budget"
-                  value={formData.budget}
-                  onChange={updateField}
-                  className="h-10 w-full rounded-lg border border-gray-200 bg-white px-4 text-sm text-gray-600 outline-none focus:border-blue-600"
-                >
-                  <option value="">Select your budget</option>
-                  {budgets.map((budget) => (
-                    <option key={budget} value={budget}>
-                      {budget}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-
-            <div className="relative mt-3">
-              <Pencil className="absolute left-4 top-4 h-4 w-4 text-gray-400" />
-              <textarea
-                name="message"
-                value={formData.message}
-                onChange={updateField}
-                placeholder="Tell us about your project"
-                rows={3}
-                required
-                className="w-full resize-none rounded-lg border border-gray-200 bg-white p-3 pl-11 text-sm outline-none focus:border-blue-600"
-              />
-            </div>
-
-            <label className="mt-3 flex items-center gap-3 text-xs text-gray-600">
-              <input
-                type="checkbox"
-                checked={formData.agree}
-                onChange={(e) =>
-                  setFormData((prev) => ({
-                    ...prev,
-                    agree: e.target.checked,
-                  }))
-                }
-                className="h-4 w-4 accent-blue-600"
-              />
-              I agree to the{" "}
-              <span className="text-blue-600">Privacy Policy</span>
-            </label>
-
-            {success && (
-              <div className="mt-3 flex items-center gap-3 text-sm text-green-600">
-                <CheckCircle2 className="h-4 w-4" />
-                {success}
-              </div>
-            )}
-
-            {error && (
-              <div className="mt-3 flex items-center gap-3 text-sm text-red-600">
-                <AlertCircle className="h-4 w-4" />
-                {error}
-              </div>
-            )}
-
-            <button
-              type="submit"
-              disabled={loading || !formData.agree}
-              className="mt-5 flex h-11 w-full items-center justify-center gap-3 rounded-full bg-black text-sm font-black uppercase tracking-wide text-white transition hover:bg-blue-600 disabled:cursor-not-allowed disabled:opacity-60"
-            >
-              {loading ? "Sending..." : "Send Message"}
-              <ArrowRight className="h-4 w-4" />
-            </button>
-
-            <div className="mt-4 flex items-center justify-center gap-2 text-xs text-gray-500">
-              <ShieldCheck className="h-4 w-4 text-blue-600" />
-              Your information is 100% secure and confidential.
-            </div>
-          </motion.form>
-        </div>
-      </section>
-
-      <section className="bg-black px-6 py-12 text-white">
-        <div className="mx-auto grid max-w-[1320px] grid-cols-1 gap-8 lg:grid-cols-[260px_1fr]">
-          <div>
-            <div className="mb-5 flex items-center gap-3 text-xs font-black uppercase tracking-wide text-gray-400">
-              <span className="h-2 w-2 rounded-full bg-blue-600" />
-              Get in touch
-            </div>
-
-            <h2 className="text-4xl font-black leading-tight">
-              Other ways <br /> to reach us.
-            </h2>
-          </div>
-
-          <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-4">
-            {contactCards.map((card) => {
-              const Icon = card.icon;
-
-              return (
-                <div
-                  key={card.title}
-                  className="rounded-xl border border-white/10 bg-white/[0.03] p-7"
-                >
-                  <Icon className="mb-8 h-8 w-8 text-blue-600" />
-                  <h3 className="text-xl font-black">{card.title}</h3>
-                  <p className="mt-3 text-sm text-gray-400">{card.text}</p>
-                  <p className="mt-4 text-sm font-bold">{card.value}</p>
-
-                  <button className="mt-8 flex h-9 w-9 items-center justify-center rounded-full border border-white/30">
-                    <ArrowRight className="h-4 w-4" />
-                  </button>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      <section className="relative overflow-hidden px-6 py-20">
-        <div className="mx-auto grid max-w-[1320px] grid-cols-1 gap-10 lg:grid-cols-[360px_1fr] lg:items-center">
-          <div className="rounded-xl bg-white p-9 shadow-[0_25px_80px_rgba(0,0,0,0.08)]">
-            <div className="mb-5 flex items-center gap-2 text-xs font-black uppercase tracking-wider text-blue-600">
-              <MapPin className="h-4 w-4" />
-              Global Collaboration
-            </div>
-
-            <h2 className="text-3xl font-black leading-tight">
-              We work with clients from around the world.
-            </h2>
-
-            <p className="mt-5 text-sm leading-7 text-gray-600">
-              No matter where you are, we’re just a message away.
-            </p>
-
-            <div className="mt-7 flex -space-x-3">
-              {["U", "K", "A", "P"].map((item) => (
-                <div
-                  key={item}
-                  className="flex h-9 w-9 items-center justify-center rounded-full border-2 border-white bg-black text-xs font-black text-white"
-                >
-                  {item}
-                </div>
-              ))}
-              <div className="flex h-9 w-9 items-center justify-center rounded-full border-2 border-white bg-blue-600 text-white">
-                +
-              </div>
-            </div>
-          </div>
-
-          <div className="relative min-h-[360px] rounded-2xl bg-[radial-gradient(circle_at_center,#dbeafe_1px,transparent_1px)] [background-size:18px_18px]">
-            {[
-              ["Canada", "left-[18%] top-[18%]"],
-              ["USA", "left-[20%] top-[38%]"],
-              ["UK", "left-[50%] top-[20%]"],
-              ["UAE", "left-[62%] top-[48%]"],
-              ["Pakistan", "left-[70%] top-[36%]"],
-              ["Singapore", "left-[82%] top-[58%]"],
-              ["Australia", "left-[84%] top-[76%]"],
-            ].map(([country, position]) => (
-              <div
-                key={country}
-                className={`absolute ${position} flex items-center gap-2`}
+            <div className="flex items-center lg:justify-end">
+              <form
+                onSubmit={handleSubmit}
+                className="w-full max-w-[560px] rounded-[24px] bg-white p-7 shadow-[0_30px_90px_rgba(15,23,42,0.12)] sm:p-8"
               >
-                <span className="h-4 w-4 rounded-full bg-blue-600 shadow-[0_0_0_6px_rgba(37,99,235,0.12)]" />
-                <span className="rounded-md bg-white px-3 py-2 text-xs font-bold shadow">
-                  {country}
+                <h2 className="mb-6 text-2xl font-black uppercase tracking-[-0.04em]">
+                  Send Us a Message
+                </h2>
+
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                  <label className="relative">
+                    <User
+                      size={17}
+                      className="absolute left-4 top-1/2 -translate-y-1/2 text-[#7B8794]"
+                    />
+                    <input
+                      name="name"
+                      value={formData.name}
+                      onChange={handleChange}
+                      required
+                      placeholder="Your Name"
+                      className="h-12 w-full rounded-lg border border-[#D9E3F0] bg-white pl-12 pr-4 text-sm outline-none transition focus:border-[#1463FF]"
+                    />
+                  </label>
+
+                  <label className="relative">
+                    <Mail
+                      size={17}
+                      className="absolute left-4 top-1/2 -translate-y-1/2 text-[#7B8794]"
+                    />
+                    <input
+                      name="email"
+                      type="email"
+                      value={formData.email}
+                      onChange={handleChange}
+                      required
+                      placeholder="Email Address"
+                      className="h-12 w-full rounded-lg border border-[#D9E3F0] bg-white pl-12 pr-4 text-sm outline-none transition focus:border-[#1463FF]"
+                    />
+                  </label>
+
+                  <label className="relative sm:col-span-2">
+                    <Building2
+                      size={17}
+                      className="absolute left-4 top-1/2 -translate-y-1/2 text-[#7B8794]"
+                    />
+                    <input
+                      name="company"
+                      value={formData.company}
+                      onChange={handleChange}
+                      placeholder="Company / Organization"
+                      className="h-12 w-full rounded-lg border border-[#D9E3F0] bg-white pl-12 pr-4 text-sm outline-none transition focus:border-[#1463FF]"
+                    />
+                  </label>
+
+                  <label>
+                    <span className="mb-2 block text-xs font-medium text-[#4B5563]">
+                      Project Type
+                    </span>
+                    <select
+                      name="projectType"
+                      value={formData.projectType}
+                      onChange={handleChange}
+                      required
+                      className="h-12 w-full rounded-lg border border-[#D9E3F0] bg-white px-4 text-sm outline-none transition focus:border-[#1463FF]"
+                    >
+                      <option value="">Select a service</option>
+                      <option value="Business Website">Business Website</option>
+                      <option value="SaaS Development">SaaS Development</option>
+                      <option value="E-Commerce Store">E-Commerce Store</option>
+                      <option value="AI Automation">AI Automation</option>
+                      <option value="AI Chatbot">AI Chatbot</option>
+                      <option value="Dashboard">Dashboard</option>
+                    </select>
+                  </label>
+
+                  <label>
+                    <span className="mb-2 block text-xs font-medium text-[#4B5563]">
+                      Budget Range
+                    </span>
+                    <select
+                      name="budget"
+                      value={formData.budget}
+                      onChange={handleChange}
+                      required
+                      className="h-12 w-full rounded-lg border border-[#D9E3F0] bg-white px-4 text-sm outline-none transition focus:border-[#1463FF]"
+                    >
+                      <option value="">Select your budget</option>
+                      <option value="$500 - $1,000">$500 - $1,000</option>
+                      <option value="$1,000 - $3,000">$1,000 - $3,000</option>
+                      <option value="$3,000 - $5,000">$3,000 - $5,000</option>
+                      <option value="$5,000+">$5,000+</option>
+                    </select>
+                  </label>
+
+                  <label className="relative sm:col-span-2">
+                    <Pencil
+                      size={17}
+                      className="absolute left-4 top-4 text-[#7B8794]"
+                    />
+                    <textarea
+                      name="message"
+                      value={formData.message}
+                      onChange={handleChange}
+                      required
+                      placeholder="Tell us about your project"
+                      rows={4}
+                      className="w-full resize-none rounded-lg border border-[#D9E3F0] bg-white py-4 pl-12 pr-4 text-sm outline-none transition focus:border-[#1463FF]"
+                    />
+                  </label>
+                </div>
+
+                <label className="mt-4 flex items-center gap-3 text-sm text-[#4B5563]">
+                  <input
+                    type="checkbox"
+                    checked={formData.agree}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        agree: e.target.checked,
+                      }))
+                    }
+                    className="h-4 w-4 accent-[#1463FF]"
+                  />
+                  I agree to the{" "}
+                  <Link href="/privacy-policy" className="text-[#1463FF]">
+                    Privacy Policy
+                  </Link>
+                </label>
+
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="mt-5 flex w-full items-center justify-center gap-3 rounded-full bg-gradient-to-r from-[#1463FF] to-[#05C8F7] px-8 py-4 text-[12px] font-black uppercase tracking-[0.12em] text-white shadow-[0_18px_40px_rgba(20,99,255,0.28)] transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-70"
+                >
+                  {isSubmitting ? "Sending..." : "Send Message"}
+                  <ArrowRight size={16} />
+                </button>
+
+                {statusMessage && (
+                  <p className="mt-3 text-center text-sm font-semibold text-[#1463FF]">
+                    {statusMessage}
+                  </p>
+                )}
+
+                <p className="mt-4 flex items-center justify-center gap-2 text-xs text-[#6B7280]">
+                  <Lock size={14} className="text-[#1463FF]" />
+                  Your information is 100% secure and confidential.
+                </p>
+              </form>
+            </div>
+          </div>
+        </section>
+
+        <section className="bg-[#020817] py-14 text-white">
+          <div className="mx-auto grid max-w-[1500px] grid-cols-1 gap-8 px-5 sm:px-8 lg:grid-cols-[0.45fr_1.55fr] lg:px-12">
+            <div>
+              <div className="mb-5 flex items-center gap-2">
+                <span className="h-2 w-2 rounded-full bg-[#1463FF]" />
+                <span className="text-[10px] font-black uppercase tracking-[0.18em] text-white/70">
+                  Get In Touch
                 </span>
               </div>
-            ))}
+
+              <h2 className="text-[34px] font-black leading-[1.05] tracking-[-0.05em] sm:text-[42px]">
+                Other ways <br />
+                to reach us.
+              </h2>
+            </div>
+
+            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+              {contactCards.map((card) => {
+                const Icon = card.icon;
+
+                return (
+                  <Link
+                    key={card.title}
+                    href={card.href}
+                    target={card.href.startsWith("http") ? "_blank" : "_self"}
+                    className="group rounded-[16px] border border-[#1463FF]/25 bg-white/[0.04] p-7 transition-all hover:-translate-y-1 hover:border-[#1463FF]"
+                  >
+                    <Icon className="mb-8 text-[#1463FF]" size={34} />
+
+                    <h3 className="text-2xl font-black tracking-[-0.04em]">
+                      {card.title}
+                    </h3>
+
+                    <p className="mt-4 text-sm text-white/65">{card.desc}</p>
+
+                    <p className="mt-5 text-sm font-bold text-white">
+                      {card.value}
+                    </p>
+
+                    <span className="mt-8 flex h-10 w-10 items-center justify-center rounded-full border border-white/30 transition-all group-hover:bg-[#1463FF] group-hover:text-white">
+                      <ArrowRight size={15} />
+                    </span>
+                  </Link>
+                );
+              })}
+            </div>
           </div>
-        </div>
-      </section>
-    </main>
+        </section>
+
+        <section className="relative overflow-hidden bg-[#F7FBFF] py-16">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(20,99,255,0.08),transparent_45%)]" />
+
+          <div className="relative z-10 mx-auto grid max-w-[1500px] grid-cols-1 gap-10 px-5 sm:px-8 lg:grid-cols-[0.35fr_1.65fr] lg:px-12">
+            <div className="rounded-[20px] bg-white p-8 shadow-[0_24px_80px_rgba(15,23,42,0.08)]">
+              <div className="mb-6 flex items-center gap-2">
+                <Globe2 size={16} className="text-[#1463FF]" />
+                <span className="text-[10px] font-black uppercase tracking-[0.18em] text-[#1463FF]">
+                  Global Collaboration
+                </span>
+              </div>
+
+              <h2 className="text-[34px] font-black leading-[1.05] tracking-[-0.05em]">
+                We work with clients from around the world.
+              </h2>
+
+              <p className="mt-6 text-sm leading-7 text-[#4B5563]">
+                No matter where you are, we&apos;re just a message away.
+              </p>
+
+              <div className="mt-8 flex -space-x-3">
+                <Image
+                  src="/muhammad-yasir-founder-ceo.webp"
+                  alt="Team member"
+                  width={44}
+                  height={44}
+                  className="h-11 w-11 rounded-full border-2 border-white object-cover"
+                />
+                <Image
+                  src="/yaseen.webp"
+                  alt="Team member"
+                  width={44}
+                  height={44}
+                  className="h-11 w-11 rounded-full border-2 border-white object-cover"
+                />
+                <Image
+                  src="/shair-afgun.webp"
+                  alt="Team member"
+                  width={44}
+                  height={44}
+                  className="h-11 w-11 rounded-full border-2 border-white object-cover"
+                />
+                <span className="flex h-11 w-11 items-center justify-center rounded-full border-2 border-white bg-[#1463FF] text-white">
+                  <Plus size={18} />
+                </span>
+              </div>
+            </div>
+
+            <div className="relative min-h-[380px] overflow-hidden rounded-[22px]">
+              <Image
+                src="/world-map-dots.webp"
+                alt="Global clients map"
+                fill
+                className="object-contain"
+              />
+
+              {locations.map((location) => (
+                <div
+                  key={location.name}
+                  className={`absolute ${location.className} hidden items-center gap-2 rounded-lg bg-white px-3 py-2 text-xs font-bold text-[#05070D] shadow-[0_12px_35px_rgba(15,23,42,0.12)] md:flex`}
+                >
+                  <span className="h-4 w-4 rounded-full border-4 border-[#DCEBFF] bg-[#1463FF]" />
+                  {location.name}
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      </main>
+    </>
   );
 }
