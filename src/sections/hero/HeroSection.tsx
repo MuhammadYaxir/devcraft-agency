@@ -3,7 +3,10 @@
 import React from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { ArrowRight, ArrowUpRight } from "lucide-react";
+import { ArrowRight, ArrowUpRight, CalendarDays } from "lucide-react";
+import { FaWhatsapp } from "react-icons/fa";
+
+const calendlyLink = "https://calendly.com/craftodev/30min";
 
 const HeroSection = () => {
   return (
@@ -31,7 +34,7 @@ const HeroSection = () => {
           initial={{ opacity: 0, y: 35 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          className="max-w-[720px]"
+          className="max-w-[760px]"
         >
           <div className="mb-6 flex items-center gap-2">
             <span className="text-[#1463FF]">✦</span>
@@ -52,22 +55,32 @@ const HeroSection = () => {
             digital products that drive real growth.
           </p>
 
-          <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center">
+          <div className="mt-10 flex flex-wrap items-center gap-4">
             <Link
-              href="/contact"
-              className="group inline-flex w-fit items-center gap-3 rounded-full bg-gradient-to-r from-[#1463FF] to-[#05C8F7] px-6 py-4 text-[11px] font-black uppercase tracking-[0.12em] text-white shadow-[0_18px_40px_rgba(20,99,255,0.28)] transition-all duration-300 hover:-translate-y-0.5"
+              href="https://wa.me/923000907547"
+              target="_blank"
+              className="group inline-flex items-center gap-3 rounded-full bg-[#25D366] px-6 py-4 text-[11px] font-black uppercase tracking-[0.12em] text-white shadow-[0_18px_40px_rgba(37,211,102,0.28)] transition-all duration-300 hover:-translate-y-0.5"
             >
-              Let&apos;s Build Together
+              <FaWhatsapp size={20} />
+              WhatsApp Us
+            </Link>
+
+            <Link
+              href={calendlyLink}
+              target="_blank"
+              className="group inline-flex items-center gap-3 rounded-full border border-[#1463FF]/15 bg-white px-6 py-4 text-[11px] font-black uppercase tracking-[0.12em] text-[#1463FF] shadow-[0_14px_35px_rgba(15,23,42,0.06)] transition-all duration-300 hover:-translate-y-0.5 hover:border-[#1463FF] hover:bg-[#1463FF] hover:text-white"
+            >
+              <CalendarDays size={16} />
+              Book Free 30 Min Call
               <ArrowRight
-                size={15}
-                strokeWidth={3}
-                className="transition-transform duration-300 group-hover:translate-x-1"
+                size={14}
+                className="transition-transform group-hover:translate-x-1"
               />
             </Link>
 
             <Link
               href="/projects"
-              className="group inline-flex w-fit items-center gap-2 rounded-full border border-[#D9E3F0] bg-white px-6 py-4 text-[11px] font-black uppercase tracking-[0.12em] text-[#05070D] shadow-[0_14px_35px_rgba(15,23,42,0.06)] transition-all duration-300 hover:-translate-y-0.5 hover:border-[#1463FF]/40 hover:text-[#1463FF]"
+              className="group inline-flex items-center gap-2 rounded-full border border-[#D9E3F0] bg-white px-6 py-4 text-[11px] font-black uppercase tracking-[0.12em] text-[#05070D] shadow-[0_14px_35px_rgba(15,23,42,0.06)] transition-all duration-300 hover:-translate-y-0.5 hover:border-[#1463FF]/40 hover:text-[#1463FF]"
             >
               View Work
               <ArrowUpRight
