@@ -32,9 +32,9 @@ const contactCards = [
   {
     title: "WhatsApp",
     desc: "Chat with our team.",
-    value: "+92 300 0907547",
+    value: "+92 309 9997547",
     icon: Phone,
-    href: "https://wa.me/923000907547",
+    href: "https://wa.me/923099997547",
   },
   {
     title: "Book a Call",
@@ -170,7 +170,7 @@ export default function ContactPage() {
 
               <div className="mt-8 flex flex-wrap gap-4">
                 <Link
-                  href="https://wa.me/923000907547"
+                  href="https://wa.me/923099997547"
                   target="_blank"
                   className="inline-flex items-center gap-4 text-[11px] font-black uppercase tracking-[0.12em] text-[#25D366]"
                 >
