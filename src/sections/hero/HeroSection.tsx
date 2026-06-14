@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import { ArrowRight, ArrowUpRight, CalendarDays } from "lucide-react";
 import { FaWhatsapp } from "react-icons/fa";
 
-const calendlyLink = "https://calendly.com/craftodev/30min";
+const calendlyLink = "https://calendly.com/craftodevtech/30min";
 
 const HeroSection = () => {
   return (

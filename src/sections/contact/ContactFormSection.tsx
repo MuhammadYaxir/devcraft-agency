@@ -19,7 +19,7 @@ import {
   Plus,
 } from "lucide-react";
 
-const calendlyLink = "https://calendly.com/craftodev/30min";
+const calendlyLink = "https://calendly.com/craftodevtech/30min";
 
 const contactCards = [
   {
